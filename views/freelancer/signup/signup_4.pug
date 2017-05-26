@@ -1,0 +1,61 @@
+include /views/layout/head
+.ui.centered.grid.container
+    .column
+      .signup
+        h1.ui.teal.header
+          i.users.icon
+          .content
+            | Inscription Freelancer
+            .sub.header Inscrivez-vous et profitez de nos services spécial Freelancer!
+        .ui.divider
+        .ui.fluid.ordered.tablet.stackable.steps
+            .completed.step
+                .content
+                    .title Identité
+            .completed.step
+                .content
+                    .title Compétences
+            .completed.step
+                .content
+                    .title Compte 
+            .step
+                .content
+                    .title Justificatifs 
+        
+        .ui.divider          
+        form(class="ui form signup-4" role="form" enctype="multipart/form-data" action="/freelancer/signup/final?skip=false" method="post")
+            div.ui.error.message(style="margin-top:0")
+            h3.ui.header(style="margin-top:0")
+                i.user.icon
+                .content  Justification de vos compétences
+                    .sub.header Veuillez televerser les documents qui serviront à justifier vos compétences.
+            table.ui.large.padded.striped.very.basic.table
+                each competence, index in competences
+                    tr 
+                        th #{competence.titre}
+                        td(style="border:0")
+                            .field
+                                input(type="hidden" name="idCompetenceJustif"+index value=competence._id )
+                                input(type="file" accept=".pdf" name="justif"+index)
+            .ui.modal.passVerif
+                .header Passer l'étape de justification
+                .content
+                    p Êtes-vous sûr de vouloir passer cette étape?
+                    p Vous pourrez Téleverser les justificatifs ultérieurement.
+                .actions
+                    .ui.cancel.button Non
+                    .ui.approve.teal.button Oui
+            .ui.modal.confirmar
+                h2.ui.header 
+                    i.warning.circle.icon
+                    .content Veuillez vérifier vos données avant de valider:
+                .content
+                    include /views/partials/id_table
+                .actions
+                    .ui.cancel.button Annuler
+                    .ui.approve.teal.button Valider et Terminer l'inscription
+            .ui.basic.clearing.segment
+                button.ui.right.labeled.icon.right.floated.teal.button.confirmar-opener(type="button")
+                    i.right.arrow.icon
+                    | Suivant
+                button.ui.right.floated.yellow.button.passVerif-opener(type="button" style="margin-right:1em") Passer

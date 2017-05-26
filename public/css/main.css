@@ -1,42 +1,43 @@
 body {
-    background: url('/static/images/bg_pattern.png')
+    background: #E8CBC0;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #636FA4, #E8CBC0);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #636FA4, #E8CBC0);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-attachment: fixed;
+}
+
+.signup {
+    background-color: #ecf0f1;
+    border: 1px solid #fff;
+    margin-top: 4em;
+    padding: 1em;
+    border-radius: 1em;
 }
 
 .ui.grid.main {
-    margin-top: 70px;
+    min-height: 100%;
+    margin: 0;
 }
 
-.mobile.row {
-    padding-top: 0px !important;
-    margin-top: 0px !important;
+.column.left {
+    background: #333439;
 }
 
-.mobile.row .ui.inverted.menu {
-    border-radius: 0px !important;
+.msgNotifs {
+    margin-top: 2em;
+    margin-bottom: 2em;
 }
 
-.padding-reset {
-    padding: 0px !important;
+.column.main {
+    background: #ecf0f1
 }
 
-.ui.message {
-    padding: 40px !important;
+.ui.secondary.inverted.pointing.menu {
+    border-width: 0 !important;
 }
 
-@media (max-width: 767px) {
-    .ui.grid.main {
-        margin-top: 70px;
-    }
-    .ui.grid {
-        margin: 0 !important;
-    }
-    .ui.vertical.menu.navbar {
-        margin-top: 0px !important;
-    }
-}
-
-.ui.vertical.menu {
-    margin-top: -15px !important;
-    width: 100%;
-    display: none;
+.signup form {
+    padding: 1em;
 }

@@ -1,0 +1,73 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.accountType}
+block content
+    .ui.container
+        .ui.two.columns.grid
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer")
+                    i.user.icon
+                    | Retourner au profil
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                    i.exchange.icon
+                    | Modifier le profil
+        if demandeTrouvee != ""
+            .ui.negative.message
+                .header Impossible de modifier vos compétences.
+                p 
+                    | Vous avez dèja une demande de validation 
+                    b (ID: #{demande._id})
+                    |  en attente de traitement.
+                ul.list
+                    li Patientez le temps qu'un administrateur traite votre demande.
+                    li Supprimez votre demande et enregistrez-en une nouvelle.
+        .ui.teal.inverted.segment
+                h2.ui.header 
+                    i.book.icon
+                    .content   Détails de votre demande:
+        .ui.padded.segment
+            .ui.padded.basic.segment
+                h2.ui.header 
+                        .content   #{demande._id}
+                            .sub.header ID de la demande
+                h2.ui.header 
+                        .content   #{user._id}
+                            .sub.header ID de l'utilisateur
+                h2.ui.header 
+                        .content   #{(demande.state === "pending") ? "En attente de traitement" : " Huh ? Mehdi!"}
+                            .sub.header Etat de la demande
+                h2.ui.header 
+                        .content   #{dateCreated}
+                            .sub.header Date d'enregistrement de la demande
+                h2.ui.header Justificatifs fournis:
+                .ui.relaxed.divided.list
+                    each justificatif, index in demande.justificatifs
+                        .item
+                            i.large.linkify.icon
+                            .content
+                                a.header(href= justificatif.url ) Justificatif #{index+1} :
+                                .description #{justificatif.url}
+            .ui.padded.basic.clearing.segment
+                form.ui.form(action="/freelancer/demande/"+demande._id+"?_method=DELETE" method="post")
+                    button.ui.big.red.right.floated.validateModal.button(type="button") Supprimer la demande 
+            .ui.modal
+                    h2.ui.header
+                        i.help.circle.icon 
+                        .content Supprimer votre demande ?
+                    .content
+                        p 
+                            | Une fois supprimée, vous deverez déposer une autre demande 
+                            |  afin de valider votre profil.
+                    .center.aligned.actions
+                        .ui.cancel.red.button Annuler
+                        .ui.approve.green.button Valider
+            //- if messages.demandeDeleted != ""
+            //-     .ui.positive.message
+            //-         .header Demande supprimée
+            //-         p Votre demande a été correctement supprimée. vous pouvez à présent en déposer une autre.

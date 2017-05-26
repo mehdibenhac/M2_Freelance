@@ -1,0 +1,95 @@
+include /views/layout/head
+
+.ui.centered.grid.container
+    .fourteen.wide.column
+      .signup
+        h1.ui.teal.header
+          i.users.icon
+          .content
+            | Inscription Freelancer
+            .sub.header Inscrivez-vous et profitez de nos services spécial Freelancer!
+        .ui.divider
+        .ui.fluid.ordered.tablet.stackable.steps
+          .step
+            .content
+              .title Identité
+          .disabled.step
+            .content
+              .title Compétences
+          .disabled.step
+            .content
+              .title Compte
+          .disabled.step
+            .content
+              .title Justificatifs
+        form(class="ui form signup-1" role="form" action="/freelancer/signup" method="post")
+          h3.ui.header(style="margin-top:0")
+                i.edit.icon
+                .content  Informations d'identité
+                    .sub.header Veuillez saisir les informations qui serviront à vous identifier.
+          div.ui.error.message  
+          .field    
+            h4.ui.dividing.header Identité
+            .inline.fields
+              label Êtes-vous:
+              .field
+                .ui.radio.checkbox
+                  input(type="radio" name="sexe" checked value="Homme" tabindex="0" class="hidden")
+                  label Homme
+              .field
+                .ui.radio.checkbox
+                  input(type="radio" name="sexe" value="Femme" tabindex="0" class="hidden")
+                  label Femme
+            .two.fields
+              .field
+                input(type="text" name="nom" placeholder="Nom")
+              .field
+                input(class="" type="text" name="pnom" placeholder="Prénom")
+          .field
+            h4.ui.dividing.header Email et numéro de téléphone: 
+            if messages != ""
+              .ui.icon.message
+                i.warning.icon
+                .content
+                  .header Erreur de données!
+                  p #{messages}.           
+            .two.fields
+              .field
+                input(type="text" name="email" placeholder="Adresse Mail")
+              .field
+                input(class="" type="text" name="telephone" maxlength=10 placeholder="Numéro de téléphone")
+          .field
+            h4.ui.dividing.header Date & lieu de naissance
+            p
+              i.warning.circle.orange.icon
+              | Attention! Vous devez être agé de 18 ans au moins pour utiliser nos services.
+            .two.fields
+              .field
+                input(type="date" name="dateNaiss" max="1999-06-01")
+              .field
+                select(name="lieuNaiss" class="ui search dropdown")
+                  option(value="" disabled selected) Selectionnez une Wilaya
+                  option(value="Alger") Alger
+                  option(value="Constantine") Constantine
+                  option(value="Annaba") Annaba
+          .field
+            h4.ui.dividing.header Adresse
+            .two.fields
+              .field
+                select( name="wilayaAdr" class="ui search dropdown")
+                  option(value="" disabled selected) Selectionnez une Wilaya
+                  option(value="Alger") Alger
+                  option(value="Constantine") Constantine
+                  option(value="Annaba") Annaba
+              .field
+                input(type="text" name="communeAdr" placeholder="Commune")
+            .two.fields
+              .field
+                input(type="text" name="quartierAdr" placeholder="Quartier")
+              .field
+                input(type="text" name="lotissementAdr" placeholder="lotissement")
+          .ui.basic.clearing.segment
+            button.ui.right.labeled.icon.right.floated.teal.submit.button
+              i.right.arrow.icon
+              | Suivant
+            

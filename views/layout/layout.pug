@@ -1,0 +1,56 @@
+include /views/layout/head
+
+.ui.two.columns.grid.main
+    .three.wide.column.left
+        .ui.container
+            block user
+            if (user.isValid === true)
+                .ui.positive.icon.justified.message
+                    i.checkmark.icon
+                    .content
+                        .header Profil validé
+            else
+                .ui.negative.icon.small.message
+                    i.warning.icon
+                    .content
+                        .header Profil non validé
+            .msgNotifs
+                div(class="ui teal two item inverted compact stackable menu")
+                    a.item
+                        i.mail.icon 
+                        | Messages
+                        .floating.ui.label 0
+                    a.item
+                        i.bell.icon 
+                        | Notifications
+                        .floating.ui.label 0
+            .ui.teal.message 
+                i.close.icon
+                .header Freelancer
+                p Vous êtes actuellement connecté en tant que Freelancer
+            .ui.large.vertical.secondary.fluid.pointing.inverted.menu
+                a.active.item 
+                    i.user.icon
+                    | Profil
+                a.item
+                    i.tasks.icon
+                    | Offres
+                a.item
+                    i.suitcase.icon
+                    | Contrats
+                a.item
+                    i.sitemap.icon
+                    | Employeurs
+            .ui.divider
+            .ui.large.vertical.secondary.fluid.pointing.inverted.menu
+                a.item
+                    i.home.icon
+                    | Accueil
+                a.item 
+                    i.info.icon
+                    | Informations
+                a.item
+                    i.power.icon
+                    | Déconnexion
+    .thirteen.wide.column.main
+        block content

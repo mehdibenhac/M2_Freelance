@@ -1,0 +1,11 @@
+include  /views/layout/head
+
+.ui.container
+    .ui.center.aligned.segment(style="margin-top:15em")
+        .ui.toggle.checkbox
+            if (parametres.disponibilite === true)
+                input(type="checkbox" id="toggle-notifs" class="hidden" value="true" checked)
+            else
+                input(type="checkbox" id="toggle-notifs" class="hidden" value="false")
+            label Disponibilité
+        h3(id="results") hey

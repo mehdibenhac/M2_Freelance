@@ -1,0 +1,39 @@
+include /views/layout/head
+
+.ui.centered.grid.container
+    .column
+      .signup
+        h1.ui.teal.header
+          i.users.icon
+          .content
+            | Inscription Freelancer
+            .sub.header Inscrivez-vous et profitez de nos services spécial Freelancer!
+        .ui.divider
+        .ui.fluid.ordered.tablet.stackable.steps
+            .completed.step
+                .content
+                    .title Identité
+            .step
+                .content
+                    .title Compétences
+            .disabled.step
+                .content
+                    .title Compte 
+            .disabled.step
+                .content
+                    .title Compte 
+        .ui.divider          
+        form(class="ui form signup-2" role="form" action="/freelancer/signup?step=2" method="post")
+            h3.ui.header(style="margin-top:0")
+                i.student.icon
+                .content  Choix des compétences
+                    .sub.header Veuillez choisir jusqu'à quatre compétences parmi la liste ci-dessous.
+            div.ui.error.message(style="margin-top:0")
+            .field
+                label Compétences:
+                include /views/partials/competences_select
+            .ui.basic.clearing.segment
+                button.ui.right.labeled.icon.right.floated.teal.submit.button
+                    i.right.arrow.icon
+                    | Suivant
+            

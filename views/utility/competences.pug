@@ -1,0 +1,19 @@
+include /views/layout/head
+
+.ui.container(style="margin-top:10em")
+    .ui.segment
+        form.ui.form(action="/competences/" method="post")
+            h3.ui.dividing.header Ajout d'une competence
+            .field
+                label Titre de la compétence
+                input(type="text" name="competTitre" placeholder="Titre de la compétence")
+            .field
+                label Description de la compétence
+                textarea(name="competDesc" placeholder="Description de la compétence")
+            .field
+                label Domaine de la compétence
+                include /views/partials/domaines_select
+            .field
+                button.ui.primary.submit.button Ajouter
+        
+

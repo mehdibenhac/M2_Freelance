@@ -1,0 +1,130 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.three.columns.grid
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/competences")
+                    i.exchange.icon
+                    | Modifier les compétences
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                    i.edit.icon
+                    | Modifier le profil
+            .column
+                a.ui.orange.labeled.icon.fluid.big.button
+                    i.delete.icon
+                    | Supprimer le compte
+        if messages.demandeSupprimee != ""
+            .ui.info.icon.message
+                i.info.icon
+                .content
+                    .header #{messages.demandeSupprimee}
+        .ui.two.columns.grid
+            .four.wide.column
+                .ui.segment
+                    .inline.field
+                        .ui.toggle.checkbox
+                            if (user.parametres.disponibilite === true)
+                                input(type="checkbox" id="toggle-dispo" class="hidden" value="true" checked)
+                            else
+                                input(type="checkbox" id="toggle-dispo" class="hidden" value="false")
+                            label Disponibilité
+                .ui.card
+                    .image
+                        img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+                    .content
+                        h3.ui.header 
+                            | #{user.userID._id}
+                            .sub.header Numéro de compte
+                    .content
+                        h3.ui.header 
+                            | #{user.userID.username}
+                            .sub.header Nom d'utilisateur
+                    .content
+                        h3.ui.header 
+                            | #{user.userID.accountType}
+                            .sub.header Type de compte
+                    .content
+                        h3.ui.header 
+                            | #{dateCreated}
+                            .sub.header Date de création
+                .ui.teal.inverted.segment
+                        h3.ui.header
+                            i.alarm.icon
+                            .content    Notifications:
+                .ui.vertical.segments
+                    .ui.segment
+                        .inline.field
+                            .ui.toggle.checkbox
+                                if (user.parametres.notif_offres === true)
+                                    input(type="checkbox" id="toggle-offresNotif" class="hidden" value="true" checked)
+                                else
+                                    input(type="checkbox" id="toggle-offresNotif" class="hidden" value="false")
+                                label Offres
+                    .ui.segment
+                        .inline.field
+                            .ui.toggle.checkbox
+                                if (user.parametres.notif_employeurs === true)
+                                    input(type="checkbox" id="toggle-empsNotif" class="hidden" value="true" checked)
+                                else
+                                    input(type="checkbox" id="toggle-empsNotif" class="hidden" value="false")
+                                label Employeurs
+            .twelve.wide.column
+                .ui.teal.inverted.segment
+                    h3.ui.header 
+                        i.user.icon
+                        .content   Identité:
+                .ui.horizontal.segments
+                    .ui.padded.segment
+                        h3.ui.header 
+                            .content   #{user.nom}
+                                .sub.header Nom
+                        h3.ui.header 
+                            .content   #{user.pnom}
+                                .sub.header Prénom
+                        h3.ui.header 
+                            .content   #{user.sexe}
+                                .sub.header Sexe
+                        h3.ui.header 
+                            .content   #{dateNaiss}
+                                .sub.header Date de naissance
+                        h3.ui.header 
+                            .content   #{user.lieuNaiss}
+                                .sub.header Lieu de naissance
+                        h3.ui.header 
+                            .content   #{user.telephone}
+                                .sub.header Numéro de téléphone
+                    .ui.padded.segment
+                        h3.ui.header 
+                            .content   #{user.email}
+                                .sub.header Adresse mail
+                        h3.ui.header 
+                            .content   #{user.wilayaAdr}
+                                .sub.header Wilaya de résidence
+                        h3.ui.header 
+                            .content   #{user.communeAdr}
+                                .sub.header Commune de residence
+                        h3.ui.header 
+                            .content   #{user.quartierAdr}
+                                .sub.header Quartier de résidence
+                        h3.ui.header 
+                            .content   #{user.lotissementAdr}
+                                .sub.header Numéro de lotissement
+                .ui.teal.inverted.segment
+                        h3.ui.header
+                            i.student.icon
+                            .content Compétences:
+                .ui.vertical.segments
+                    each competence, index in user.competences
+                        .ui.padded.segment
+                            h3.ui.header 
+                                .content   #{competence.titre}
+                                    .sub.header Competence #{index+1}
+                        

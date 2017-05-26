@@ -1,0 +1,68 @@
+include /views/layout/head
+
+.ui.centered.grid.container
+    .fourteen.wide.column
+      .signup
+        h1.ui.pink.header
+          i.users.icon
+          .content
+            | Inscription Employeur
+            .sub.header Inscrivez-vous et profitez de nos services spéciaux pour employeurs!
+        .ui.divider
+        .ui.fluid.ordered.tablet.stackable.steps
+            .completed.step
+                .content
+                    .title Identité
+            .completed.step
+                .content
+                    .title Domaines
+            .step
+                .content
+                    .title Compte
+        .ui.divider          
+        form(class="ui form signup-3 employeur" role="form" action="/employeur/signup/final" method="post")
+            div.ui.error.message(style="margin-top:0")
+            h3.ui.header(style="margin-top:0")
+                i.user.icon
+                .content  Informations de compte
+                    .sub.header Veuillez saisir les informations nécessaires au fonctionnement de votre compte.
+            if messages != ""
+              .ui.icon.message
+                i.warning.icon
+                .content
+                  .header Erreur de données!
+                  p #{messages}
+            input(type="hidden" name="accountType" value="Employeur")
+            .three.fields
+                .field
+                    label Nom d'utilisateur:
+                    input(type="text" name="username" placeholder="Nom d'utilisateur")
+                .field
+                    label Mot de passe:
+                    input(type="password" name="password" placeholder="Mot de passe")
+                .field
+                    label Resaisissez le mot de passe:
+                    input(type="password" name="REpassword" placeholder="Resaisissez le mot de passe")
+            .ui.modal.termesConfirmar
+                h3.ui.pink.header 
+                    i.warning.circle.icon
+                    .content Veuillez vérifier vos données et accepter les termes d'utilisation avant de valider:
+                .content
+                    include /views/partials/id_table_emp
+                    .ui.divider
+                    h4.ui.header
+                        i.ui.warning.icon
+                        |  Termes d'utilisation:
+                    .ui.basic.segment(style="margin-top:0px; padding-top:0px")
+                        p Acceptez-vous les termes d'utilisation de Fennec Freelance?
+                        p Vous pouvez telecharger le document en clickant sur le lien ci-dessous:
+                        a(href="/static/docs/termes.pdf")
+                            i.linkify.icon 
+                            | Télecharger le document
+                .actions
+                    .ui.cancel.button Annuler
+                    .ui.approve.pink.button Accepter & valider              
+            .ui.basic.clearing.segment
+                button.ui.right.labeled.icon.right.floated.pink.button.termesConfirmar-opener(type="button")
+                    i.right.arrow.icon
+                    | Suivant

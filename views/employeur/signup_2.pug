@@ -1,0 +1,36 @@
+include /views/layout/head
+
+.ui.centered.grid.container
+    .fourteen.wide.column
+      .signup
+        h1.ui.pink.header
+          i.users.icon
+          .content
+            | Inscription Employeur
+            .sub.header Inscrivez-vous et profitez de nos services spéciaux pour employeurs!
+        .ui.divider
+        .ui.fluid.ordered.tablet.stackable.steps
+            .completed.step
+                .content
+                    .title Identité
+            .step
+                .content
+                    .title Domaines
+            .disabled.step
+                .content
+                    .title Compte
+        .ui.divider          
+        form(class="ui form signup-2" role="form" action="/employeur/signup?step=2" method="post")
+            h3.ui.header(style="margin-top:0")
+                i.student.icon
+                .content  Choix des domaines
+                    .sub.header Veuillez choisir jusqu'à quatre domaines parmi la liste ci-dessous.
+            div.ui.error.message(style="margin-top:0")
+            .field
+                label Domaines:
+                include /views/partials/domaines_select
+            .ui.basic.clearing.segment
+                button.ui.right.labeled.icon.right.floated.pink.submit.button
+                    i.right.arrow.icon
+                    | Suivant
+            

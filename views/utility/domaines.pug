@@ -1,0 +1,16 @@
+include /views/layout/head
+
+.ui.container(style="margin-top:10em")
+    .ui.segment
+        form.ui.form(action="/domaines/" method="post")
+            h3.ui.dividing.header Ajout d'un domaine
+            .field
+                label Titre du domaine
+                input(type="text" name="domaineTitre" placeholder="Titre de la compétence")
+            .field
+                label Description du domaine
+                textarea(name="domaineDesc" placeholder="Description de la compétence")
+            .field
+                button.ui.primary.submit.button Ajouter
+        
+

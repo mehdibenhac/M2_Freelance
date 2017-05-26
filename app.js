@@ -1,32 +1,36 @@
 //---------------- Requires
-var express = require('express');
-var bodyParser = require('body-parser');
-var _ = require('underscore');
-var mongoose = require('mongoose');
 
-var app = express();
+var app = require('express')();
 
-//---------------- DB Config
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/fennec");
+require("./app/config.js")(app);
+require("./app/routes.js")(app);
+require("./app/db.js")();
 
-//---------------- App Config
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
-app.set('view engine', 'pug');
-app.use('/static', express.static(__dirname + '/public'));
-app.locals.basedir = __dirname;
 
-//---------------- Routes
-var indexRoutes = require('./app/routes/indexRoutes.js');
-var freelancerRoutes = require('./app/routes/freelancerRoutes.js');
+//---------------- Error Handling
 
-app.use('/freelancer', freelancerRoutes);
-app.use('/', indexRoutes);
+app.all('*', function (req, res, next) {
+    var err = new Error();
+    err.status = 404;
+    err.message = "No such path exists!"
+    next(err);
+});
+
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    console.log(err.stack);
+    res.send({
+        message: "Une erreur est survenue!",
+        error: {
+            status: err.status,
+            error: err.message,
+        }
+    })
+})
+
 
 //---------------- Server
+
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
     console.log("Serveur démarré sur le port: " + PORT);

@@ -1,0 +1,89 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.two.columns.grid
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer")
+                    i.user.icon
+                    | Retourner au profil
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/competences")
+                    i.exchange.icon
+                    | Modifier les compétences
+        .ui.teal.inverted.segment
+            h1.ui.header
+                i.edit.icon
+                .content
+                    | Modification du profil
+        .ui.raised.segment()
+            if allowModif == false
+                .ui.info.icon.message 
+                    i.warning.icon
+                    .content
+                        .header Vous avez modifié votre profil le #{lastModified}.
+                            |  Veuillez patienter une semaine avant d'effectuer une autre modification.
+            form.ui.form(action="?_method=PUT" role="form" method="post")
+                div.ui.error.message
+                if messages.modifierStatus != ""
+                    .ui.success.icon.message
+                        i.info.icon
+                        .content
+                            .header #{messages.modifierStatus}
+                br
+                .field
+                    h4.ui.dividing.header Email et numéro de téléphone:        
+                    .two.fields
+                        .field
+                            input(type="text" name="email" placeholder="Adresse Mail" value=user.email  disabled=( allowModif === false ) ? "" : undefined)
+                        .field
+                            input(class="" type="text" name="telephone" maxlength=10 placeholder="Numéro de téléphone" value=user.telephone  disabled=( allowModif === false ) ? "" : undefined)
+                .field
+                    h4.ui.dividing.header Adresse
+                    .two.fields
+                        .field
+                            select( name="wilayaAdr" class="ui search dropdown" value=user.wilayaAdr  disabled=( allowModif === false ) ? "" : undefined)
+                                option(value="Alger") Alger
+                                option(value="Constantine") Constantine
+                                option(value="Annaba" selected) Annaba
+                        .field
+                            input(type="text" name="communeAdr" placeholder="Commune" value=user.communeAdr  disabled=( allowModif === false ) ? "" : undefined)
+                    .two.fields
+                        .field
+                            input(type="text" name="quartierAdr" placeholder="Quartier" value=user.quartierAdr  disabled=( allowModif === false ) ? "" : undefined)
+                        .field
+                            input(type="text" name="lotissementAdr" placeholder="lotissement" value=user.lotissementAdr  disabled=( allowModif === false ) ? "" : undefined)
+                if(allowModif === true)
+                    .ui.icon.message
+                        i.info.icon
+                        .content
+                            .header Derniere modification effectuée le: #{lastModified}
+                            ul.list 
+                                li Pour modifier les données sensibles de votre compte (nom, prénom, ...etc), veuillez contactez votre administrateur.
+                br
+                .ui.basic.clearing.segment
+                    button.ui.labeled.icon.right.floated.teal.submit.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
+                        i.down.arrow.icon
+                        | Mettre à jour votre profil
+                    button.ui.labeled.icon.right.floated.orange.button(type="reset"  disabled=( allowModif === false ) ? "" : undefined)
+                        i.refresh.icon
+                        | Réinitialiser le formulaire
+                .ui.modal
+                    h2.ui.header
+                        i.help.circle.icon 
+                        .content Mettre à jour votre profil ?
+                    .content
+                        p 
+                            | Une fois modifié, vous deverez attendre 
+                            b une semaine (7 jours)
+                            |  avant de pouvoir effectuer une autre modification.
+                    .center.aligned.actions
+                        .ui.cancel.red.button Annuler
+                        .ui.approve.green.button Valider
+
