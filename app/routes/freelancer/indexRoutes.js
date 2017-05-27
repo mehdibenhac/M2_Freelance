@@ -23,7 +23,9 @@ Router.get('/', middleware.isLoggedIn, middleware.isFreelancer, function (req, r
         res.render('./freelancer/index', {
             messages: {
                 freelancerConnected: req.flash('freelancerConnected'),
-                demandeSupprimee: req.flash('demandeSupprimee')
+                demandeSupprimee: req.flash('demandeSupprimee'),
+                noValid: req.flash('noValid'),
+                competModifSuccess: req.flash('competModifSuccess')
             },
             user: freelancer,
             dateCreated: dateCreated,

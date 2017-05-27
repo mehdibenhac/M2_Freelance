@@ -155,8 +155,10 @@ Router.post('/final', upload.any(), function (req, res, next) {
                 });
                 for (var i = 0; i < req.files.length; i++) {
                     var newJustificatif = {
-                        url: '/static/uploads/' + req.files[i].filename
+                        url: '/static/uploads/' + req.files[i].filename,
+                        competence: req.body["idCompetenceJustif" + i]
                     };
+                    console.log(newJustificatif);
                     newDemande.justificatifs.push(newJustificatif);
                 }
                 newDemande.save(function (err, createdDemande) {
@@ -166,6 +168,7 @@ Router.post('/final', upload.any(), function (req, res, next) {
                     console.log('Demande created!');
                     req.session.destroy();
                     res.send({
+                        message: 'Freelancer créé avec succés!',
                         User: createdUser,
                         Freelancer: createdFreelancer,
                         Demande: createdDemande

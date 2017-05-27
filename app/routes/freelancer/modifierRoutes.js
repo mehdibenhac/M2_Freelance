@@ -5,10 +5,28 @@
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
 var Freelancer = require('../../models/Freelancer.js');
+var Competence = require('../../models/Competence.js');
 var Demande = require('../../models/Demande.js');
+var shortid = require('shortid');
+var multer = require('multer');
+var _ = require('underscore');
 var moment = require('moment');
 
+// ===== Multer Settings
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, shortid.generate() + file.originalname);
 
+    }
+});
+var upload = multer({
+    storage: storage
+});
+
+// ===== routes pour les modifications du profil
 
 Router.get('/profil', middleware.isLoggedIn, middleware.isFreelancer, function (req, res) {
     var user = req.user;
@@ -39,7 +57,6 @@ Router.get('/profil', middleware.isLoggedIn, middleware.isFreelancer, function (
         });
     });
 });
-
 Router.put('/profil', middleware.isLoggedIn, middleware.isFreelancer, function (req, res) {
     var user = req.user;
     Freelancer.findOneAndUpdate({
@@ -68,9 +85,9 @@ Router.put('/profil', middleware.isLoggedIn, middleware.isFreelancer, function (
     });
 });
 
+// ===== routes pour les modifications des compétences
+
 Router.get('/competences', middleware.isLoggedIn, middleware.isFreelancer, function (req, res) {
-    var user = req.user;
-    console.log(req.user._id);
     Demande.findOne({
         userID: req.user._id
     }, function (err, demande) {
@@ -82,8 +99,125 @@ Router.get('/competences', middleware.isLoggedIn, middleware.isFreelancer, funct
             req.flash('demandeTrouvee', 'Vous avez une demande en attente de traitement.')
             res.redirect('/freelancer/demande/' + demande._id);
         } else {
-            res.send('Pas de demande!');
+            Freelancer.findOne({
+                userID: req.user
+            }).populate('competences').populate({
+                path: "competences",
+                populate: {
+                    path: "domaine"
+                }
+            }).exec(function (err, freelancer) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                if (freelancer !== null) {
+                    console.log(freelancer.competences);
+                    Competence.find(function (err, competences) {
+                        if (err) {
+                            console.log(err.stack)
+                            return next(err);
+                        }
+                        if (competences.length > 0) {
+                            var user = freelancer;
+                            user.userID = req.user;
+                            res.render('./freelancer/modifierCompetences', {
+                                user: user,
+                                competences: competences,
+                                sameCompets: req.flash('sameCompets')
+                            })
+                        } else {
+                            res.send('Error ? No competence found!');
+                        }
+                    })
+                } else {
+                    res.send('Error ? No freelancer found!');
+                }
+            })
         }
     });
+});
+Router.put('/competences', function (req, res, next) {
+    Freelancer.findOne({
+        userID: req.user._id
+    }).select('competences').exec(function (err, freelancer) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        if (_.isEqual(req.body.compets, freelancer.competences)) {
+            req.flash('sameCompets', 'Les compétences selectionnées sont les mêmes.');
+            res.redirect('/freelancer/modifier/competences');
+        } else if (freelancer.competences.length === 1 && req.body.compets === freelancer.competences[0]) {
+            req.flash('sameCompets', 'Les compétences selectionnées sont les mêmes.');
+            res.redirect('/freelancer/modifier/competences');
+        } else {
+            freelancer.competences = req.body.compets;
+            freelancer.isValid = false;
+            freelancer.save(function (err, savedFreelancer) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                req.flash('competModifSuccess', 'Compétences modifiée avec succés.');
+                res.redirect('/freelancer');
+            });
+        }
+    });
+});
+
+// ===== routes pour la validation du profil:
+
+Router.get('/validate', function (req, res, next) {
+    Demande.findOne({
+        'userID': req.user._id
+    }, function (err, demande) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        if (demande !== null) {
+            req.flash('validateTrouvee', 'Une demande de validation a déja été trouvée pour votre compte.')
+            return res.redirect('/freelancer/demande/' + demande._id);
+        }
+        Freelancer.findOne({
+            'userID': req.user._id
+        }).populate('userID competences').populate({
+            path: 'competences',
+            populate: {
+                path: 'domaine'
+            }
+        }).exec(function (err, freelancer) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            console.log(freelancer);
+            res.render('freelancer/demande/ajout', {
+                user: freelancer
+            });
+        });
+    });
+});
+Router.post('/validate', upload.any(), function (req, res, next) {
+    console.log(req.files);
+    var newDemande = new Demande({
+        userID: req.user._id,
+        state: 'pending'
+    });
+    for (var i = 0; i < req.files.length; i++) {
+        var newJustificatif = {
+            url: '/static/uploads/' + req.files[i].filename,
+            competence: req.body["idCompetenceJustif" + i]
+        };
+        newDemande.justificatifs.push(newJustificatif);
+    }
+    newDemande.save(function (err, createdDemande) {
+        if (err) {
+            return next(err);
+        }
+        req.flash('demandeCreated', 'Demande créée avec succés.');
+        res.redirect('/freelancer/demande/' + createdDemande._id);
+    })
 });
 module.exports = Router;

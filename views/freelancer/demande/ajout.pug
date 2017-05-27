@@ -1,0 +1,64 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.two.columns.grid
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer")
+                    i.user.icon
+                    | Retourner au profil
+            .column
+                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                    i.edit.icon
+                    | Modifier le profil
+        .ui.teal.inverted.segment
+                h2.ui.header 
+                    i.file.icon
+                    .content   Ajout d'une demande de validation:
+        .ui.padded.segment
+            .ui.padded.basic.segment
+                h2.ui.header
+                    i.student.icon 
+                    .content   Compétences à valider:
+                .ui.two.stackable.cards
+                    each competence in user.competences
+                        .ui.teal.card
+                            .content
+                                .header #{competence.titre}
+                                .meta Domaine: #{competence.domaine.titre}
+                                .description #{competence.description}
+            .ui.divider
+            .ui.padded.basic.segment
+                h2.ui.header 
+                    i.legal.icon
+                    .content   Justificatifs à fournir:
+                form.ui.form(role="form"  enctype="multipart/form-data"  action="" method="post")
+                    div.ui.error.message(style="margin-top:0")
+                    each competence, index in user.competences
+                        .ui.yellow.segment
+                            .inline.field
+                                label #{index+1}) #{competence.titre} :
+                                input(type="hidden" name="idCompetenceJustif"+index value=competence._id )
+                                input(type="file" accept=".pdf" name="justif"+index id="justif"+index)
+                    .ui.basic.clearing.segment
+                        button.ui.labeled.icon.right.floated.teal.validateModal.button(type="button")
+                            i.save.icon
+                            | Enregistrer la demande
+                .ui.modal
+                        h2.ui.header
+                            i.help.circle.icon 
+                            .content Enregistrer la demande ?
+                        .content
+                            p   
+                                |   Une fois enregistrée, la demande devra être validée par un administrateur.
+                                |   Nous vous prions d'être patient(e).
+                        .center.aligned.actions
+                            .ui.cancel.red.button Annuler
+                            .ui.approve.green.button Valider
+

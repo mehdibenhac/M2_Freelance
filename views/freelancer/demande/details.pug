@@ -5,7 +5,7 @@ block user
         h3.ui.header.inverted
             img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
             .content  #{user.nom}
-                .sub.header #{user.accountType}
+                .sub.header #{user.userID.accountType}
 block content
     .ui.container
         .ui.two.columns.grid
@@ -15,7 +15,7 @@ block content
                     | Retourner au profil
             .column
                 a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
-                    i.exchange.icon
+                    i.edit.icon
                     | Modifier le profil
         if demandeTrouvee != ""
             .ui.negative.message
@@ -26,7 +26,15 @@ block content
                     |  en attente de traitement.
                 ul.list
                     li Patientez le temps qu'un administrateur traite votre demande.
-                    li Supprimez votre demande et enregistrez-en une nouvelle.
+                    li Supprimez votre demande et modifiez vos compétences.
+        if validateTrouvee != ""
+            .ui.negative.icon.message
+                i.info.icon
+                .header #{validateTrouvee}
+        if demandeCreated != ""
+            .ui.positive.icon.message
+                i.checkmark.icon
+                .header #{demandeCreated}
         .ui.teal.inverted.segment
                 h2.ui.header 
                     i.book.icon
@@ -37,7 +45,7 @@ block content
                         .content   #{demande._id}
                             .sub.header ID de la demande
                 h2.ui.header 
-                        .content   #{user._id}
+                        .content   #{user.userID._id}
                             .sub.header ID de l'utilisateur
                 h2.ui.header 
                         .content   #{(demande.state === "pending") ? "En attente de traitement" : " Huh ? Mehdi!"}
@@ -51,7 +59,7 @@ block content
                         .item
                             i.large.linkify.icon
                             .content
-                                a.header(href= justificatif.url ) Justificatif #{index+1} :
+                                a.header(href= justificatif.url ) #{justificatif.competence.titre} :
                                 .description #{justificatif.url}
             .ui.padded.basic.clearing.segment
                 form.ui.form(action="/freelancer/demande/"+demande._id+"?_method=DELETE" method="post")

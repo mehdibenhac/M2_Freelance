@@ -11,6 +11,49 @@ $(document).ready(function () {
                 .closest('.message')
                 .transition('fade');
         });
+    $('.ui.form')
+        .form({
+            fields: {
+                justif0: {
+                    identifier: 'justif0',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez sélectionner un justificatif pour la premiére compétence'
+                    }]
+                },
+                justif1: {
+                    identifier: 'justif1',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez sélectionner un justificatif pour la deuxiéme compétence'
+                    }]
+                },
+                justif2: {
+                    identifier: 'justif2',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez sélectionner un justificatif pour la troisiéme compétence'
+                    }]
+                },
+                justif3: {
+                    identifier: 'justif3',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez sélectionner un justificatif pour la quatriéme compétence'
+                    }]
+                },
+                compets: {
+                    identifier: 'compets',
+                    rules: [{
+                        type: 'minCount[1]',
+                        prompt: 'Selectionnez au moins une compétence.'
+                    }, {
+                        type: 'maxCount[4]',
+                        prompt: 'Vous avez selectionné plus de quatre compétences.'
+                    }]
+                }
+            }
+        });
     // Any modal validation with onClick button
 
     $('.validateModal').click(function () {

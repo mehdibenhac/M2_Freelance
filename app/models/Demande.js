@@ -12,6 +12,10 @@ var demandeSchema = mongoose.Schema({
     },
     justificatifs: [{
         url: String,
+        competence: {
+            type: String,
+            ref: 'Competence'
+        },
         date_ajout: {
             type: Date,
             default: Date.now()

@@ -1,0 +1,72 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.two.columns.grid
+            .column
+                a.ui.yellow.labeled.icon.fluid.large.button(href="/freelancer")
+                    i.user.icon
+                    | Retourner au profil
+            .column
+                a.ui.yellow.labeled.icon.fluid.large.button(href="/freelancer/modifier/profil")
+                    i.edit.icon
+                    | Modifier le profil
+        .ui.teal.inverted.segment
+            h3.ui.header
+                i.student.icon
+                .content    Modifier vos compétences:
+        .ui.raised.segment
+            .ui.basic.segment
+                h3.ui.header
+                    i.list.layout.icon
+                    .content
+                        | Vos compétences :
+                .ui.two.stackable.cards
+                    each competence in user.competences
+                        .ui.teal.card
+                            .content
+                                .header #{competence.titre}
+                                .meta Domaine: #{competence.domaine.titre}
+                                .description #{competence.description}
+            .ui.basic.segment
+                h3.ui.header
+                    i.add.square.icon
+                    .content
+                        | Selectionnez de nouvelles compétences :
+                form.ui.form(action="?_method=PUT" method="post" role="form")
+                    div.ui.error.message(style="margin-top:0")
+                    if sameCompets != ""
+                        .ui.negative.icon.message
+                            i.warning.icon
+                            .content
+                                .header #{sameCompets}
+                    .field
+                        label Compétences:
+                        include /views/partials/competences_select
+                    .ui.basic.clearing.segment
+                        button.ui.labeled.icon.right.floated.teal.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
+                            i.save.icon
+                            | Mettre à jour vos compétences
+                    .ui.modal
+                        h2.ui.header
+                            i.help.circle.icon 
+                            .content Mettre à jour vos compétences?
+                        .content
+                            .ui.red.icon.message
+                                i.warning.sign.icon
+                                .content
+                                    .header Attention!
+                                    p Vous êtes sur le point de modifier vos compétences! 
+                                    | s'il est valide, votre profil deviendra non-valide 
+                                    | jusqu'à ce que vous déposiez une demande de validation,
+                                    | et qu'un administrateur la valide.
+                        .center.aligned.actions
+                            .ui.cancel.red.button Annuler
+                            .ui.approve.green.button Valider
+

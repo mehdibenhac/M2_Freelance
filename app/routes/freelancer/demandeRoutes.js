@@ -2,7 +2,7 @@
 //     FREELANCER MODIFIER
 // ===========================
 
-
+var Router = require('express')
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
 var Freelancer = require('../../models/Freelancer.js');
@@ -14,20 +14,30 @@ Router.get('/:id', function (req, res, next) {
     var ID = req.params.id;
     Demande.findOne({
         _id: ID
-    }).populate('userID').exec(function (err, demande) {
+    }).populate('userID justificatifs.competence').exec(function (err, demande) {
         if (err) {
             console.log(err.stack)
             return next(err);
         }
         if (demande !== null) {
             var dateCreated = moment(demande.dateCreated).format('D MMMM YYYY');
-            console.log(dateCreated);
-            res.render('./freelancer/demande/details', {
-                demandeTrouvee: req.flash('demandeTrouvee'),
-                user: demande.userID,
-                demande: demande,
-                dateCreated: dateCreated
-            })
+            Freelancer.findOne({
+                'userID': req.user._id
+            }).populate('userID').exec(function (err, freelancer) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                res.render('./freelancer/demande/details', {
+                    demandeCreated: req.flash('demandeCreated'),
+                    demandeTrouvee: req.flash('demandeTrouvee'),
+                    validateTrouvee: req.flash('validateTrouvee'),
+                    user: freelancer,
+                    demande: demande,
+                    dateCreated: dateCreated
+                })
+            });
+
         }
     });
 });

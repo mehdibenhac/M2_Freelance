@@ -8,17 +8,26 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.three.columns.grid
+        .ui.four.columns.stackable.grid
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/competences")
-                    i.exchange.icon
+                a.ui.yellow.labeled.icon.fluid.small.button(href="/freelancer/modifier/competences")
+                    i.student.icon
                     | Modifier les compétences
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                a.ui.yellow.labeled.icon.fluid.small.button(href="/freelancer/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
             .column
-                a.ui.orange.labeled.icon.fluid.big.button
+                if(user.isValid)
+                    button.ui.green.labeled.icon.fluid.small.button(disabled)
+                        i.check.circle.icon
+                        | Profil validé
+                else
+                    a.ui.green.labeled.icon.fluid.small.button(href="/freelancer/modifier/validate" disabled)
+                        i.checkmark.icon
+                        | Valider le profil
+            .column
+                a.ui.orange.labeled.icon.fluid.small.button
                     i.delete.icon
                     | Supprimer le compte
         if messages.demandeSupprimee != ""
@@ -26,7 +35,17 @@ block content
                 i.info.icon
                 .content
                     .header #{messages.demandeSupprimee}
-        .ui.two.columns.grid
+        if messages.competModifSuccess != ""
+            .ui.info.icon.message
+                i.info.icon
+                .content
+                    .header #{messages.competModifSuccess}
+        if messages.noValid != ""
+            .ui.negative.icon.message
+                i.warning.icon
+                .content
+                    .header #{messages.noValid}
+        .ui.two.columns.stackable.grid
             .four.wide.column
                 .ui.segment
                     .inline.field
@@ -36,7 +55,7 @@ block content
                             else
                                 input(type="checkbox" id="toggle-dispo" class="hidden" value="false")
                             label Disponibilité
-                .ui.card
+                .ui.fluid.card
                     .image
                         img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
                     .content

@@ -10,19 +10,19 @@ block content
     .ui.container
         .ui.two.columns.grid
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer")
+                a.ui.yellow.labeled.icon.fluid.large.button(href="/freelancer")
                     i.user.icon
                     | Retourner au profil
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/competences")
-                    i.exchange.icon
+                a.ui.yellow.labeled.icon.fluid.large.button(href="/freelancer/modifier/competences")
+                    i.student.icon
                     | Modifier les compétences
         .ui.teal.inverted.segment
-            h1.ui.header
+            h3.ui.header
                 i.edit.icon
                 .content
-                    | Modification du profil
-        .ui.raised.segment()
+                    | Modification du profil :
+        .ui.raised.segment
             if allowModif == false
                 .ui.info.icon.message 
                     i.warning.icon
