@@ -16,6 +16,9 @@ include /views/layout/head
           .disabled.step
             .content
               .title Domaines
+          .disabled.step
+            .content
+              .title Compte
         form(class="ui form signup-1" role="form" action="/employeur/signup" method="post")
           h3.ui.header(style="margin-top:0")
                 i.edit.icon
@@ -30,7 +33,7 @@ include /views/layout/head
               .field
                 input(class="" type="text" name="pnom" placeholder="Prénom")
               .field
-                input(class="" type="text" name="nomEntreprise" value="Aucune" placeholder="Nom de votre entreprise (optionel)")
+                input(class="" type="text" name="nomEntreprise" placeholder="Nom de votre entreprise (optionel)")
             .inline.fields
               label Êtes-vous:
               .field

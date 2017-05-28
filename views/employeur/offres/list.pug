@@ -1,0 +1,103 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.two.columns.stackable.grid
+            .twelve.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste de vos offres :
+            .four.wide.column   
+                a.ui.violet.big.fluid.button(href="offres/ajout" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) Ajouter une offre
+        .ui.padded.violet.segment
+            if quotaOffres != ""
+                .ui.negative.icon.message
+                    i.remove.icon
+                    .content 
+                        .header #{quotaOffres}
+            if offreRemoved != ""
+                .ui.positive.icon.message
+                    i.checkmark.icon
+                    .content 
+                        .header #{offreRemoved}
+            if user.isValid
+                if offres.length === 0
+                    .ui.info.icon.message
+                        i.info.icon
+                        .content 
+                            .header Vous n'avez aucune offre à afficher
+                            p Ajoutez une offre en cliquant sur le bouton en haut à droite.
+                else
+                    if offresCount >=10
+                        .ui.info.icon.message
+                            i.close.icon
+                            i.info.icon
+                            .content 
+                                .header Vous avez atteint votre quota d'offres!
+                                p Vous avez dèja posté dix offres ouvertes.
+                    table.ui.sortable.large.padded.striped.basic.five.column.table(id="offresTable")
+                        thead
+                            tr
+                                th ID 
+                                    i.caret.down.icon
+                                th Titre
+                                    i.caret.down.icon
+                                th Compétence
+                                    i.caret.down.icon
+                                th Postulants
+                                    i.caret.down.icon
+                                th(class="sorter-shortDate dateFormat-ddmmyyyy") Date d'ajout
+                                    i.caret.down.icon
+                        tbody
+                        each offre, index in offres
+                            tr 
+                                td.two.wide 
+                                    a(href="/employeur/offres/details/"+offre._id)
+                                        h4.ui.header
+                                            i.hashtag.icon
+                                            .content #{offre._id}
+                                                .sub.header #{index+1}/10
+                                td.eight.wide 
+                                    a(href="/employeur/offres/details/"+offre._id)
+                                        h4.ui.header
+                                            i.newspaper.icon
+                                            .content #{offre.titre}
+                                td.three.wide.center.aligned
+                                    h5.ui.header  #{offre.competence.titre}
+                                td.one.wide.center.aligned
+                                    h5.ui.header #{offre.postulants.length}
+                                td.two.wide.right.aligned 
+                                    h5.ui.header
+                                        i.calendar.icon
+                                        .content #{offre.formattedDate}
+
+                    //- .ui.stackable.three.column.grid
+                    //-     each offre, index in offres
+                    //-         .row
+                    //-             .one.wide.column
+                    //-                 h4.ui.header 1
+                    //-             .twelve.wide.column
+                    //-                 h4.ui.header
+                    //-                     i.newspaper.icon
+                    //-                     .content #{offre.titre}
+                    //-                         .sub.header #{offre.competence.titre}
+                    //-             .three.wide.right.aligned.column
+                    //-                 .ui.labeled.icon.red.button Supprimer
+                    //-                     i.remove.icon
+                    if offresCount < 10
+                        .ui.info.icon.message
+                            i.info.icon
+                            | Vous ne pouvez avoir que dix offres ouvertes en même temps.
+            else
+                .ui.negative.icon.message
+                        i.remove.icon
+                        .content 
+                            .header Votre compte n'est pas validé
+                            p Vous ne pouvez pas poster d'offres.

@@ -10,6 +10,28 @@ var userSchema = mongoose.Schema({
     username: String,
     password: String,
     accountType: String,
+    notifications: [{
+        titre: String,
+        contenu: String,
+        lu: Boolean,
+        date_ajout: {
+            type: Date,
+            default: Date.now()
+        },
+        date_lu: Date
+    }],
+    messages_envoyes: [{
+        type: String,
+        ref: 'Message'
+    }],
+    messages_recus: [{
+        type: String,
+        ref: 'Message'
+    }],
+    demandes: [{
+        type: String,
+        ref: 'Demande'
+    }],
     dateCreated: {
         type: Date,
         default: Date.now()

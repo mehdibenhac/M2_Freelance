@@ -1,0 +1,64 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.two.columns.grid
+            .column
+                a.ui.purple.labeled.icon.fluid.large.button(href="/employeur")
+                    i.user.icon
+                    | Retourner au profil
+            .column
+                a.ui.purple.labeled.icon.fluid.large.button(href="/employeur/modifier/profil")
+                    i.edit.icon
+                    | Modifier le profil
+        .ui.violet.inverted.segment
+            h3.ui.header
+                i.cubes.icon
+                .content    Modifier vos domaines:
+        .ui.raised.segment
+            .ui.basic.segment
+                h3.ui.header
+                    i.list.layout.icon
+                    .content
+                        | Vos domaines :
+                .ui.two.stackable.cards
+                    each domaine in user.domaines
+                        .ui.violet.card
+                            .content
+                                .header #{domaine.titre}
+                                .description #{domaine.description}
+            .ui.basic.segment
+                h3.ui.header
+                    i.add.square.icon
+                    .content
+                        | Selectionnez de nouveaux domaines :
+                form.ui.form(action="?_method=PUT" method="post" role="form")
+                    div.ui.error.message(style="margin-top:0")
+                    if sameDomaines != ""
+                        .ui.negative.icon.message
+                            i.warning.icon
+                            .content
+                                .header #{sameDomaines}
+                    .field
+                        label Domaines:
+                        include /views/partials/domaines_select
+                    .ui.basic.clearing.segment
+                        button.ui.labeled.icon.right.floated.violet.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
+                            i.save.icon
+                            | Mettre à jour vos domaines
+                    .ui.modal
+                        h2.ui.header
+                            i.help.circle.icon 
+                            .content Mettre à jour vos domaines?
+                        .content
+                            | Êtes-vous sûr de vouloir modifier vos domaines?
+                        .center.aligned.actions
+                            .ui.cancel.red.button Annuler
+                            .ui.approve.violet.button Valider
+

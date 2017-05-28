@@ -5,15 +5,106 @@ $(document).ready(function () {
         .checkbox();
     $('.ui.checkbox')
         .checkbox();
+    $('#offresTable').tablesorter({
+        dateFormat: "ddmmyyyy"
+    });
     $('.message .close')
         .on('click', function () {
             $(this)
                 .closest('.message')
                 .transition('fade');
         });
+    $.fn.form.settings.rules.greaterThan = function (value, secondField) {
+        var secondValue = parseInt($('input[name=' + secondField + ']').val()) + 6;
+        return (value > secondValue)
+    };
     $('.ui.form')
         .form({
             fields: {
+                titreOffre: {
+                    identifier: 'titreOffre',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir un titre pour votre offre.'
+                    }]
+                },
+                descriptionOffre: {
+                    identifier: 'descriptionOffre',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir une description pour votre offre.'
+                    }]
+                },
+                competOffre: {
+                    identifier: 'competOffre',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez selectionner une compétence.'
+                    }]
+                },
+                dureeMin: {
+                    identifier: 'dureeMin',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir une durée minimum.'
+                    }]
+                },
+                dureeMax: {
+                    identifier: 'dureeMax',
+                    rules: [{
+                        type: 'greaterThan[dureeMin]',
+                        prompt: 'Un écart de 7 jours est requis entre la durée minimale et maximale.'
+                    }]
+                },
+                conditionOffre: {
+                    identifier: 'conditionOffre',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez selectionner un fichier à télécharger.'
+                    }]
+                },
+                email: {
+                    identifier: 'email',
+                    rules: [{
+                        type: 'email',
+                        prompt: 'Veuillez saisir une adresse mail valide.'
+                    }]
+                },
+                telephone: {
+                    identifier: 'telephone',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir un numéro de téléphone valide'
+                    }]
+                },
+                wilayaAdr: {
+                    identifier: 'wilayaAdr',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez sélectionner une wilaya'
+                    }]
+                },
+                communeAdr: {
+                    identifier: 'communeAdr',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir le nom de votre commune'
+                    }]
+                },
+                quartierAdr: {
+                    identifier: 'quartierAdr',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir le nom de votre quartier'
+                    }]
+                },
+                lotissementAdr: {
+                    identifier: 'lotissementAdr',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir votre numéro de lotissement'
+                    }]
+                },
                 justif0: {
                     identifier: 'justif0',
                     rules: [{
@@ -50,6 +141,16 @@ $(document).ready(function () {
                     }, {
                         type: 'maxCount[4]',
                         prompt: 'Vous avez selectionné plus de quatre compétences.'
+                    }]
+                },
+                domaines: {
+                    identifier: 'domaines',
+                    rules: [{
+                        type: 'minCount[1]',
+                        prompt: 'Selectionnez au moins un domaine.'
+                    }, {
+                        type: 'maxCount[4]',
+                        prompt: 'Vous avez selectionné plus de quatre domaines.'
                     }]
                 }
             }

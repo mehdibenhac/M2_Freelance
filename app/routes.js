@@ -6,12 +6,14 @@ module.exports = function (app) {
     var indexRoutes = require('./routes/indexRoutes.js');
     // Freelancer Routes
     var freelancerIndex = require('./routes/freelancer/indexRoutes.js');
-    var freelancerSignup = require('./routes/freelancer/signupRoutes.js')
-    var freelancerModifier = require('./routes/freelancer/modifierRoutes.js')
-    var freelancerDemande = require('./routes/freelancer/demandeRoutes.js')
+    var freelancerSignup = require('./routes/freelancer/signupRoutes.js');
+    var freelancerModifier = require('./routes/freelancer/modifierRoutes.js');
+    var freelancerDemande = require('./routes/freelancer/demandeRoutes.js');
     // Employeur Routes
     var employeurIndex = require('./routes/employeur/indexRoutes.js');
     var employeurSignup = require('./routes/employeur/signupRoutes.js');
+    var employeurModifier = require('./routes/employeur/modifierRoutes.js');
+    var employeurOffres = require('./routes/employeur/offresRoutes.js');
 
     // Other Routes
     var domaineRoutes = require('./routes/domaineRoutes.js');
@@ -30,7 +32,9 @@ module.exports = function (app) {
     app.use('/freelancer/demande', freelancerDemande);
     // Employeur
     app.use('/employeur', employeurIndex);
+    app.use('/employeur/modifier', employeurModifier);
     app.use('/employeur/signup', employeurSignup);
+    app.use('/employeur/offres', employeurOffres);
     // Others
     app.use('/competences', competenceRoutes);
     app.use('/endpoints', endpointsRoutes);

@@ -49,10 +49,6 @@ var freelancerSchema = mongoose.Schema({
         notif_offres: {
             type: Boolean,
             default: false
-        },
-        notif_employeurs: {
-            type: Boolean,
-            default: false
         }
     }
 });

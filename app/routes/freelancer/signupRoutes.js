@@ -11,7 +11,6 @@ var middleware = require('../../middleware.js');
 // ===== Models
 var Freelancer = require('../../models/Freelancer.js');
 var User = require('../../models/User.js');
-// var Justificatif = require('../../models/Justificatif.js');
 var Demande = require('../../models/Demande.js');
 var Competence = require('../../models/Competence.js');
 // ===== Multer Settings
@@ -137,31 +136,37 @@ Router.post('/final', upload.any(), function (req, res, next) {
     delete userData["password"];
     if (skip === "false") {
         var newUser = new User(userData);
-        User.register(newUser, password, function (err, createdUser) {
+        var newDemande = new Demande({
+            userID: newUser._id,
+            state: 'pending'
+        });
+        for (var i = 0; i < req.files.length; i++) {
+            var newJustificatif = {
+                url: '/static/uploads/' + req.files[i].filename,
+                competence: req.body["idCompetenceJustif" + i]
+            };
+            console.log(newJustificatif);
+            newDemande.justificatifs.push(newJustificatif);
+        }
+        newDemande.save(function (err, createdDemande) {
             if (err) {
+                console.log(err.stack)
                 return next(err);
             }
-            console.log('Freelancer created! Nanerr');
-            var newFreelancer = new Freelancer(freelancerData);
-            newFreelancer.userID = createdUser._id;
-            newFreelancer.save(function (err, createdFreelancer) {
+            newUser.demandes.push(createdDemande);
+            User.register(newUser, password, function (err, createdUser) {
                 if (err) {
                     return next(err);
                 }
-                console.log('Freelancer created with userID: ' + createdUser._id);
-                var newDemande = new Demande({
-                    userID: createdUser._id,
-                    state: 'pending'
-                });
-                for (var i = 0; i < req.files.length; i++) {
-                    var newJustificatif = {
-                        url: '/static/uploads/' + req.files[i].filename,
-                        competence: req.body["idCompetenceJustif" + i]
-                    };
-                    console.log(newJustificatif);
-                    newDemande.justificatifs.push(newJustificatif);
-                }
-                newDemande.save(function (err, createdDemande) {
+                console.log('Freelancer created! Nanerr');
+                var newFreelancer = new Freelancer(freelancerData);
+                newFreelancer.userID = createdUser._id;
+                newFreelancer.save(function (err, createdFreelancer) {
+                    if (err) {
+                        return next(err);
+                    }
+                    console.log('Freelancer created with userID: ' + createdUser._id);
+
                     if (err) {
                         return next(err);
                     }
@@ -176,6 +181,7 @@ Router.post('/final', upload.any(), function (req, res, next) {
                 })
             });
         });
+
     } else if (skip === "true") {
         var newUser = new User(userData);
         User.register(newUser, password, function (err, createdUser) {

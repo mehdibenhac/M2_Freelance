@@ -9,12 +9,6 @@ require("./app/db.js")();
 
 //---------------- Error Handling
 
-app.all('*', function (req, res, next) {
-    var err = new Error();
-    err.status = 404;
-    err.message = "No such path exists!"
-    next(err);
-});
 
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
@@ -28,6 +22,10 @@ app.use(function (err, req, res, next) {
     })
 })
 
+app.all('*', function (req, res, next) {
+    res.status(404);
+    res.send('404: File not found!');
+});
 
 //---------------- Server
 

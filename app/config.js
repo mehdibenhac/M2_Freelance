@@ -33,7 +33,7 @@ module.exports = function (app) {
         saveUninitialized: true
     }));
     // Use the morgan logger & initialize the session:
-    // app.use(logger('dev'));
+    app.use(logger('dev'));
     app.use(session({
         secret: "Mehdiana Jones",
         resave: false,

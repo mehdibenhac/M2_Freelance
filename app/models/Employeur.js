@@ -12,7 +12,10 @@ var employeurSchema = mongoose.Schema({
     },
     nom: String,
     pnom: String,
-    nomEntreprise: String,
+    nomEntreprise: {
+        type: String,
+        default: 'Travail à son compte'
+    },
     sexe: String,
     dateNaiss: Date,
     lieuNaiss: String,
@@ -22,6 +25,7 @@ var employeurSchema = mongoose.Schema({
     lotissementAdr: String,
     email: String,
     telephone: String,
+    lastModified: Date,
     domaines: [{
         type: String,
         ref: 'Domaine'
@@ -36,7 +40,15 @@ var employeurSchema = mongoose.Schema({
             type: String,
             ref: 'contrat'
         }
-    }]
+    }],
+    isValid: {
+        type: Boolean,
+        default: false
+    },
+    visibilite: {
+        type: Boolean,
+        default: false
+    }
 });
 
 var Employeur = mongoose.model('Employeur', employeurSchema);

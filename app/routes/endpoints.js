@@ -1,6 +1,9 @@
 var Router = require('express').Router();
 var User = require('../models/User.js');
 var Freelancer = require('../models/Freelancer.js');
+var Employeur = require('../models/Employeur.js');
+
+// Freelancer
 
 Router.put('/modifDispo', function (req, res, next) {
     console.log("modifDispo initiated");
@@ -84,6 +87,39 @@ Router.put('/modifNotifEmps', function (req, res, next) {
         }, {
             "parametres.notif_employeurs": false
         }, function (err, freelancer) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            res.send('Set to false');
+        });
+    }
+});
+
+// Employeur
+
+Router.put('/modifVisi', function (req, res, next) {
+    console.log("modifVisi initiated");
+    var bool = req.body.checked;
+    if (bool === 'true') {
+        Employeur.findOneAndUpdate({
+            userID: req.user._id
+        }, {
+            "visibilite": true
+        }, function (err, employeur) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            res.send('Set to true');
+        });
+    } else if (bool === 'false') {
+        console.log('Gonna set to false')
+        Employeur.findOneAndUpdate({
+            userID: req.user._id
+        }, {
+            "visibilite": false
+        }, function (err, employeur) {
             if (err) {
                 console.log(err.stack)
                 return next(err);

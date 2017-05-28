@@ -5,7 +5,7 @@ include /views/layout/head
         .ui.container
             block user
             if (user.isValid === true)
-                .ui.green.segment
+                .ui.violet.segment
                     h5.ui.header
                         i.checkmark.circle.icon
                         .content
@@ -15,41 +15,41 @@ include /views/layout/head
                     h5.ui.header
                         i.remove.circle.icon
                         .content Profil non validé
-                            .sub.header Si vous n'avez pas de demande en cours de traitement, veuillez en déposer une.
+                            .sub.header Votre demande est en cours de traitement.
             .msgNotifs
-                div(class="ui teal two item inverted compact stackable menu")
+                div(class="ui violet two item inverted compact stackable menu")
                     a.item
-                        i.mail.icon 
-                        .floating.ui.label 0                        
+                        i.inbox.icon 
+                        .floating.ui.label 0
                     a.item
-                        i.bell.icon
-                        div(class=(notifCount>0) ? "floating ui red label" : "floating ui label") #{notifCount} 
+                        i.alarm.icon
+                        .floating.ui.label 0
             .ui.info.message 
                 i.close.icon
-                .header Freelancer
-                p Vous êtes actuellement connecté en tant que Freelancer
+                .header Employeur
+                p Vous êtes actuellement connecté en tant qu'employeur.
             .ui.large.vertical.secondary.fluid.pointing.inverted.menu
-                a.active.item 
+                a(class= ( currentRoute === 'profil' ? "active item" : "item" )  href="/employeur/")
                     i.user.icon
                     | Profil
-                a.item
+                a(class= ( currentRoute === 'offres' ? "active item" : "item" )  href="/employeur/offres")
                     i.tasks.icon
                     | Offres
-                a.item
+                a(class= ( currentRoute === 'contrats' ? "active item" : "item" )  href="/employeur/contrats")
                     i.suitcase.icon
                     | Contrats
-                a.item
+                a(class= ( currentRoute === 'freelancers' ? "active item" : "item" )  href="/employeur/freelancers")
                     i.sitemap.icon
-                    | Employeurs
+                    | Freelancers
             .ui.divider
             .ui.large.vertical.secondary.fluid.pointing.inverted.menu
-                a.item
+                a.item(href="/employeur/offres")
                     i.home.icon
                     | Accueil
-                a.item 
+                a(class= ( currentRoute === 'informations' ? "active item" : "item" )  href="/employeur/informations") 
                     i.info.icon
                     | Informations
-                a.item
+                a(class= ( currentRoute === 'support' ? "active item" : "item" )  href="/employeur/support") 
                     i.help.circle.icon
                     | Support
                 a.item(href="/logout") 

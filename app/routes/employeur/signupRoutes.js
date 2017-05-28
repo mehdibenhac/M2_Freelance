@@ -3,8 +3,11 @@
 // ==========================
 
 var Router = require('express').Router();
+
+// ===== Our requires
 var Employeur = require('../../models/Employeur.js');
 var User = require('../../models/User.js');
+var Demande = require('../../models/Demande.js');
 var Domaine = require('../../models/Domaine.js');
 var middleware = require('../../middleware.js');
 
@@ -15,7 +18,7 @@ Router.get('/', function (req, res, next) {
     var step = req.query.step;
     switch (step) {
         case undefined:
-            res.render('employeur/signup', {
+            res.render('employeur/signup/signup', {
                 messages: req.flash('profileFound')
             });
             break;
@@ -24,13 +27,13 @@ Router.get('/', function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                res.render('employeur/signup_2', {
+                res.render('employeur/signup/signup_2', {
                     domaines: domaines
                 });
             });
             break;
         case "3":
-            res.render('employeur/signup_3', {
+            res.render('employeur/signup/signup_3', {
                 messages: req.flash('usernameFound'),
                 profile: req.session.signup.profile
             })
@@ -86,23 +89,37 @@ Router.post('/final', function (req, res, next) {
             delete userData["password"];
             var profileData = req.session.signup.profile;
             var newUser = new User(userData);
-            User.register(newUser, password, function (err, createdUser) {
+            var newDemande = new Demande({
+                userID: newUser._id,
+                state: 'pending'
+            });
+            newDemande.save(function (err, createdDemande) {
                 if (err) {
+                    console.log(err.stack)
                     return next(err);
                 }
-                var newEmployeur = new Employeur(profileData);
-                newEmployeur.userID = createdUser._id;
-                newEmployeur.save(function (err, createdEmployeur) {
+                newUser.demandes.push(createdDemande);
+                User.register(newUser, password, function (err, createdUser) {
                     if (err) {
                         return next(err);
                     }
-                    req.session.destroy();
-                    res.send({
-                        'user': createdUser,
-                        'Employeur': createdEmployeur
-                    })
+                    var newEmployeur = new Employeur(profileData);
+                    newEmployeur.userID = createdUser._id;
+                    newEmployeur.save(function (err, createdEmployeur) {
+                        if (err) {
+                            return next(err);
+                        }
+                        req.session.destroy();
+                        res.send({
+                            'Message': "Employeur créé avec succés",
+                            'User': createdUser,
+                            'Employeur': createdEmployeur,
+                            'Demande': createdDemande
+                        })
+                    });
                 });
-            })
+            });
+
         }
     })
 });

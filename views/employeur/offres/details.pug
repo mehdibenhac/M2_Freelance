@@ -1,0 +1,103 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.violet.inverted.segment
+            h3.ui.header
+                i.newspaper.icon
+                .content    Details de l'offre    ##{offre._id}
+        .ui.stackable.two.column.grid
+            .twelve.wide.column
+                .ui.padded.violet.segment
+                    .ui.padded.vertical.segments
+                        .ui.segment
+                            h3.ui.header 
+                                i.hashtag.icon
+                                .content   #{offre._id}
+                                    .sub.header ID de l'offre
+                        .ui.segment
+                            h3.ui.header 
+                                i.flag.icon
+                                .content   #{offre.etat}
+                                    .sub.header Etat de l'offre
+                        .ui.segment
+                            h3.ui.header 
+                                i.ellipsis.horizontal.icon
+                                .content   #{offre.titre}
+                                    .sub.header Titre de l'offre
+                        .ui.segment
+                            h3.ui.header 
+                                i.student.icon
+                                .content   #{offre.competence.titre}
+                                    .sub.header Compétence requise
+                        .ui.segment
+                            h3.ui.header 
+                                i.maps.pin.icon
+                                .content   #{offre.localisation}
+                                    .sub.header Localisation
+                        .ui.segment            
+                            h3.ui.header 
+                                i.write.icon
+                                .content Description de l'offre 
+                                    .sub.header #{offre.description}
+                        .ui.horizontal.segments
+                            .ui.basic.segment
+                                h3.ui.header 
+                                    i.hourglass.start.icon
+                                    .content  #{offre.duree_min} Jour(s)
+                                        .sub.header Durée minimum estimée        
+                            .ui.basic.segment
+                                h3.ui.header 
+                                    i.hourglass.end.icon
+                                    .content  #{offre.duree_max} Jours
+                                        .sub.header Durée maximum estimée  
+                        .ui.segment
+                            h3.ui.header 
+                                i.linkify.icon
+                                a.content(href= offre.url_conditions) Conditions   
+                                    .sub.header #{offre.url_conditions}
+                        if offre.url_autre != ""
+                            .ui.segment
+                                h3.ui.header 
+                                    i.linkify.icon
+                                    a.content(href= offre.url_autre) Piéces jointes  
+                                        .sub.header #{offre.url_autre}
+            .four.wide.column
+                form.ui.form(action="?_method=DELETE" method="Post")
+                    button.ui.fluid.red.labeled.icon.validateModal.button(type="button")
+                        i.remove.icon
+                        | Supprimer l'offre
+                br
+                a.ui.fluid.blue.labeled.icon.button(href="")
+                    i.edit.icon
+                    | Modifier l'offre
+                .ui.inverted.violet.segment
+                    h3.ui.header
+                        i.users.icon
+                        .content    Postulants  
+                .ui.padded.violet.segment
+                    if offre.postulants.length > 0
+                            .ui.vertical.segments
+                                each postulant, index in offre.postulants
+                                    h4.ui.header 
+                                        i.hourglass.end.icon
+                                        .content  #{postulant._id}
+                                            .sub.header #{postulant.nom} 
+                    else
+                        .ui.info.icon.message
+                            i.info.icon
+                            | Aucun postulant à afficher.
+    .ui.modal
+        h2.ui.header
+            i.help.circle.icon 
+            .content Supprimer l'offre ?
+        .content Êtes-vous sûr de vouloir supprimer cette offre ?
+        .center.aligned.actions
+            .ui.cancel.red.button Annuler
+            .ui.approve.violet.button Valider   

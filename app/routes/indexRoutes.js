@@ -49,7 +49,7 @@ Router.post('/login', middleware.isNotLoggedIn, function (req, res, next) {
                 }
                 req.session.loginAttempts = 0;
                 return res.json({
-                    message: "Login success",
+                    message: "Login succeded",
                     User: req.user
                 });
             });

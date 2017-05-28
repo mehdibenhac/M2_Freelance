@@ -5,6 +5,7 @@
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
 var Freelancer = require('../../models/Freelancer.js');
+var User = require('../../models/User.js');
 var Competence = require('../../models/Competence.js');
 var Demande = require('../../models/Demande.js');
 var shortid = require('shortid');
@@ -89,7 +90,8 @@ Router.put('/profil', middleware.isLoggedIn, middleware.isFreelancer, function (
 
 Router.get('/competences', middleware.isLoggedIn, middleware.isFreelancer, function (req, res) {
     Demande.findOne({
-        userID: req.user._id
+        userID: req.user._id,
+        state: 'pending'
     }, function (err, demande) {
         if (err) {
             console.log(err.stack)
@@ -100,7 +102,7 @@ Router.get('/competences', middleware.isLoggedIn, middleware.isFreelancer, funct
             res.redirect('/freelancer/demande/' + demande._id);
         } else {
             Freelancer.findOne({
-                userID: req.user
+                userID: req.user._id
             }).populate('competences').populate({
                 path: "competences",
                 populate: {
@@ -112,7 +114,6 @@ Router.get('/competences', middleware.isLoggedIn, middleware.isFreelancer, funct
                     return next(err);
                 }
                 if (freelancer !== null) {
-                    console.log(freelancer.competences);
                     Competence.find(function (err, competences) {
                         if (err) {
                             console.log(err.stack)
@@ -170,7 +171,8 @@ Router.put('/competences', function (req, res, next) {
 
 Router.get('/validate', function (req, res, next) {
     Demande.findOne({
-        'userID': req.user._id
+        'userID': req.user._id,
+        'state': 'pending'
     }, function (err, demande) {
         if (err) {
             console.log(err.stack)
@@ -192,7 +194,6 @@ Router.get('/validate', function (req, res, next) {
                 console.log(err.stack)
                 return next(err);
             }
-            console.log(freelancer);
             res.render('freelancer/demande/ajout', {
                 user: freelancer
             });
@@ -200,7 +201,6 @@ Router.get('/validate', function (req, res, next) {
     });
 });
 Router.post('/validate', upload.any(), function (req, res, next) {
-    console.log(req.files);
     var newDemande = new Demande({
         userID: req.user._id,
         state: 'pending'
@@ -211,13 +211,22 @@ Router.post('/validate', upload.any(), function (req, res, next) {
             competence: req.body["idCompetenceJustif" + i]
         };
         newDemande.justificatifs.push(newJustificatif);
-    }
+    };
     newDemande.save(function (err, createdDemande) {
         if (err) {
             return next(err);
         }
+        User.findByIdAndUpdate(req.user._id, {
+            $push: {
+                demandes: createdDemande
+            }
+        }, function (err, user) {});
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
         req.flash('demandeCreated', 'Demande créée avec succés.');
         res.redirect('/freelancer/demande/' + createdDemande._id);
-    })
+    });
 });
 module.exports = Router;

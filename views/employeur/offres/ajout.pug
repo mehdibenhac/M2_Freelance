@@ -1,0 +1,86 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.violet.inverted.segment
+            h3.ui.header
+                i.bookmark.icon
+                .content    Ajout d'une offre
+        .ui.padded.violet.segment
+            form.ui.form(role="form" enctype="multipart/form-data"  action="" method="post")
+                div.ui.error.message(style="margin-top:0")
+                .ui.basic.segment
+                    .ui.purple.inverted.segment
+                        h4.ui.header 
+                            i.write.icon
+                            .content Description de l'offre
+                    .field
+                        label Titre
+                        input(type="text" name="titreOffre" placeholder="Titre de l'offre")
+                    .field
+                        label Compétence concernée
+                        select(type="text" class="ui dropdown" name="competOffre" placeholder="Titre de l'offre")
+                            option(value="" selected disabled) Compétence concernée par l'offre
+                            each competence in competences
+                                option(value=competence._id) #{competence.titre}
+                    .field
+                        label Description
+                        textarea.textarea(name="descriptionOffre" placeholder="Description de votre offre")
+                    .inline.fields
+                        label Localisation :
+                        .field
+                            .ui.radio.checkbox
+                                input(type="radio" name="localOffre" checked value=user.wilayaAdr tabindex="0" class="hidden")
+                                label #{user.wilayaAdr}
+                        .field
+                            .ui.radio.checkbox
+                                input(type="radio" name="localOffre" value="Nationale" tabindex="0" class="hidden")
+                                label Territoire national
+                    .ui.purple.inverted.segment
+                        h4.ui.header 
+                            i.calendar.icon
+                            .content Durée éstimée de l'emploi
+                    .two.fields   
+                        .field
+                            label Durée minimum (Jours)
+                            input(type="number" name="dureeMin" value="1")
+                        .field
+                            label Durée maximum (Jours)
+                            input(type="number" name="dureeMax" value="2")
+                    .ui.purple.inverted.segment
+                        h4.ui.header 
+                            i.linkify.icon
+                            .content Piéces jointes:
+                    .two.fields
+                        .field
+                            label Condititions de l'offre
+                            input(type="file" name="conditionOffre")
+                        .field
+                            label Autre (Optionel)
+                            input(type="file" name="autreOffre")
+                    .ui.info.icon.message
+                        i.info.icon
+                        .content
+                            | Les rémunérations et autres données doivent être négociées directement au prés de l'employeur
+                .ui.basic.clearing.segment
+                    button.ui.labeled.icon.right.floated.violet.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
+                        i.save.icon
+                        | Enregistrer l'offre
+                    button.ui.labeled.icon.right.floated.orange.button(type="reset"  disabled=( allowModif === false ) ? "" : undefined)
+                        i.refresh.icon
+                        | Réinitialiser le formulaire
+                .ui.modal
+                    h2.ui.header
+                        i.help.circle.icon 
+                        .content Ajouter l'offre ?
+                    .content Êtes-vous sûr de vouloir ajouter cette offre ?
+                    .center.aligned.actions
+                        .ui.cancel.red.button Annuler
+                        .ui.approve.violet.button Valider        
+                    

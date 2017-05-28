@@ -10,11 +10,11 @@ block content
     .ui.container
         .ui.two.columns.grid
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer")
+                a.ui.blue.labeled.icon.fluid.big.button(href="/freelancer")
                     i.user.icon
                     | Retourner au profil
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                a.ui.blue.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
         if demandeTrouvee != ""
@@ -36,36 +36,43 @@ block content
                 i.checkmark.icon
                 .header #{demandeCreated}
         .ui.teal.inverted.segment
-                h2.ui.header 
+                h3.ui.header 
                     i.book.icon
                     .content   Détails de votre demande:
         .ui.padded.segment
             .ui.padded.basic.segment
-                h2.ui.header 
-                        .content   #{demande._id}
-                            .sub.header ID de la demande
-                h2.ui.header 
-                        .content   #{user.userID._id}
-                            .sub.header ID de l'utilisateur
-                h2.ui.header 
-                        .content   #{(demande.state === "pending") ? "En attente de traitement" : " Huh ? Mehdi!"}
-                            .sub.header Etat de la demande
-                h2.ui.header 
-                        .content   #{dateCreated}
-                            .sub.header Date d'enregistrement de la demande
-                h2.ui.header Justificatifs fournis:
-                .ui.relaxed.divided.list
-                    each justificatif, index in demande.justificatifs
-                        .item
-                            i.large.linkify.icon
-                            .content
-                                a.header(href= justificatif.url ) #{justificatif.competence.titre} :
-                                .description #{justificatif.url}
+                h4.ui.header 
+                    i.hashtag.icon
+                    .content   #{demande._id}
+                        .sub.header ID de la demande
+                h4.ui.header 
+                    i.user.icon
+                    .content   #{user.userID._id}
+                        .sub.header ID de l'utilisateur
+                h4.ui.header 
+                    i.hourglass.half.icon
+                    .content   #{(demande.state === "pending") ? "En attente de traitement" : " Huh ? Mehdi!"}
+                        .sub.header Etat de la demande
+                h4.ui.header 
+                    i.calendar.icon
+                    .content   #{dateCreated}
+                        .sub.header Date d'enregistrement de la demande
+                h4.ui.header 
+                    i.legal.icon
+                    .content Justificatifs fournis:
+                .ui.basic.segment
+                    .ui.relaxed.divided.list
+                        each justificatif, index in demande.justificatifs
+                            .item
+                                i.large.linkify.icon
+                                .content
+                                    a.header(href= justificatif.url ) #{justificatif.competence.titre} :
+                                    .description #{justificatif.url}
             .ui.padded.basic.clearing.segment
                 form.ui.form(action="/freelancer/demande/"+demande._id+"?_method=DELETE" method="post")
-                    button.ui.big.red.right.floated.validateModal.button(type="button") Supprimer la demande 
+                    button.ui.red.right.floated.validateModal.button(type="button") Supprimer la demande 
             .ui.modal
-                    h2.ui.header
+                    h4.ui.header
                         i.help.circle.icon 
                         .content Supprimer votre demande ?
                     .content

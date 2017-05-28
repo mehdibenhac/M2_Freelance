@@ -10,11 +10,11 @@ block content
     .ui.container
         .ui.two.columns.grid
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer")
+                a.ui.blue.labeled.icon.fluid.big.button(href="/freelancer")
                     i.user.icon
                     | Retourner au profil
             .column
-                a.ui.yellow.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                a.ui.blue.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
         .ui.teal.inverted.segment
@@ -41,7 +41,7 @@ block content
                 form.ui.form(role="form"  enctype="multipart/form-data"  action="" method="post")
                     div.ui.error.message(style="margin-top:0")
                     each competence, index in user.competences
-                        .ui.yellow.segment
+                        .ui.blue.segment
                             .inline.field
                                 label #{index+1}) #{competence.titre} :
                                 input(type="hidden" name="idCompetenceJustif"+index value=competence._id )

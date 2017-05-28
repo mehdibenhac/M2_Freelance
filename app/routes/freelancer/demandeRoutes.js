@@ -4,6 +4,7 @@
 
 var Router = require('express')
 var Router = require('express').Router();
+var User = require('../../models/User.js');
 var middleware = require('../../middleware.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Demande = require('../../models/Demande.js');
@@ -52,8 +53,19 @@ Router.delete('/:id', function (req, res, next) {
             return next(err);
         }
         if (demande !== null) {
-            req.flash('demandeSupprimee', 'Votre demande de verification a été supprimée.');
-            res.redirect('/freelancer/');
+            console.log(demande)
+            User.findByIdAndUpdate(req.user._id, {
+                $pull: {
+                    demandes: demande._id
+                }
+            }, function (err, user) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                req.flash('demandeSupprimee', 'Votre demande de verification a été supprimée.');
+                res.redirect('/freelancer/');
+            })
         }
     });
 });

@@ -1,76 +1,48 @@
-extends /views/layout/layout
+extends /views/layout/layout_emp
 
 block user
     .ui.segment.basic
         h3.ui.header.inverted
             img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
             .content  #{user.nom}
-                .sub.header #{user.accountType}
+                .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.four.columns.stackable.grid
+        .ui.three.columns.stackable.grid
             .column
-                a.ui.blue.labeled.icon.fluid.small.button(href="/freelancer/modifier/competences")
+                a.ui.purple.labeled.icon.fluid.small.button(href="/employeur/modifier/domaines")
                     i.student.icon
-                    | Modifier les compétences
+                    | Modifier les domaines
             .column
-                a.ui.blue.labeled.icon.fluid.small.button(href="/freelancer/modifier/profil")
+                a.ui.purple.labeled.icon.fluid.small.button(href="/employeur/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
             .column
-                if(user.isValid)
-                    button.ui.green.labeled.icon.fluid.small.button(disabled)
-                        i.check.circle.icon
-                        | Profil validé
-                else
-                    a.ui.green.labeled.icon.fluid.small.button(href="/freelancer/modifier/validate" disabled)
-                        i.checkmark.icon
-                        | Valider le profil
-            .column
-                a.ui.orange.labeled.icon.fluid.small.button
+                a.ui.red.labeled.icon.fluid.small.button
                     i.delete.icon
                     | Supprimer le compte
-        if messages.demandeSupprimee != ""
+        if messages.domainesModifSuccess != ""
             .ui.info.icon.message
                 i.info.icon
                 .content
-                    .header #{messages.demandeSupprimee}
-        if messages.competModifSuccess != ""
-            .ui.info.icon.message
-                i.info.icon
-                .content
-                    .header #{messages.competModifSuccess}
-        if messages.noValid != ""
-            .ui.negative.icon.message
-                i.warning.icon
-                .content
-                    .header #{messages.noValid}
+                    .header #{messages.domainesModifSuccess}
         .ui.two.columns.stackable.grid
             .four.wide.column
-                .ui.teal.inverted.segment
+                .ui.violet.inverted.segment
                         h4.ui.header
-                            i.alarm.icon
-                            .content    Notifications:
-                .ui.vertical.segments
-                    .ui.segment
-                        .inline.field
-                            .ui.toggle.checkbox
-                                if (user.parametres.notif_offres === true)
-                                    input(type="checkbox" id="toggle-offresNotif" class="hidden" value="true" checked)
-                                else
-                                    input(type="checkbox" id="toggle-offresNotif" class="hidden" value="false")
-                                label Offres
+                            i.tasks.icon
+                            .content    Compte:
                 .ui.segment
                     .inline.field
                         .ui.toggle.checkbox
-                            if (user.parametres.disponibilite === true)
-                                input(type="checkbox" id="toggle-dispo" class="hidden" value="true" checked)
+                            if (user.visibilite === true)
+                                input(type="checkbox" id="toggle-visi" class="hidden" value="true" checked)
                             else
-                                input(type="checkbox" id="toggle-dispo" class="hidden" value="false")
-                            label Disponibilité
+                                input(type="checkbox" id="toggle-visi" class="hidden" value="false")
+                            label Visibilité
                     .ui.info.message
                         i.help.icon
-                        | Permet de modifier votre visibilité vis-à-vis des employeurs.
+                        | Permet de modifier votre visibilité vis-à-vis des freelancers.
                 .ui.fluid.card
                     .image
                         img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
@@ -95,7 +67,7 @@ block content
                             .content #{dateCreated}
                                 .sub.header Date de création
             .twelve.wide.column
-                .ui.teal.inverted.segment
+                .ui.violet.inverted.segment
                     h4.ui.header 
                         i.user.icon
                         .content   Identité:
@@ -109,6 +81,10 @@ block content
                             i.ellipsis.horizontal.icon 
                             .content   #{user.pnom}
                                 .sub.header Prénom
+                        h4.ui.header 
+                            i.building.icon 
+                            .content   #{user.nomEntreprise}
+                                .sub.header Nom d'entreprise
                         h4.ui.header
                             i(class=( user.sexe === "Homme") ? "male icon" : "female icon" ) 
                             .content   #{user.sexe}
@@ -121,11 +97,11 @@ block content
                             i.marker.icon 
                             .content   #{user.lieuNaiss}
                                 .sub.header Lieu de naissance
+                    .ui.padded.segment
                         h4.ui.header
                             i.call.icon 
                             .content   #{user.telephone}
                                 .sub.header Numéro de téléphone
-                    .ui.padded.segment
                         h4.ui.header 
                             i.at.icon                         
                             .content   #{user.email}
@@ -146,17 +122,17 @@ block content
                             i.building.outline.icon                         
                             .content   #{user.lotissementAdr}
                                 .sub.header Numéro de lotissement
-                .ui.teal.inverted.segment
+                .ui.violet.inverted.segment
                         h4.ui.header
-                            i.university.icon
-                            .content Compétences:
+                            i.cubes.icon
+                            .content Domaines:
                 .ui.two.stackable.cards
-                    each competence, index in user.competences
-                        .green.card
+                    each domaine, index in user.domaines
+                        .violet.card
                             .content
                                 h4.ui.header
-                                    i.student.icon 
-                                    .content  #{index+1} -  #{competence.titre}
+                                    i.cube.icon 
+                                    .content  #{index+1} -  #{domaine.titre}
                                 .description
-                                    | #{competence.description}
+                                    | #{domaine.description}
                         

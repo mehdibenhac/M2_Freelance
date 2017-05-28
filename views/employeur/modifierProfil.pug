@@ -1,4 +1,4 @@
-extends /views/layout/layout
+extends /views/layout/layout_emp
 
 block user
     .ui.segment.basic
@@ -10,14 +10,14 @@ block content
     .ui.container
         .ui.two.columns.grid
             .column
-                a.ui.blue.labeled.icon.fluid.large.button(href="/freelancer")
+                a.ui.purple.labeled.icon.fluid.large.button(href="/employeur")
                     i.user.icon
                     | Retourner au profil
             .column
-                a.ui.blue.labeled.icon.fluid.large.button(href="/freelancer/modifier/competences")
-                    i.student.icon
-                    | Modifier les compétences
-        .ui.teal.inverted.segment
+                a.ui.purple.labeled.icon.fluid.large.button(href="/employeur/modifier/domaines")
+                    i.cubes.icon
+                    | Modifier les domaines
+        .ui.violet.inverted.segment
             h3.ui.header
                 i.edit.icon
                 .content
@@ -68,7 +68,7 @@ block content
                                 li Pour modifier les données sensibles de votre compte (nom, prénom, ...etc), veuillez contactez votre administrateur.
                 br
                 .ui.basic.clearing.segment
-                    button.ui.labeled.icon.right.floated.teal.submit.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
+                    button.ui.labeled.icon.right.floated.violet.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
                         i.down.arrow.icon
                         | Mettre à jour votre profil
                     button.ui.labeled.icon.right.floated.orange.button(type="reset"  disabled=( allowModif === false ) ? "" : undefined)
@@ -85,5 +85,5 @@ block content
                             |  avant de pouvoir effectuer une autre modification.
                     .center.aligned.actions
                         .ui.cancel.red.button Annuler
-                        .ui.approve.green.button Valider
+                        .ui.approve.violet.button Valider
 
