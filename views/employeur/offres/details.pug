@@ -11,8 +11,37 @@ block content
         .ui.violet.inverted.segment
             h3.ui.header
                 i.newspaper.icon
-                .content    Details de l'offre    ##{offre._id}
+                .content    Details de l'offre (ID: #{offre._id})
         .ui.stackable.two.column.grid
+            .four.wide.column
+                a.ui.violet.labeled.big.fluid.icon.button(href="/employeur/offres")
+                    i.reply.icon
+                    | Retour aux offres
+                br
+                form.ui.form(action="?_method=DELETE" method="Post")
+                    button.ui.yellow.fluid.labeled.big.icon.validateModal.button(type="button")
+                        i.remove.icon
+                        | Supprimer l'offre
+                br
+                a.ui.blue.fluid.labeled.big.icon.button(href="")
+                    i.edit.icon
+                    | Modifier l'offre
+                .ui.inverted.violet.segment
+                    h3.ui.header
+                        i.users.icon
+                        .content    Postulants  
+                .ui.padded.violet.segment
+                    if offre.postulants.length > 0
+                            .ui.vertical.segments
+                                each postulant, index in offre.postulants
+                                    h4.ui.header 
+                                        i.hourglass.end.icon
+                                        .content  #{postulant._id}
+                                            .sub.header #{postulant.nom} 
+                    else
+                        .ui.info.icon.message
+                            i.info.icon
+                            | Aucun postulant à afficher.
             .twelve.wide.column
                 .ui.padded.violet.segment
                     .ui.padded.vertical.segments
@@ -68,31 +97,7 @@ block content
                                     i.linkify.icon
                                     a.content(href= offre.url_autre) Piéces jointes  
                                         .sub.header #{offre.url_autre}
-            .four.wide.column
-                form.ui.form(action="?_method=DELETE" method="Post")
-                    button.ui.fluid.red.labeled.icon.validateModal.button(type="button")
-                        i.remove.icon
-                        | Supprimer l'offre
-                br
-                a.ui.fluid.blue.labeled.icon.button(href="")
-                    i.edit.icon
-                    | Modifier l'offre
-                .ui.inverted.violet.segment
-                    h3.ui.header
-                        i.users.icon
-                        .content    Postulants  
-                .ui.padded.violet.segment
-                    if offre.postulants.length > 0
-                            .ui.vertical.segments
-                                each postulant, index in offre.postulants
-                                    h4.ui.header 
-                                        i.hourglass.end.icon
-                                        .content  #{postulant._id}
-                                            .sub.header #{postulant.nom} 
-                    else
-                        .ui.info.icon.message
-                            i.info.icon
-                            | Aucun postulant à afficher.
+            
     .ui.modal
         h2.ui.header
             i.help.circle.icon 

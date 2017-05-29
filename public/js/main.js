@@ -8,6 +8,9 @@ $(document).ready(function () {
     $('#offresTable').tablesorter({
         dateFormat: "ddmmyyyy"
     });
+    $('button[type=reset]').click(function () {
+        $('.ui.dropdown').dropdown('clear');
+    });
     $('.message .close')
         .on('click', function () {
             $(this)

@@ -1,0 +1,90 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+                .sub.header #{user.userID.accountType}
+block content
+    .ui.container
+        .ui.teal.inverted.segment
+            h3.ui.header
+                i.list.icon
+                .content    Liste des offres disponibles :
+        .ui.teal.segment
+            form.ui.form(action="" method="GET" role="form")
+                    .fields
+                        .field
+                            .ui.icon.input
+                                input(type="text" name="search" placeholder="Titre" value= (fields.search === "") ? undefined : fields.search )
+                                i.search.icon
+                        .field
+                            select(class="ui dropdown" name="compet")
+                                option(value="" disabled selected) Compétences.
+                                each competence in user.competences
+                                    option(value=competence._id) #{competence.titre}
+                        .field
+                            select(class="ui dropdown" name="local")
+                                option(value="" disabled selected) Localisation
+                                option(value="Nationale") Nationale
+                                option(value=user.wilayaAdr) #{user.wilayaAdr}
+                        .field
+                            input(type="number" name="min" min="0" placeholder="D. min")
+                        .field
+                            input(type="number" name="max" min="1" placeholder="D. max")
+                        .field
+                            button.ui.yellow.icon.button(type="reset")
+                                i.refresh.icon
+                        .field
+                            button.ui.teal.icon.button.submit
+                                i.search.icon
+            .ui.divider
+            if offres.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    .content 
+                        .header Aucune offre n'est disponible!
+            else
+                if user.isValid == false
+                    .ui.negative.icon.message
+                        i.close.icon
+                        i.info.icon
+                        .content 
+                            .header Votre compte n'est pas validé.
+                            p Vous ne pourrez postuler pour une offre que si votre compte a été validé par un administrateur.
+                table.ui.sortable.large.padded.striped.basic.six.column.table(id="offresTable")
+                    thead
+                        tr
+                            th Titre
+                                i.caret.down.icon
+                            th Compétence
+                                i.caret.down.icon
+                            th Localisation
+                                i.caret.down.icon
+                            th Durée min
+                                i.caret.down.icon
+                            th Durée max
+                                i.caret.down.icon
+                            th(class="sorter-shortDate dateFormat-ddmmyyyy") Date d'ajout
+                                i.caret.down.icon
+                    tbody
+                    each offre, index in offres
+                        tr 
+                            td.five.wide 
+                                a(href="/freelancer/offres/details/"+offre._id)
+                                    i.newspaper.icon 
+                                    | #{offre.titre}
+                            td.three.wide.left.aligned
+                                p  #{offre.competence.titre}
+                            td.two.wide.center.aligned
+                                p #{offre.localisation}
+                            td.two.wide.center.aligned 
+                                i.hourglass.start.icon
+                                | #{offre.duree_min}
+                            td.two.wide.center.aligned 
+                                i.hourglass.end.icon
+                                | #{offre.duree_max}
+                            td.two.wide.center.aligned 
+                                i.calendar.icon
+                                | #{moment(offre.dateAjout).format('DD/MM/YYYY')}

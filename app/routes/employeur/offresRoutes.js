@@ -44,7 +44,7 @@ Router.get('/', function (req, res, next) {
                 employeur: req.user._id
             }).populate('competence').exec(function (err, offres) {
                 for (var i = 0; i < offres.length; i++) {
-                    offres[i].formattedDate = moment(offres[i].dateAjout).format('DD/MM/YYYY');
+                    offres[i].formattedDate = moment(offres[i].dateAjout).format('DD/MM/YYYY HH:mm');
                 }
                 var offresCount = offres.length;
                 res.render('employeur/offres/list', {

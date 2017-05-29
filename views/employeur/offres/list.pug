@@ -15,7 +15,9 @@ block content
                         i.list.icon
                         .content    Liste de vos offres :
             .four.wide.column   
-                a.ui.violet.big.fluid.button(href="offres/ajout" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) Ajouter une offre
+                a.ui.violet.labeled.icon.big.fluid.button(href="offres/ajout" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) 
+                    i.add.icon
+                    | Ajouter une offre
         .ui.padded.violet.segment
             if quotaOffres != ""
                 .ui.negative.icon.message
@@ -45,7 +47,7 @@ block content
                     table.ui.sortable.large.padded.striped.basic.five.column.table(id="offresTable")
                         thead
                             tr
-                                th ID 
+                                th ID (#{offres.length}/10) 
                                     i.caret.down.icon
                                 th Titre
                                     i.caret.down.icon
@@ -58,25 +60,21 @@ block content
                         tbody
                         each offre, index in offres
                             tr 
-                                td.two.wide 
+                                td.three.wide 
                                     a(href="/employeur/offres/details/"+offre._id)
-                                        h4.ui.header
-                                            i.hashtag.icon
-                                            .content #{offre._id}
-                                                .sub.header #{index+1}/10
-                                td.eight.wide 
+                                        i.hashtag.icon
+                                        | #{offre._id}
+                                td.six.wide 
                                     a(href="/employeur/offres/details/"+offre._id)
-                                        h4.ui.header
-                                            i.newspaper.icon
-                                            .content #{offre.titre}
-                                td.three.wide.center.aligned
-                                    h5.ui.header  #{offre.competence.titre}
+                                        i.newspaper.icon 
+                                        | #{offre.titre}
+                                td.three.wide.left.aligned
+                                    p  #{offre.competence.titre}
                                 td.one.wide.center.aligned
-                                    h5.ui.header #{offre.postulants.length}
-                                td.two.wide.right.aligned 
-                                    h5.ui.header
-                                        i.calendar.icon
-                                        .content #{offre.formattedDate}
+                                    p #{offre.postulants.length}
+                                td.three.wide.center.aligned 
+                                    i.calendar.icon
+                                    | #{offre.formattedDate}
 
                     //- .ui.stackable.three.column.grid
                     //-     each offre, index in offres

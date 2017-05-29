@@ -18,6 +18,7 @@ var express = require('express'),
 
 module.exports = function (app) {
     // Configure moment language:
+    app.locals.moment = moment;
     moment.locale('fr');
     // Setup methodOverride
     app.use(methodOverride('_method'));
