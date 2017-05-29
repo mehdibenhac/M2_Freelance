@@ -2,6 +2,7 @@ var Router = require('express').Router();
 var User = require('../models/User.js');
 var Freelancer = require('../models/Freelancer.js');
 var Employeur = require('../models/Employeur.js');
+var Offre = require('../models/Offre.js');
 
 // Freelancer
 
@@ -96,6 +97,30 @@ Router.put('/modifNotifEmps', function (req, res, next) {
     }
 });
 
+Router.put('/postuler', function (req, res, next) {
+    console.log("Postuler initiated");
+    var bool = req.body.checked;
+    var idOffre = req.body.idOffre;
+    if (bool === "true") {
+        Offre.findByIdAndUpdate(idOffre, {
+            $push: {
+                postulants: req.user.profil.ID
+            }
+        }, function (err, offre) {
+            console.log(offre.postulants)
+            res.send('OK');
+        })
+    } else {
+        Offre.findByIdAndUpdate(idOffre, {
+            $pull: {
+                postulants: req.user.profil.ID
+            }
+        }, function (err, offre) {
+            console.log(offre.postulants)
+            res.send('OK');
+        })
+    }
+});
 // Employeur
 
 Router.put('/modifVisi', function (req, res, next) {

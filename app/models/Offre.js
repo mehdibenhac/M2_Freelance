@@ -15,11 +15,11 @@ var offreSchema = mongoose.Schema({
     localisation: String,
     employeur: {
         type: String,
-        ref: 'User'
+        ref: 'Employeur'
     },
     postulants: [{
         type: String,
-        ref: 'User'
+        ref: 'Freelancer'
     }],
     url_conditions: String,
     url_autre: String,

@@ -14,16 +14,16 @@ block content
                 .content    Details de l'offre (ID: #{offre._id})
         .ui.stackable.two.column.grid
             .four.wide.column
-                a.ui.violet.labeled.big.fluid.icon.button(href="/employeur/offres")
+                a.ui.violet.labeled.fluid.icon.button(href="/employeur/offres")
                     i.reply.icon
                     | Retour aux offres
                 br
                 form.ui.form(action="?_method=DELETE" method="Post")
-                    button.ui.yellow.fluid.labeled.big.icon.validateModal.button(type="button")
+                    button.ui.yellow.fluid.labeled.icon.validateModal.button(type="button")
                         i.remove.icon
                         | Supprimer l'offre
                 br
-                a.ui.blue.fluid.labeled.big.icon.button(href="")
+                a.ui.blue.fluid.labeled.icon.button(href="")
                     i.edit.icon
                     | Modifier l'offre
                 .ui.inverted.violet.segment

@@ -105,6 +105,46 @@ $(function () {
             });
         }
     });
+    $('#postulator').change(function (e) {
+        if (this.checked) {
+            $('#postulatorLabel').text('Postulé');
+            var parameters = {
+                checked: true,
+                idOffre: $('#offreID').val()
+            };
+            $.ajax({
+                url: '/endpoints/postuler',
+                dataType: 'text',
+                method: 'put',
+                data: parameters,
+                success: function (data, textStatus, jQxhr) {
+                    console.log('Success')
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown)
+                }
+            });
+        } else {
+            $('#postulatorLabel').text('Postuler');
+            var parameters = {
+                checked: false,
+                idOffre: $('#offreID').val()
+            };
+            $.ajax({
+                url: '/endpoints/postuler',
+                dataType: 'text',
+                method: 'put',
+                data: parameters,
+                success: function (data, textStatus, jQxhr) {
+                    console.log('Success')
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown)
+                }
+            });
+        }
+        location.reload();
+    });
     // Employeur
     $('#toggle-visi').change(function (e) {
         if (this.checked) {

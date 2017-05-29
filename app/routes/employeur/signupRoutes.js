@@ -83,30 +83,37 @@ Router.post('/final', function (req, res, next) {
             req.flash('usernameFound', 'Le nom d\'utilisateur fourni est dèja utilisé');
             res.redirect('back');
         } else {
-            delete req.body["REpassword"]
-            var userData = req.body;
             var password = req.body.password;
-            delete userData["password"];
             var profileData = req.session.signup.profile;
-            var newUser = new User(userData);
+            var newEmployeur = new Employeur(profileData);
+            var newUser = new User({
+                username: req.body.username,
+                profil: {
+                    accountType: "Employeur",
+                    ID: newEmployeur._id
+                }
+            });
+            newEmployeur.userID = newUser._id;
             var newDemande = new Demande({
-                userID: newUser._id,
-                state: 'pending'
+                profil: {
+                    accountType: "Employeur",
+                    ID: newEmployeur._id
+                },
+                status: 'pending'
             });
             newDemande.save(function (err, createdDemande) {
                 if (err) {
                     console.log(err.stack)
                     return next(err);
                 }
-                newUser.demandes.push(createdDemande);
                 User.register(newUser, password, function (err, createdUser) {
                     if (err) {
+                        console.log(err.stack)
                         return next(err);
                     }
-                    var newEmployeur = new Employeur(profileData);
-                    newEmployeur.userID = createdUser._id;
                     newEmployeur.save(function (err, createdEmployeur) {
                         if (err) {
+                            console.log(err.stack)
                             return next(err);
                         }
                         req.session.destroy();

@@ -15,13 +15,12 @@ Router.get('/:id', function (req, res, next) {
     var ID = req.params.id;
     Demande.findOne({
         _id: ID
-    }).populate('userID justificatifs.competence').exec(function (err, demande) {
+    }).populate('justificatifs.competence').exec(function (err, demande) {
         if (err) {
             console.log(err.stack)
             return next(err);
         }
         if (demande !== null) {
-            var dateCreated = moment(demande.dateCreated).format('D MMMM YYYY');
             Freelancer.findOne({
                 'userID': req.user._id
             }).populate('userID').exec(function (err, freelancer) {
@@ -34,8 +33,7 @@ Router.get('/:id', function (req, res, next) {
                     demandeTrouvee: req.flash('demandeTrouvee'),
                     validateTrouvee: req.flash('validateTrouvee'),
                     user: freelancer,
-                    demande: demande,
-                    dateCreated: dateCreated
+                    demande: demande
                 })
             });
 
@@ -53,19 +51,8 @@ Router.delete('/:id', function (req, res, next) {
             return next(err);
         }
         if (demande !== null) {
-            console.log(demande)
-            User.findByIdAndUpdate(req.user._id, {
-                $pull: {
-                    demandes: demande._id
-                }
-            }, function (err, user) {
-                if (err) {
-                    console.log(err.stack)
-                    return next(err);
-                }
-                req.flash('demandeSupprimee', 'Votre demande de verification a été supprimée.');
-                res.redirect('/freelancer/');
-            })
+            req.flash('demandeSupprimee', 'Votre demande de verification a été supprimée.');
+            res.redirect('/freelancer/');
         }
     });
 });

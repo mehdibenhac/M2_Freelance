@@ -1,7 +1,3 @@
-// =========================
-//      Freelancer Offres
-// =========================
-
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
 var Employeur = require('../../models/Employeur.js');
@@ -54,9 +50,7 @@ Router.get('/', function (req, res, next) {
                             localisation: "Nationale"
                         }]
                     }, {
-                        postulants: {
-                            $ne: req.user.profil.ID
-                        }
+                        postulants: req.user.profil.ID
                     }, {
                         titre: {
                             $regex: search,
@@ -71,18 +65,21 @@ Router.get('/', function (req, res, next) {
                         }
                     }]
                 }).populate('competence').sort({
-                    dateAjout: -1
+                    dateAjout: 1,
+                    localisation: 1,
+                    competence: 1,
+                    titre: 1
                 }).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
                     }
                     console.log('2');
-                    res.render('freelancer/offres/list', {
+                    res.render('freelancer/offres/postulatsList', {
                         fields: fields,
                         user: freelancer,
                         offres: offres,
-                        currentRoute: 'offres'
+                        currentRoute: 'postulats'
                     });
                 });
             } else if (typeof (local) === 'undefined') {
@@ -97,9 +94,7 @@ Router.get('/', function (req, res, next) {
                             }]
                         },
                         {
-                            postulants: {
-                                $ne: req.user.profil.ID
-                            }
+                            postulants: req.user.profil.ID
                         },
                         {
                             titre: {
@@ -116,17 +111,20 @@ Router.get('/', function (req, res, next) {
                         }
                     ]
                 }).populate('competence').sort({
-                    dateAjout: -1,
+                    dateAjout: 1,
+                    localisation: 1,
+                    competence: 1,
+                    titre: 1
                 }).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
                     }
-                    res.render('freelancer/offres/list', {
+                    res.render('freelancer/offres/postulatsList', {
                         fields: fields,
                         user: freelancer,
                         offres: offres,
-                        currentRoute: 'offres'
+                        currentRoute: 'postulats'
                     });
                 });
             } else if (typeof (compet) === 'undefined') {
@@ -138,9 +136,7 @@ Router.get('/', function (req, res, next) {
                             }
                         },
                         {
-                            postulants: {
-                                $ne: req.user.profil.ID
-                            }
+                            postulants: req.user.profil.ID
                         },
                         {
                             titre: {
@@ -158,17 +154,20 @@ Router.get('/', function (req, res, next) {
                         }
                     ]
                 }).populate('competence').sort({
-                    dateAjout: -1,
+                    dateAjout: 1,
+                    localisation: 1,
+                    competence: 1,
+                    titre: 1
                 }).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
                     }
-                    res.render('freelancer/offres/list', {
+                    res.render('freelancer/offres/postulatsList', {
                         fields: fields,
                         user: freelancer,
                         offres: offres,
-                        currentRoute: 'offres'
+                        currentRoute: 'postulats'
                     });
                 });
             } else {
@@ -177,9 +176,7 @@ Router.get('/', function (req, res, next) {
                             competence: compet
                         },
                         {
-                            postulants: {
-                                $ne: req.user.profil.ID
-                            }
+                            postulants: req.user.profil.ID
                         },
                         {
                             titre: {
@@ -197,17 +194,20 @@ Router.get('/', function (req, res, next) {
                         }
                     ]
                 }).populate('competence').sort({
-                    dateAjout: -1
+                    dateAjout: 1,
+                    localisation: 1,
+                    competence: 1,
+                    titre: 1
                 }).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
                     }
-                    res.render('freelancer/offres/list', {
+                    res.render('freelancer/offres/postulatsList', {
                         fields: fields,
                         user: freelancer,
                         offres: offres,
-                        currentRoute: 'offres'
+                        currentRoute: 'postulats'
                     });
                 });
             }
@@ -216,32 +216,6 @@ Router.get('/', function (req, res, next) {
         }
 
     })
-});
-Router.get('/details/:id', function (req, res, next) {
-    var ID = req.params.id;
-    Freelancer.findById(req.user.profil.ID).exec(function (err, freelancer) {
-        if (err) {
-            console.log(err.stack)
-            return next(err);
-        }
-        Offre.findById(ID).populate('employeur postulants competence').exec(function (err, offre) {
-            if (err) {
-                console.log(err.stack)
-                return next(err);
-            }
-            console.log(_.any(offre.postulants, function (item) {
-                console.log("ITEM : ", typeof (item));
-                console.log("FREELANCER : ", typeof (freelancer));
-                return item._id === freelancer._id;
-            }));
-            res.render('freelancer/offres/details', {
-                user: freelancer,
-                offre: offre,
-                currentRoute: 'offres'
-            })
-        });
-    });
-
 });
 
 module.exports = Router;

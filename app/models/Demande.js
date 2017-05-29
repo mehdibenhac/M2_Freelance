@@ -6,9 +6,12 @@ var demandeSchema = mongoose.Schema({
         type: String,
         default: shortid.generate
     },
-    userID: {
-        type: String,
-        ref: 'User'
+    profil: {
+        accountType: String,
+        ID: {
+            type: String,
+            refPath: 'profil.accountType'
+        }
     },
     justificatifs: [{
         url: String,
@@ -26,7 +29,7 @@ var demandeSchema = mongoose.Schema({
         default: Date.now()
     },
     dateTreated: Date,
-    state: String
+    status: String
 });
 
 var Demande = mongoose.model('Demande', demandeSchema);

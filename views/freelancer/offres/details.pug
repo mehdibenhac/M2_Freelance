@@ -1,0 +1,168 @@
+extends /views/layout/layout
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.teal.inverted.segment
+            h3.ui.header
+                i.newspaper.icon
+                .content    Details de l'offre (ID: #{offre._id})
+        .ui.two.column.stackable.grid
+            .twelve.wide.column
+                .ui.two.column.stackable.grid
+                    .three.column.row
+                        .column
+                            a.ui.labeled.icon.teal.fluid.button(href="/freelancer/offres") 
+                                i.reply.icon
+                                | Liste des offres
+                        .column
+                            a.ui.labeled.icon.teal.fluid.button(href="/freelancer/postulats") 
+                                i.wait.icon
+                                | Liste des postulats
+                        .column
+                            a.ui.labeled.icon.teal.fluid.button(href="") 
+                                i.mail.icon
+                                | Contacter l'employeur
+                    .row
+                        .six.wide.column
+                            .ui.fluid.card
+                                .center.aligned.content
+                                    h3.ui.teal.header Employeur
+                                .image
+                                    img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+                                .content
+                                    h4.ui.header 
+                                        i.hashtag.icon                         
+                                        .content #{offre.employeur._id}
+                                            .sub.header ID
+                                .content
+                                    h4.ui.header 
+                                        i.user.icon    
+                                        .content #{offre.employeur.nom}
+                                            .sub.header Nom
+                                .content
+                                    h4.ui.header 
+                                        i.ellipsis.horizontal.icon
+                                        .content #{offre.employeur.pnom}
+                                            .sub.header Prénom
+                                .content
+                                    h4.ui.header 
+                                        i.call.icon
+                                        .content #{offre.employeur.telephone}
+                                            .sub.header Numéro de téléphone
+                                .content
+                                    h4.ui.header 
+                                        i.mail.icon
+                                        .content #{offre.employeur.email}
+                                            .sub.header Adresse Mail
+                                .content
+                                    h4.ui.header 
+                                        i.map.icon
+                                        .content #{offre.employeur.wilayaAdr}
+                                            .sub.header Wilaya
+                        .ten.wide.column
+                            .ui.padded.teal.segment
+                                .ui.padded.vertical.segments
+                                    .ui.segment
+                                        h3.ui.header 
+                                            i.hashtag.icon
+                                            .content   #{offre._id}
+                                                .sub.header ID de l'offre
+                                    .ui.segment
+                                        h3.ui.header 
+                                            i.flag.icon
+                                            .content   #{offre.etat}
+                                                .sub.header Etat de l'offre
+                                    .ui.segment
+                                        h3.ui.header 
+                                            i.ellipsis.horizontal.icon
+                                            .content   #{offre.titre}
+                                                .sub.header Titre de l'offre
+                                    .ui.segment
+                                        h3.ui.header 
+                                            i.student.icon
+                                            .content   #{offre.competence.titre}
+                                                .sub.header Compétence requise
+                                    .ui.segment
+                                        h3.ui.header 
+                                            i.maps.pin.icon
+                                            .content   #{offre.localisation}
+                                                .sub.header Localisation
+                                    .ui.segment            
+                                        h3.ui.header 
+                                            i.write.icon
+                                            .content Description de l'offre 
+                                                .sub.header #{offre.description}
+                                    .ui.horizontal.segments
+                                        .ui.basic.segment
+                                            h3.ui.header 
+                                                i.hourglass.start.icon
+                                                .content  #{offre.duree_min} Jour(s)
+                                                    .sub.header Durée minimum estimée        
+                                        .ui.basic.segment
+                                            h3.ui.header 
+                                                i.hourglass.end.icon
+                                                .content  #{offre.duree_max} Jours
+                                                    .sub.header Durée maximum estimée  
+                                    .ui.segment
+                                        h3.ui.header 
+                                            i.linkify.icon
+                                            a.content(href= offre.url_conditions) Conditions   
+                                    if offre.url_autre != ""
+                                        .ui.segment
+                                            h3.ui.header 
+                                                i.linkify.icon
+                                                a.content(href= offre.url_autre) Piéces jointes
+            .four.wide.column
+                .ui.inverted.teal.segment
+                    h3.ui.header
+                        i.users.icon
+                        .content    Postulants (#{offre.postulants.length}/10)
+                .ui.segment
+                    if user.isValid
+                        if  (offre.postulants.length >= 10)
+                            h4.ui.red.header
+                                i.info.icon
+                                .content Nombre de postulants maximum atteint
+                        else
+                            .ui.toggle.checkbox
+                                if (_.any(offre.postulants, function(postulant){ return postulant._id === user._id }))
+                                    input(type="hidden" id="offreID" value=offre._id)
+                                    input(type="checkbox" id="postulator" class="hidden" value="true" checked)
+                                    label(id="postulatorLabel") Postulé
+                                else
+                                    input(type="hidden" id="offreID" value=offre._id)
+                                    input(type="checkbox" id="postulator" class="hidden" value="false")
+                                    label(id="postulatorLabel") Postuler
+                    else if !user.isValid && _.any(offre.postulants, function(postulant){ return postulant._id === user._id })
+                        .ui.toggle.checkbox
+                            input(type="hidden" id="offreID" value=offre._id)
+                            input(type="checkbox" id="postulator" class="hidden" value="true" checked)
+                            label(id="postulatorLabel") Postulé
+                    else
+                        h4.ui.red.header
+                                i.info.icon
+                                .content Votre compte n'est pas validé. Vous ne pouvez pas postuler.
+                .ui.padded.teal.segment
+                    if offre.postulants.length > 0
+                            each postulant, index in offre.postulants
+                                h4.ui.dividing.header 
+                                    i.user.icon
+                                    .content  #{postulant.nom}
+                                        .sub.header #{postulant.pnom} 
+                    else
+                        .ui.info.icon.message
+                            i.info.icon
+                            | Aucun postulant à afficher.
+    .ui.modal
+        h2.ui.header
+            i.help.circle.icon 
+            .content Supprimer l'offre ?
+        .content Êtes-vous sûr de vouloir supprimer cette offre ?
+        .center.aligned.actions
+            .ui.cancel.red.button Annuler
+            .ui.approve.teal.button Valider   

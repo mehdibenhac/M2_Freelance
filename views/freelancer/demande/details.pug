@@ -5,7 +5,6 @@ block user
         h3.ui.header.inverted
             img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
             .content  #{user.nom}
-                .sub.header #{user.userID.accountType}
 block content
     .ui.container
         .ui.two.columns.grid
@@ -46,16 +45,12 @@ block content
                     .content   #{demande._id}
                         .sub.header ID de la demande
                 h4.ui.header 
-                    i.user.icon
-                    .content   #{user.userID._id}
-                        .sub.header ID de l'utilisateur
-                h4.ui.header 
                     i.hourglass.half.icon
-                    .content   #{(demande.state === "pending") ? "En attente de traitement" : " Huh ? Mehdi!"}
+                    .content   #{(demande.status === "pending") ? "En attente de traitement" : " Huh ? Mehdi!"}
                         .sub.header Etat de la demande
                 h4.ui.header 
                     i.calendar.icon
-                    .content   #{dateCreated}
+                    .content   #{moment(demande.dateCreated).format('D MMMM YYYY')}
                         .sub.header Date d'enregistrement de la demande
                 h4.ui.header 
                     i.legal.icon

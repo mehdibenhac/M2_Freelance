@@ -5,7 +5,6 @@ block user
         h3.ui.header.inverted
             img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
             .content  #{user.nom}
-                .sub.header #{user.accountType}
 block content
     .ui.container
         .ui.four.columns.stackable.grid
@@ -87,12 +86,12 @@ block content
                     .content
                         h4.ui.header 
                             i.tag.icon
-                            .content #{user.userID.accountType}
+                            .content #{user.userID.profil.accountType}
                                 .sub.header Type de compte
                     .content
                         h4.ui.header 
-                            i.calendar.outline.icon
-                            .content #{dateCreated}
+                            i.calendar.icon
+                            .content #{moment(user.dateCreated).format('D MMMM YYYY')}
                                 .sub.header Date de création
             .twelve.wide.column
                 .ui.teal.inverted.segment
@@ -115,7 +114,7 @@ block content
                                 .sub.header Sexe
                         h4.ui.header 
                             i.calendar.icon 
-                            .content   #{dateNaiss}
+                            .content   #{moment(user.dateNaiss).format('D MMMM YYYY')}
                                 .sub.header Date de naissance
                         h4.ui.header 
                             i.marker.icon 

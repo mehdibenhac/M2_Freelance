@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var passportLocalMongoose = require('passport-local-mongoose');
 var shortid = require('shortid');
 
+
 var userSchema = mongoose.Schema({
     _id: {
         type: String,
@@ -9,17 +10,13 @@ var userSchema = mongoose.Schema({
     },
     username: String,
     password: String,
-    accountType: String,
-    notifications: [{
-        titre: String,
-        contenu: String,
-        lu: Boolean,
-        date_ajout: {
-            type: Date,
-            default: Date.now()
-        },
-        date_lu: Date
-    }],
+    profil: {
+        accountType: String,
+        ID: {
+            type: String,
+            refPath: 'profil.accountType'
+        }
+    },
     messages_envoyes: [{
         type: String,
         ref: 'Message'
@@ -28,15 +25,13 @@ var userSchema = mongoose.Schema({
         type: String,
         ref: 'Message'
     }],
-    demandes: [{
-        type: String,
-        ref: 'Demande'
-    }],
     dateCreated: {
         type: Date,
         default: Date.now()
     }
 });
+
+
 
 userSchema.plugin(passportLocalMongoose);
 

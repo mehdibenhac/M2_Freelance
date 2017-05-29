@@ -90,8 +90,8 @@ Router.put('/profil', middleware.isLoggedIn, middleware.isFreelancer, function (
 
 Router.get('/competences', middleware.isLoggedIn, middleware.isFreelancer, function (req, res) {
     Demande.findOne({
-        userID: req.user._id,
-        state: 'pending'
+        "profil.ID": req.user.profil.ID,
+        "status": "pending"
     }, function (err, demande) {
         if (err) {
             console.log(err.stack)
@@ -171,8 +171,8 @@ Router.put('/competences', function (req, res, next) {
 
 Router.get('/validate', function (req, res, next) {
     Demande.findOne({
-        'userID': req.user._id,
-        'state': 'pending'
+        "profil.ID": req.user.profil.ID,
+        "status": 'pending'
     }, function (err, demande) {
         if (err) {
             console.log(err.stack)
@@ -202,8 +202,8 @@ Router.get('/validate', function (req, res, next) {
 });
 Router.post('/validate', upload.any(), function (req, res, next) {
     var newDemande = new Demande({
-        userID: req.user._id,
-        state: 'pending'
+        profil: req.user.profil,
+        status: 'pending'
     });
     for (var i = 0; i < req.files.length; i++) {
         var newJustificatif = {
@@ -213,14 +213,6 @@ Router.post('/validate', upload.any(), function (req, res, next) {
         newDemande.justificatifs.push(newJustificatif);
     };
     newDemande.save(function (err, createdDemande) {
-        if (err) {
-            return next(err);
-        }
-        User.findByIdAndUpdate(req.user._id, {
-            $push: {
-                demandes: createdDemande
-            }
-        }, function (err, user) {});
         if (err) {
             console.log(err.stack)
             return next(err);

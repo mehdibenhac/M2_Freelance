@@ -11,7 +11,7 @@ block content
         .ui.teal.inverted.segment
             h3.ui.header
                 i.list.icon
-                .content    Liste des offres disponibles : (#{offres.length} offres trouvées)
+                .content    Liste de vos postulats: (#{offres.length} postulats trouvées)
         .ui.teal.segment
             form.ui.form(action="" method="GET" role="form")
                     .fields
@@ -44,7 +44,7 @@ block content
                 .ui.info.icon.message
                     i.info.icon
                     .content 
-                        .header Aucune offre n'est disponible!
+                        .header Aucune postulat à afficher!
             else
                 if user.isValid == false
                     .ui.negative.icon.message

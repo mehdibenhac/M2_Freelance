@@ -25,13 +25,13 @@ block content
                         input(type="text" name="titreOffre" placeholder="Titre de l'offre")
                     .field
                         label Compétence concernée
-                        select(type="text" class="ui dropdown" name="competOffre" placeholder="Titre de l'offre")
+                        select(type="text" class="ui dropdown" required maxlength="50" name="competOffre" placeholder="Titre de l'offre")
                             option(value="" selected disabled) Compétence concernée par l'offre
                             each competence in competences
                                 option(value=competence._id) #{competence.titre}
                     .field
                         label Description
-                        textarea.textarea(name="descriptionOffre" placeholder="Description de votre offre")
+                        textarea.textarea(name="descriptionOffre" required maxlength="1000" placeholder="Description de votre offre")
                     .inline.fields
                         label Localisation :
                         .field

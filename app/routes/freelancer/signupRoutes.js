@@ -132,20 +132,29 @@ Router.post('/final', upload.any(), function (req, res, next) {
     var skip = req.query.skip;
     var freelancerData = req.session.signup.profile;
     var password = req.session.signup.account.password;
-    var userData = req.session.signup.account;
-    delete userData["password"];
+    var newFreelancer = new Freelancer(freelancerData);
+    var newUser = new User({
+        username: req.session.signup.account.username,
+        profil: {
+            accountType: "Freelancer",
+            ID: newFreelancer._id
+        }
+    });
+    newFreelancer.userID = newUser._id;
+    console.log(newUser);
     if (skip === "false") {
-        var newUser = new User(userData);
         var newDemande = new Demande({
-            userID: newUser._id,
-            state: 'pending'
+            profil: {
+                accountType: "Freelancer",
+                ID: newFreelancer._id
+            },
+            status: 'pending'
         });
         for (var i = 0; i < req.files.length; i++) {
             var newJustificatif = {
                 url: '/static/uploads/' + req.files[i].filename,
                 competence: req.body["idCompetenceJustif" + i]
             };
-            console.log(newJustificatif);
             newDemande.justificatifs.push(newJustificatif);
         }
         newDemande.save(function (err, createdDemande) {
@@ -153,24 +162,16 @@ Router.post('/final', upload.any(), function (req, res, next) {
                 console.log(err.stack)
                 return next(err);
             }
-            newUser.demandes.push(createdDemande);
-            User.register(newUser, password, function (err, createdUser) {
+            newFreelancer.save(function (err, createdFreelancer) {
                 if (err) {
+                    console.log(err.stack)
                     return next(err);
                 }
-                console.log('Freelancer created! Nanerr');
-                var newFreelancer = new Freelancer(freelancerData);
-                newFreelancer.userID = createdUser._id;
-                newFreelancer.save(function (err, createdFreelancer) {
+                User.register(newUser, password, function (err, createdUser) {
                     if (err) {
+                        console.log(err.stack)
                         return next(err);
                     }
-                    console.log('Freelancer created with userID: ' + createdUser._id);
-
-                    if (err) {
-                        return next(err);
-                    }
-                    console.log('Demande created!');
                     req.session.destroy();
                     res.send({
                         message: 'Freelancer créé avec succés!',
@@ -178,19 +179,16 @@ Router.post('/final', upload.any(), function (req, res, next) {
                         Freelancer: createdFreelancer,
                         Demande: createdDemande
                     });
-                })
+                });
             });
         });
 
     } else if (skip === "true") {
-        var newUser = new User(userData);
         User.register(newUser, password, function (err, createdUser) {
             if (err) {
                 return next(err);
             }
             console.log('User created!');
-            var newFreelancer = new Freelancer(freelancerData);
-            newFreelancer.userID = createdUser._id;
             newFreelancer.save(function (err, createdFreelancer) {
                 if (err) {
                     return next(err);

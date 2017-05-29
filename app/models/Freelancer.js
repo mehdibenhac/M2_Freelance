@@ -40,6 +40,10 @@ var freelancerSchema = mongoose.Schema({
             ref: 'contrat'
         }
     }],
+    dateCreated: {
+        type: Date,
+        default: Date.now()
+    },
     lastModified: Date,
     parametres: {
         disponibilite: {

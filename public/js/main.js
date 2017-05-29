@@ -5,6 +5,10 @@ $(document).ready(function () {
         .checkbox();
     $('.ui.checkbox')
         .checkbox();
+    $('#sidebaror').click(function () {
+        $('.ui.wide.sidebar')
+            .sidebar('toggle');
+    });
     $('#offresTable').tablesorter({
         dateFormat: "ddmmyyyy"
     });

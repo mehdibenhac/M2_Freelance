@@ -19,26 +19,27 @@ include /views/layout/head
             .msgNotifs
                 div(class="ui teal two item inverted compact stackable menu")
                     a.item
-                        i.mail.icon 
-                        .floating.ui.label 0                        
+                        i.mail.icon                        
                     a.item
                         i.bell.icon
-                        div(class=(notifCount>0) ? "floating ui red label" : "floating ui label") #{notifCount} 
             .ui.info.message 
                 i.close.icon
                 .header Freelancer
                 p Vous êtes actuellement connecté en tant que Freelancer
             .ui.large.vertical.secondary.fluid.pointing.inverted.menu
-                a.active.item 
+                a(class= ( currentRoute === 'profil' ? "active item" : "item" ) href="/freelancer/") 
                     i.user.icon
                     | Profil
-                a.item
+                a(class= ( currentRoute === 'offres' ? "active item" : "item" ) href="/freelancer/offres") 
                     i.tasks.icon
                     | Offres
-                a.item
+                a(class= ( currentRoute === 'postulats' ? "active item" : "item" ) href="/freelancer/postulats") 
+                    i.wait.icon
+                    | Postulats
+                a(class= ( currentRoute === 'contrats' ? "active item" : "item" ) href="/freelancer/contrats") 
                     i.suitcase.icon
                     | Contrats
-                a.item
+                a(class= ( currentRoute === 'employeurs' ? "active item" : "item" ) href="/freelancer/employeurs") 
                     i.sitemap.icon
                     | Employeurs
             .ui.divider

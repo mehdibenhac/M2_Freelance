@@ -41,11 +41,8 @@ Router.get('/', function (req, res, next) {
         }
         if (employeur !== null) {
             Offre.find({
-                employeur: req.user._id
+                employeur: employeur._id
             }).populate('competence').exec(function (err, offres) {
-                for (var i = 0; i < offres.length; i++) {
-                    offres[i].formattedDate = moment(offres[i].dateAjout).format('DD/MM/YYYY HH:mm');
-                }
                 var offresCount = offres.length;
                 res.render('employeur/offres/list', {
                     currentRoute: 'offres',
@@ -63,18 +60,6 @@ Router.get('/', function (req, res, next) {
     })
 });
 Router.get('/ajout', function (req, res, next) {
-    Offre.count({
-        employeur: req.user._id
-    }, function (err, offresCount) {
-        if (err) {
-            console.log(err.stack)
-            return next(err);
-        }
-        if (offresCount >= 10) {
-            req.flash('quotaOffres', 'Attention! vous ne pouvez plus ajouter d\'offres car vous avez atteint votre quota.');
-            return res.redirect('/employeur/offres');
-        }
-    });
     Employeur.findOne({
         userID: req.user._id
     }).populate('userID').exec(function (err, employeur) {
@@ -83,20 +68,32 @@ Router.get('/ajout', function (req, res, next) {
             return next(err);
         }
         if (employeur !== null) {
-            Competence.find(function (err, competences) {
+            Offre.count({
+                employeur: employeur._id
+            }, function (err, offresCount) {
                 if (err) {
                     console.log(err.stack)
                     return next(err);
                 }
-                if (competences.length > 0) {
-                    res.render('employeur/offres/ajout', {
-                        currentRoute: 'offres',
-                        user: employeur,
-                        competences: competences
-                    })
-                } else {
-                    res.send('Competences null');
+                if (offresCount >= 10) {
+                    req.flash('quotaOffres', 'Attention! vous ne pouvez plus ajouter d\'offres car vous avez atteint votre quota.');
+                    return res.redirect('/employeur/offres');
                 }
+                Competence.find(function (err, competences) {
+                    if (err) {
+                        console.log(err.stack)
+                        return next(err);
+                    }
+                    if (competences.length > 0) {
+                        res.render('employeur/offres/ajout', {
+                            currentRoute: 'offres',
+                            user: employeur,
+                            competences: competences
+                        })
+                    } else {
+                        res.send('Competences null');
+                    }
+                });
             });
         } else {
             res.send('Employeur null')
@@ -116,7 +113,7 @@ Router.post('/ajout', upload.any(), function (req, res, next) {
         description: req.body.descriptionOffre,
         duree_min: req.body.dureeMin,
         duree_max: req.body.dureeMax,
-        employeur: req.user._id,
+        employeur: req.user.profil.ID,
         url_conditions: url_conditions,
         url_autre: url_autre,
         localisation: req.body.localOffre

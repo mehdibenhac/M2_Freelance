@@ -10,6 +10,7 @@ module.exports = function (app) {
     var freelancerModifier = require('./routes/freelancer/modifierRoutes.js');
     var freelancerDemande = require('./routes/freelancer/demandeRoutes.js');
     var freelancerOffres = require('./routes/freelancer/offresRoutes.js');
+    var freelancerPostulats = require('./routes/freelancer/postulatsRoutes.js');
     // Employeur Routes
     var employeurIndex = require('./routes/employeur/indexRoutes.js');
     var employeurSignup = require('./routes/employeur/signupRoutes.js');
@@ -32,6 +33,7 @@ module.exports = function (app) {
     app.use('/freelancer/modifier', freelancerModifier);
     app.use('/freelancer/offres', freelancerOffres);
     app.use('/freelancer/demande', freelancerDemande);
+    app.use('/freelancer/postulats', freelancerPostulats);
     // Employeur
     app.use('/employeur', employeurIndex);
     app.use('/employeur/modifier', employeurModifier);

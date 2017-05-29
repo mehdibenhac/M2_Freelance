@@ -25,6 +25,10 @@ var employeurSchema = mongoose.Schema({
     lotissementAdr: String,
     email: String,
     telephone: String,
+    dateCreated: {
+        type: Date,
+        default: Date.now()
+    },
     lastModified: Date,
     domaines: [{
         type: String,

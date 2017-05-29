@@ -15,7 +15,7 @@ block content
                         i.list.icon
                         .content    Liste de vos offres :
             .four.wide.column   
-                a.ui.violet.labeled.icon.big.fluid.button(href="offres/ajout" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) 
+                a.ui.violet.labeled.icon.circular.fluid.button(href="offres/ajout" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) 
                     i.add.icon
                     | Ajouter une offre
         .ui.padded.violet.segment
@@ -44,7 +44,7 @@ block content
                             .content 
                                 .header Vous avez atteint votre quota d'offres!
                                 p Vous avez dèja posté dix offres ouvertes.
-                    table.ui.sortable.large.padded.striped.basic.five.column.table(id="offresTable")
+                    table.ui.sortable.padded.striped.basic.five.column.table(id="offresTable")
                         thead
                             tr
                                 th ID (#{offres.length}/10) 
@@ -74,7 +74,7 @@ block content
                                     p #{offre.postulants.length}
                                 td.three.wide.center.aligned 
                                     i.calendar.icon
-                                    | #{offre.formattedDate}
+                                    | #{moment(offre.dateAjout).format('D MMMM YYYY hh:mm')}
 
                     //- .ui.stackable.three.column.grid
                     //-     each offre, index in offres
