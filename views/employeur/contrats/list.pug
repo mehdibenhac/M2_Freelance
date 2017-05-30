@@ -1,0 +1,95 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.two.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .fourteen.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste de vos contrats (#{contrats.length}) :
+        .ui.padded.violet.segment
+            form.ui.form(action="" method="GET" role="form")
+                .equal.width.fields
+                    .field
+                        .ui.icon.input
+                            input(type="text" name="searchOffre" placeholder="Titre de l'offre...")
+                            i.search.icon
+                    .field
+                        .ui.icon.input
+                            input(type="text" name="searchNom" placeholder="Nom du freelancer...")
+                            i.search.icon
+                    .field
+                        .ui.icon.input
+                            input(type="text" name="searchPnom" placeholder="Prénom du freelancer...")
+                            i.search.icon
+                    .field
+                        select(class="ui dropdown" name="etat")
+                            option(value="" disabled selected) Etat du contrat...
+                            option(value="Négociation") En cours de négociation
+                            option(value="Ouvert") Ouvert
+                            option(value="Fermé") Fermé
+                    .two.fields
+                        .field
+                            button.ui.yellow.icon.fluid.button(type="reset")
+                                i.refresh.icon
+                        .field
+                            button.ui.teal.icon.fluid.button.submit
+                                i.search.icon
+            .ui.divider
+            if contrats.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    .content 
+                        .header Vous n'avez aucun contrat à afficher
+            else
+                table.ui.sortable.padded.striped.basic.five.column.table(id="offresTable")
+                    thead
+                        tr
+                            th ID 
+                                i.caret.down.icon
+                            th Offre
+                                i.caret.down.icon
+                            th Freelancer
+                                i.caret.down.icon
+                            th Etat
+                                i.caret.down.icon
+                            th Jours restants
+                                i.caret.down.icon
+                    tbody
+                        each contrat, index in contrats
+                            tr 
+                                td.two.wide 
+                                    a(href="/employeur/contrats/details/"+contrat._id)
+                                        i.hashtag.icon
+                                        | #{contrat._id}
+                                td.five.wide 
+                                    i.newspaper.icon 
+                                    | #{contrat.offre.titre}
+                                td.five.wide.left.aligned
+                                    i.user.icon
+                                    |  #{contrat.freelancer.nom}, #{contrat.freelancer.pnom}
+                                case contrat.etat
+                                    when "Négociation"
+                                        td.two.wide.left.warning.aligned
+                                            i.wait.icon
+                                            |  #{contrat.etat}
+                                    when "Ouvert"
+                                        td.two.wide.left.positive.aligned
+                                            i.circle.thin.icon
+                                            |  #{contrat.etat}
+                                    when "Fermé"
+                                        td.two.wide.left.negative.aligned
+                                            i.circle.icon
+                                            |  #{contrat.etat}
+                                td.two.wide.center.aligned 
+                                    i.calendar.icon
+                                    | #{moment(contrat.dateFin).fromNow(true)}

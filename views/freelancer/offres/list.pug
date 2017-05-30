@@ -8,10 +8,15 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.teal.inverted.segment
-            h3.ui.header
-                i.list.icon
-                .content    Liste des offres disponibles : (#{offres.length} offres trouvées)
+        .ui.two.column.grid
+            .two.wide.column
+                a.ui.blue.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .fourteen.wide.column
+                .ui.teal.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste des offres disponibles : (#{offres.length} offres trouvées)
         .ui.teal.segment
             form.ui.form(action="" method="GET" role="form")
                     .fields

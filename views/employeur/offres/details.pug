@@ -8,36 +8,41 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.violet.inverted.segment
-            h3.ui.header
-                i.newspaper.icon
-                .content    Details de l'offre (ID: #{offre._id})
+        .ui.three.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.newspaper.icon
+                        .content    Détails de l'offre (##{offre._id}) :
+            .four.wide.column   
+                a.ui.violet.labeled.icon.huge.fluid.button(href="/employeur/offres/" ) 
+                    i.reply.icon
+                    | Retour
         .ui.stackable.two.column.grid
             .four.wide.column
-                a.ui.violet.labeled.fluid.icon.button(href="/employeur/offres")
-                    i.reply.icon
-                    | Retour aux offres
-                br
                 form.ui.form(action="?_method=DELETE" method="Post")
                     button.ui.yellow.fluid.labeled.icon.validateModal.button(type="button")
                         i.remove.icon
                         | Supprimer l'offre
                 br
-                a.ui.blue.fluid.labeled.icon.button(href="")
+                a.ui.purple.fluid.labeled.icon.button(href="")
                     i.edit.icon
                     | Modifier l'offre
                 .ui.inverted.violet.segment
                     h3.ui.header
                         i.users.icon
-                        .content    Postulants  
+                        .content    Postulants (#{offre.postulants.length}/10)  
                 .ui.padded.violet.segment
                     if offre.postulants.length > 0
-                            .ui.vertical.segments
-                                each postulant, index in offre.postulants
-                                    h4.ui.header 
-                                        i.hourglass.end.icon
-                                        .content  #{postulant._id}
-                                            .sub.header #{postulant.nom} 
+                        each postulant, index in offre.postulants
+                            h4.ui.header 
+                                i.user.icon
+                                .content  #{postulant._id}
+                                    .sub.header #{postulant.nom}
+                            .ui.divider 
                     else
                         .ui.info.icon.message
                             i.info.icon

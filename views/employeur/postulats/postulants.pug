@@ -1,0 +1,103 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.three.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .eleven.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.users.icon
+                        .content    Liste des postulants pour l'offre ##{offre._id} :
+            .three.wide.column   
+                a.ui.violet.labeled.icon.huge.fluid.button(href="/employeur/postulats/") 
+                    i.reply.icon
+                    | Retour
+        .ui.padded.violet.segment
+            h3.ui.dividing.header
+                i.book.icon
+                .content Détails de l'offre:
+            .ui.padded.basic.segment
+                .ui.two.column.stackable.grid
+                    .eight.wide.column
+                        h3.ui.header 
+                            i.hashtag.icon
+                            .content   #{offre._id}
+                                .sub.header ID de l'offre
+                        h3.ui.header 
+                            i.flag.icon
+                            .content   #{offre.etat}
+                                .sub.header Etat de l'offre
+                        h3.ui.header 
+                            i.ellipsis.horizontal.icon
+                            .content   #{offre.titre}
+                                .sub.header Titre de l'offre
+                    .eight.wide.column
+                        h3.ui.header 
+                            i.maps.pin.icon
+                            .content   #{offre.localisation}
+                                .sub.header Localisation
+                        h3.ui.header 
+                            i.student.icon
+                            .content   #{offre.competence.titre}
+                                .sub.header Compétence requise
+                        .ui.two.column.grid
+                            .row
+                                .column
+                                    h3.ui.header 
+                                        i.hourglass.start.icon
+                                        .content  #{offre.duree_min} Jour(s)
+                                            .sub.header Durée minimum estimée        
+                                .column
+                                    h3.ui.header 
+                                        i.hourglass.end.icon
+                                        .content  #{offre.duree_max} Jours
+                                            .sub.header Durée maximum estimée
+            h3.ui.dividing.header
+                i.list.icon
+                .content liste des postulants
+            if postulants.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    | Aucun postulant à afficher
+            else
+                .ui.divided.items
+                    each postulant in postulants
+                        .item
+                            .ui.small.image
+                                img(src="/static/images/male.png")
+                            .content
+                                a.header #{postulant.nom}, #{postulant.pnom}
+                                .meta  Offres complétées: #{postulant.notations.length}
+                                .ui.star.large.rating(data-rating=Math.round(postulant.note_moy) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(postulant.note_moy*100)/100)
+                                .description
+                                    .ui.large.list
+                                        .item
+                                            i.birthday.icon
+                                            .content 
+                                                | #{moment(postulant.dateNaiss).fromNow(true)}
+                                        .item
+                                            i.maps.pin.icon
+                                            .content  
+                                                | #{postulant.wilayaAdr}, #{postulant.communeAdr}, #{postulant.quartierAdr}, lot: #{postulant.lotissementAdr}
+                                        .item
+                                            i.at.icon
+                                            .content 
+                                                | #{postulant.email}
+                                        .item
+                                            i.call.icon
+                                            .content  
+                                                | #{postulant.telephone}
+                                .extra
+                                    form.ui.form(action=offre._id+"/contrat" method="get")
+                                        input(type="hidden" name="idUser" value=postulant._id)
+                                        .ui.purple.right.floated.labeled.icon.submit.button
+                                            i.legal.icon
+                                            | Etablir un contrat

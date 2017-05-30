@@ -7,13 +7,17 @@ block user
             .content  #{user.nom}
 block content
     .ui.container
-        .ui.two.columns.grid
+        .ui.three.column.grid
+            .wide.column
+                a.ui.blue.labeled.icon.fluid.button(id="sidebaror")
+                    i.content.icon
+                    | Menu
             .column
-                a.ui.blue.labeled.icon.fluid.big.button(href="/freelancer")
+                a.ui.blue.labeled.icon.fluid.button(href="/freelancer")
                     i.user.icon
                     | Retourner au profil
             .column
-                a.ui.blue.labeled.icon.fluid.big.button(href="/freelancer/modifier/profil")
+                a.ui.blue.labeled.icon.fluid.button(href="/freelancer/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
         if demandeTrouvee != ""

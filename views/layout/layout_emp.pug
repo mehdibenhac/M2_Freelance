@@ -1,59 +1,67 @@
-include /views/layout/head
-
-.ui.two.columns.grid.stackable.main
-    .three.wide.column.left
-        .ui.container
-            block user
-            if (user.isValid === true)
-                .ui.violet.segment
-                    h5.ui.header
-                        i.checkmark.circle.icon
-                        .content
-                            .header Profil validé
-            else
-                .ui.red.segment
-                    h5.ui.header
-                        i.remove.circle.icon
-                        .content Profil non validé
-                            .sub.header Votre demande est en cours de traitement.
-            .msgNotifs
-                div(class="ui violet two item inverted compact stackable menu")
+doctype
+html
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+        title Fennec Freelance
+        link(rel="stylesheet" href="/static/semantic/dist/semantic.min.css")
+        link(rel="stylesheet" href="/static/css/main.css")
+        script(src="/static/js/jquery-3.2.1.min.js")
+        script(src="/static/semantic/dist/semantic.min.js")
+        script(src="/static/js/main.js")
+        script(src="/static/js/ajax.js")
+        script(src="/static/js/jquery.tablesorter.min.js")
+    body
+        .ui.left.inverted.vertical.menu.sidebar
+            .ui.basic.segment
+                block user
+                if (user.isValid === true)
+                    .ui.violet.inverted.segment
+                        h5.ui.center.aligned.header(data-tooltip="Profil validé.")
+                            i.green.building.icon
+                            | Employeur
+                else
+                    .ui.violet.inverted.segment
+                        h5.ui.center.aligned.header(data-tooltip="Profil non validé.")
+                            i.red.building.icon
+                            | Employeur
+                .ui.two.column.grid
+                    .column
+                        .ui.violet.icon.fluid.button
+                            i.mail.icon
+                    .column   
+                        .ui.violet.icon.fluid.button
+                            i.alarm.icon
+                .ui.divider     
+                .ui.large.vertical.secondary.fluid.pointing.inverted.menu
+                    a(class= ( currentRoute === 'profil' ? "active item" : "item" ) href="/employeur/") 
+                        i.user.icon
+                        | Profil
+                    a(class= ( currentRoute === 'offres' ? "active item" : "item" ) href="/employeur/offres") 
+                        i.tasks.icon
+                        | Offres
+                    a(class= ( currentRoute === 'postulats' ? "active item" : "item" ) href="/employeur/postulats") 
+                        i.wait.icon
+                        | Postulats
+                    a(class= ( currentRoute === 'contrats' ? "active item" : "item" ) href="/employeur/contrats") 
+                        i.suitcase.icon
+                        | Contrats
+                    a(class= ( currentRoute === 'employeurs' ? "active item" : "item" ) href="/employeur/freelancers") 
+                        i.sitemap.icon
+                        | Freelancers
+                .ui.divider
+                .ui.large.vertical.secondary.fluid.pointing.inverted.menu
                     a.item
-                        i.inbox.icon 
+                        i.home.icon
+                        | Accueil
+                    a.item 
+                        i.info.icon
+                        | Informations
                     a.item
-                        i.alarm.icon
-            .ui.info.message 
-                i.close.icon
-                .header Employeur
-                p Vous êtes actuellement connecté en tant qu'employeur.
-            .ui.large.vertical.secondary.fluid.pointing.inverted.menu
-                a(class= ( currentRoute === 'profil' ? "active item" : "item" )  href="/employeur/")
-                    i.user.icon
-                    | Profil
-                a(class= ( currentRoute === 'offres' ? "active item" : "item" )  href="/employeur/offres")
-                    i.tasks.icon
-                    | Offres
-                a(class= ( currentRoute === 'contrats' ? "active item" : "item" )  href="/employeur/contrats")
-                    i.suitcase.icon
-                    | Contrats
-                a(class= ( currentRoute === 'freelancers' ? "active item" : "item" )  href="/employeur/freelancers")
-                    i.sitemap.icon
-                    | Freelancers
-            .ui.divider
-            .ui.large.vertical.secondary.fluid.pointing.inverted.menu
-                a.item(href="/employeur/offres")
-                    i.home.icon
-                    | Accueil
-                a(class= ( currentRoute === 'informations' ? "active item" : "item" )  href="/employeur/informations") 
-                    i.info.icon
-                    | Informations
-                a(class= ( currentRoute === 'support' ? "active item" : "item" )  href="/employeur/support") 
-                    i.help.circle.icon
-                    | Support
-                a.item(href="/logout") 
-                    i.power.icon
-                    | Déconnexion
-            .ui.basic.segment(style="padding:0; margin:0")
-                img.ui.centered.small.image(src="/static/images/logo_full2.png")
-    .thirteen.wide.column.main
-        block content
+                        i.help.circle.icon
+                        | Support
+                    a.item(href="/logout") 
+                        i.power.icon
+                        | Déconnexion                 
+        .pusher
+            block content

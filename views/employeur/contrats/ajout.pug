@@ -1,0 +1,172 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.three.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .eleven.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.legal.icon
+                        .content  Création d'un contrat :
+            .three.wide.column   
+                a.ui.violet.labeled.icon.huge.fluid.button(href="/employeur/postulats/") 
+                    i.reply.icon
+                    | Retour
+        .ui.divider
+        .ui.warning.icon.message
+            i.warning.sign.icon
+            .content Veuillez vérifier les informations ci-dessous avant de créer un contrat
+        .ui.two.column.stackable.grid
+            .six.wide.column
+                .ui.violet.inverted.segment
+                    h4.ui.centered.header Freelancer                
+                .ui.violet.segment
+                    .ui.fluid.card
+                        .ui.centered.image
+                            img(class="ui circular image" src=+ (freelancer[0].sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+                        .center.aligned.content
+                            .ui.star.huge.rating(data-rating=Math.round(freelancer[0].note_moy) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(freelancer[0].note_moy*100)/100)
+                        .content
+                            h4.ui.header 
+                                i.hashtag.icon                         
+                                .content #{freelancer[0]._id}
+                                    .sub.header ID
+                        .content
+                            h4.ui.header 
+                                i.user.icon    
+                                .content #{freelancer[0].nom}
+                                    .sub.header Nom
+                        .content
+                            h4.ui.header 
+                                i.ellipsis.horizontal.icon
+                                .content #{freelancer[0].pnom}
+                                    .sub.header Prénom
+                        .content
+                            h4.ui.header 
+                                i.call.icon
+                                .content #{freelancer[0].telephone}
+                                    .sub.header Numéro de téléphone
+                        .content
+                            h4.ui.header 
+                                i.mail.icon
+                                .content #{freelancer[0].email}
+                                    .sub.header Adresse Mail
+                        .content
+                            h4.ui.header 
+                                i.map.icon
+                                .content #{freelancer[0].wilayaAdr}
+                                    .sub.header Wilaya
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h4.ui.centered.header Offre 
+                .ui.violet.segment
+                    .ui.padded.vertical.segments
+                        .ui.segment
+                            h3.ui.header 
+                                i.hashtag.icon
+                                .content   #{offre._id}
+                                    .sub.header ID de l'offre
+                        .ui.segment
+                            h3.ui.header 
+                                i.flag.icon
+                                .content   #{offre.etat}
+                                    .sub.header Etat de l'offre
+                        .ui.segment
+                            h3.ui.header 
+                                i.ellipsis.horizontal.icon
+                                .content   #{offre.titre}
+                                    .sub.header Titre de l'offre
+                        .ui.segment
+                            h3.ui.header 
+                                i.student.icon
+                                .content   #{offre.competence.titre}
+                                    .sub.header Compétence requise
+                        .ui.segment
+                            h3.ui.header 
+                                i.maps.pin.icon
+                                .content   #{offre.localisation}
+                                    .sub.header Localisation
+                        .ui.segment            
+                            h3.ui.header 
+                                i.write.icon
+                                .content Description de l'offre 
+                                    .sub.header #{offre.description}
+                        .ui.horizontal.segments
+                            .ui.basic.segment
+                                h3.ui.header 
+                                    i.hourglass.start.icon
+                                    .content  #{offre.duree_min} Jour(s)
+                                        .sub.header Durée minimum estimée        
+                            .ui.basic.segment
+                                h3.ui.header 
+                                    i.hourglass.end.icon
+                                    .content  #{offre.duree_max} Jours
+                                        .sub.header Durée maximum estimée  
+                        .ui.segment
+                            h3.ui.header 
+                                i.linkify.icon
+                                a.content(href= offre.url_conditions) Conditions   
+                        if offre.url_autre != ""
+                            .ui.segment
+                                h3.ui.header 
+                                    i.linkify.icon
+                                    a.content(href= offre.url_autre) Piéces jointes
+        .ui.divider
+        .ui.violet.inverted.segment
+            h4.ui.centered.header Finalisation
+        .ui.violet.padded.segment
+            .ui.basic.segment
+                .ui.warning.icon.message
+                    i.warning.sign.icon
+                    .content Pour négocier la rémunération et autres détails, veuillez contacter le Freelancer directement.
+                form.ui.form.contratForm(action="contrat/fin" method="post" role="form")
+                    div.ui.error.message                    
+                    .two.fields
+                        input(type="hidden" value= freelancer[0]._id name="idFreelancer")
+                        .inline.centered.field
+                            label Date de début:
+                            input(type="Date" value= Date.now() id="dateDebut" name="dateDebut" disabled)
+                        .inline.field
+                            label Date de fin:
+                            input(type="Date" required id="dateFin"  onkeydown="return false" name="dateFin")
+                    .field
+                        .ui.checkbox
+                            input(type="checkbox" name="termes" class="hidden")
+                            label J'accèpte les termes d'utilisation de Fennec Freelance et m'engage à respecter les clauses détaillées dans l'offre
+                        .ui.padded.basic.segment
+                            .ui.list 
+                                a.item(href="/static/docs/termes.pdf")
+                                    i.linkify.icon
+                                    .content Termes d'utilisation
+                                a.item(href=offre.url_conditions)
+                                    i.linkify.icon
+                                    .content Conditions
+
+                    .field
+                        button.ui.vertical.animated.violet.validateContrat.fluid.button(type="button")
+                            .hidden.content
+                                i.checkmark.icon 
+                            .visible.content Créer le contrat
+    .ui.modal
+        h2.ui.header
+            i.help.circle.icon 
+            .content Créer le contrat ?
+        .content
+            .ui.negative.icon.message
+                i.warning.sign.icon
+                .content
+                    .header Attention! vous êtes sur le point d'établir un contrat!
+                    ul.list
+                        li Veuillez vous assurer de respecter les clause définies dans l'offre ainsi que les termes d'utilisation de Fennec Freelance.
+                        li Fennec Freelance ne sera en aucun cas tenue responsable pour votre conduite ou celle du freelancer.
+        .center.aligned.actions
+            .ui.cancel.red.button Annuler
+            .ui.approve.violet.button Valider

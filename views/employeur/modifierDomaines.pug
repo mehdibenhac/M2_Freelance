@@ -8,12 +8,15 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.two.columns.grid
-            .column
+        .ui.three.columns.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.large.button(id="sidebaror")
+                    i.content.icon
+            .seven.wide.column
                 a.ui.purple.labeled.icon.fluid.large.button(href="/employeur")
                     i.user.icon
                     | Retourner au profil
-            .column
+            .seven.wide.column
                 a.ui.purple.labeled.icon.fluid.large.button(href="/employeur/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
@@ -48,6 +51,9 @@ block content
                     .field
                         label Domaines:
                         include /views/partials/domaines_select
+                    .ui.info.icon.message
+                        i.info.icon
+                        .content Les domaines que vous sélectionnez serviront à vous référencer au prés des Freelancers.
                     .ui.basic.clearing.segment
                         button.ui.labeled.icon.right.floated.violet.validateModal.button(type="button"  disabled=( allowModif === false ) ? "" : undefined)
                             i.save.icon

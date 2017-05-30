@@ -8,13 +8,17 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.two.columns.grid
+        .ui.three.columns.grid
             .column
-                a.ui.blue.labeled.icon.fluid.large.button(href="/freelancer")
+                a.ui.blue.labeled.icon.fluid.button(id="sidebaror")
+                    i.content.icon
+                    | Menu
+            .column
+                a.ui.blue.labeled.icon.fluid.button(href="/freelancer")
                     i.user.icon
                     | Retourner au profil
             .column
-                a.ui.blue.labeled.icon.fluid.large.button(href="/freelancer/modifier/competences")
+                a.ui.blue.labeled.icon.fluid.button(href="/freelancer/modifier/competences")
                     i.student.icon
                     | Modifier les compétences
         .ui.teal.inverted.segment

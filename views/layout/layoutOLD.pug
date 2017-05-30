@@ -1,0 +1,62 @@
+include /views/layout/head
+
+.ui.two.columns.grid.stackable.main
+    .three.wide.column.left
+        .ui.container
+            block user
+            if (user.isValid === true)
+                .ui.green.segment
+                    h5.ui.header
+                        i.checkmark.circle.icon
+                        .content
+                            .header Profil validé
+            else
+                .ui.red.segment
+                    h5.ui.header
+                        i.remove.circle.icon
+                        .content Profil non validé
+                            .sub.header Si vous n'avez pas de demande en cours de traitement, veuillez en déposer une.
+            .msgNotifs
+                div(class="ui teal two item inverted compact stackable menu")
+                    a.item
+                        i.mail.icon                        
+                    a.item
+                        i.bell.icon
+            .ui.info.message 
+                i.close.icon
+                .header Freelancer
+                p Vous êtes actuellement connecté en tant que Freelancer
+            .ui.large.vertical.secondary.fluid.pointing.inverted.menu
+                a(class= ( currentRoute === 'profil' ? "active item" : "item" ) href="/freelancer/") 
+                    i.user.icon
+                    | Profil
+                a(class= ( currentRoute === 'offres' ? "active item" : "item" ) href="/freelancer/offres") 
+                    i.tasks.icon
+                    | Offres
+                a(class= ( currentRoute === 'postulats' ? "active item" : "item" ) href="/freelancer/postulats") 
+                    i.wait.icon
+                    | Postulats
+                a(class= ( currentRoute === 'contrats' ? "active item" : "item" ) href="/freelancer/contrats") 
+                    i.suitcase.icon
+                    | Contrats
+                a(class= ( currentRoute === 'employeurs' ? "active item" : "item" ) href="/freelancer/employeurs") 
+                    i.sitemap.icon
+                    | Employeurs
+            .ui.divider
+            .ui.large.vertical.secondary.fluid.pointing.inverted.menu
+                a.item
+                    i.home.icon
+                    | Accueil
+                a.item 
+                    i.info.icon
+                    | Informations
+                a.item
+                    i.help.circle.icon
+                    | Support
+                a.item(href="/logout") 
+                    i.power.icon
+                    | Déconnexion
+            .ui.basic.segment(style="padding:0; margin:0")
+                img.ui.centered.small.image(src="/static/images/logo_full2.png")
+    .thirteen.wide.column.main
+        block content

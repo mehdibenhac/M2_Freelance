@@ -86,4 +86,53 @@ Router.put('/ajax/testing', function (req, res, next) {
     // });
 });
 
+Router.get('/testAggregate', function (req, res, next) {
+    // Freelancer.aggregate([{
+    //         "$unwind": "$notations"
+    //     },
+    //     {
+    //         "$group": {
+    //             _id: null,
+    //             note_moy: {
+    //                 "$avg": "$notations.note"
+    //             }
+    //         }
+    //     }
+    // ], function (err, results) {
+    //     res.send(results);
+    // })
+    Freelancer.aggregate(
+        [{
+                $project: {
+                    nom: "$nom",
+                    pnom: "$pnom",
+                    note_Moyenne: {
+                        $divide: [{
+                            $reduce: {
+                                input: "$notations.note",
+                                initialValue: 0,
+                                in: {
+                                    $sum: ["$$value", "$$this"]
+                                }
+                            }
+                        }, {
+                            $size: "$notations"
+                        }]
+                    }
+                }
+            },
+            {
+                $sort: {
+                    note_Moyenne: -1
+                }
+            }
+        ],
+        function (err, results) {
+            res.send(results);
+        });
+});
+
+Router.get('/sidebar', function (req, res, next) {
+    res.render('sidebarTest');
+});
 module.exports = Router;

@@ -8,10 +8,15 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.teal.inverted.segment
-            h3.ui.header
-                i.list.icon
-                .content    Liste de vos postulats: (#{offres.length} postulats trouvées)
+        .ui.two.column.grid
+            .two.wide.column
+                a.ui.blue.icon.huge.fluid.button(id="sidebaror")
+                    i.content.icon
+            .fourteen.wide.column
+                .ui.teal.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste de vos postulats : (#{offres.length} postulats trouvées)
         .ui.teal.segment
             form.ui.form(action="" method="GET" role="form")
                     .fields
@@ -44,7 +49,7 @@ block content
                 .ui.info.icon.message
                     i.info.icon
                     .content 
-                        .header Aucune postulat à afficher!
+                        .header Aucun postulat à afficher!
             else
                 if user.isValid == false
                     .ui.negative.icon.message

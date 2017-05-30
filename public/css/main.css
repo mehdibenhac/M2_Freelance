@@ -1,11 +1,5 @@
 body {
-    background: #E8CBC0;
-    /* fallback for old browsers */
-    background: -webkit-linear-gradient(to bottom, #636FA4, #E8CBC0);
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to bottom, #636FA4, #E8CBC0);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background-attachment: fixed;
+    background: #333439 !important;
 }
 
 .signup {
@@ -21,6 +15,11 @@ body {
     margin: 0;
 }
 
+.pusher {
+    background: #ecf0f1 !important;
+    min-height: 100%;
+}
+
 .column.left {
     background: #333439;
 }
@@ -32,6 +31,10 @@ body {
 
 .column.main {
     background: #ecf0f1
+}
+
+.ui.container {
+    padding: 1em;
 }
 
 .ui.secondary.inverted.pointing.menu {

@@ -8,16 +8,19 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.two.columns.stackable.grid
-            .twelve.wide.column
+        .ui.three.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
                 .ui.violet.inverted.segment
                     h3.ui.header
                         i.list.icon
                         .content    Liste de vos offres :
             .four.wide.column   
-                a.ui.violet.labeled.icon.circular.fluid.button(href="offres/ajout" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) 
+                a.ui.violet.labeled.icon.huge.fluid.button(href="/employeur/offres/ajout/" class= ( (user.isValid === false || offresCount >= 10) ? "disabled" : "") ) 
                     i.add.icon
-                    | Ajouter une offre
+                    | Ajouter
         .ui.padded.violet.segment
             if quotaOffres != ""
                 .ui.negative.icon.message

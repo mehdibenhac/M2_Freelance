@@ -8,10 +8,19 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.violet.inverted.segment
-            h3.ui.header
-                i.bookmark.icon
-                .content    Ajout d'une offre
+        .ui.three.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.plus.icon
+                        .content    Ajouter une offre :
+            .four.wide.column   
+                a.ui.violet.labeled.icon.huge.fluid.button(href="/employeur/offres/" ) 
+                    i.reply.icon
+                    | Retour
         .ui.padded.violet.segment
             form.ui.form(role="form" enctype="multipart/form-data"  action="" method="post")
                 div.ui.error.message(style="margin-top:0")

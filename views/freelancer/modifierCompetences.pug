@@ -8,7 +8,11 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.two.columns.grid
+        .ui.three.columns.grid
+            .column
+                a.ui.blue.labeled.icon.fluid.button(id="sidebaror")
+                    i.content.icon
+                    | Menu
             .column
                 a.ui.blue.labeled.icon.fluid.large.button(href="/freelancer")
                     i.user.icon

@@ -1,3 +1,9 @@
+Date.prototype.toDateInputValue = (function () {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0, 10);
+});
+
 $(document).ready(function () {
     $('select.dropdown')
         .dropdown();
@@ -5,10 +11,17 @@ $(document).ready(function () {
         .checkbox();
     $('.ui.checkbox')
         .checkbox();
+    $('.ui.rating')
+        .rating('disable');
     $('#sidebaror').click(function () {
-        $('.ui.wide.sidebar')
+        $('.ui.sidebar')
             .sidebar('toggle');
     });
+    $('#daysPercent').progress();
+    $('#dateDebut').val(new Date().toDateInputValue());
+    $('#dateFin').attr("min", new Date().toDateInputValue());
+    $('.ui.star.rating')
+        .popup();
     $('#offresTable').tablesorter({
         dateFormat: "ddmmyyyy"
     });
@@ -28,6 +41,13 @@ $(document).ready(function () {
     $('.ui.form')
         .form({
             fields: {
+                titreOffre: {
+                    identifier: 'titreOffre',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir un titre pour votre offre.'
+                    }]
+                },
                 titreOffre: {
                     identifier: 'titreOffre',
                     rules: [{
@@ -171,6 +191,37 @@ $(document).ready(function () {
                 $('.ui.form').submit();
             }
         }).modal('show');
+    })
+
+    // Contrat form validation
+    $('.ui.form.contratForm').form({
+        fields: {
+            dateFin: {
+                identifier: 'dateFin',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Veuillez saisir la date d\'échéance du contrat.'
+                }]
+            },
+            termes: {
+                identifier: 'termes',
+                rules: [{
+                    type: 'checked',
+                    prompt: 'Veuillez accepter les termes d\'utilisation.'
+                }]
+            },
+        },
+        onSuccess: function (event, fields) {
+            $('.ui.modal').modal({
+                closable: false,
+                onApprove: function () {
+                    $('.ui.form.contratForm').submit();
+                }
+            }).modal('show');
+        }
+    })
+    $('.validateContrat').click(function () {
+        $('.ui.form.contratForm').form('validate form');
     })
 
     // Signup 1 form validation

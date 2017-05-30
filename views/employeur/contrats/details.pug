@@ -1,0 +1,183 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.three.column.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.suitcase.icon
+                        .content    Détails du contrat ##{contrat._id} :
+            .four.wide.column
+                a.ui.violet.labeled.icon.fluid.huge.button(href="/employeur/contrats")
+                    i.reply.icon
+                    | Retour
+        .ui.divider
+        .ui.two.column.stackable.grid
+            .five.wide.column
+                button.ui.purple.labeled.icon.fluid.huge.button(class= (contrat.etat !== "Ouvert" ? "disabled" : ""))
+                    i.archive.icon
+                    | Clôturer
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.user.icon
+                        | Freelancer: 
+                .ui.fluid.card
+                    .ui.centered.image
+                        img(class="ui circular image" src=+ (freelancer[0].sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+                    .center.aligned.content
+                        .ui.star.huge.rating(data-rating=Math.round(freelancer[0].note_moy) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(freelancer[0].note_moy*100)/100+" pour "+freelancer[0].notations.length+" contrats notées.")
+                    .content
+                        h4.ui.header 
+                            i.hashtag.icon                         
+                            .content #{freelancer[0]._id}
+                                .sub.header ID
+                    .content
+                        h4.ui.header 
+                            i.user.icon    
+                            .content #{freelancer[0].nom}
+                                .sub.header Nom
+                    .content
+                        h4.ui.header 
+                            i.ellipsis.horizontal.icon
+                            .content #{freelancer[0].pnom}
+                                .sub.header Prénom
+                    .content
+                        h4.ui.header 
+                            i.call.icon
+                            .content #{freelancer[0].telephone}
+                                .sub.header Numéro de téléphone
+                    .content
+                        h4.ui.header 
+                            i.mail.icon
+                            .content #{freelancer[0].email}
+                                .sub.header Adresse Mail
+                    .content
+                        h4.ui.header 
+                            i.map.icon
+                            .content #{freelancer[0].wilayaAdr}
+                                .sub.header Wilaya
+            .eleven.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.idea.icon
+                        | Etat du contrat:
+                .ui.violet.padded.segment
+                    .ui.stackable.two.column.centered.grid
+                        .column
+                            case contrat.etat
+                                when "Négociation"
+                                    .ui.info.icon.message
+                                        i.info.icon
+                                        .content
+                                            .header #{contrat.etat}                                    
+                                            | Votre contrat est en cours de négociation.
+                                when "Fermé"
+                                    .ui.warning.icon.message
+                                        i.archive.icon
+                                        .content
+                                            .header #{contrat.etat}                                    
+                                            | Votre contrat a été clôturé.
+                                when "Ouvert"
+                                    .ui.positive.icon.message
+                                        i.circle.thin.icon
+                                        .content
+                                            .header #{contrat.etat}                                    
+                                            | Votre contrat est ouvert. Le freelancer l'a accepté.
+                        .column
+                            if contrat.etat === "Ouvert" || contrat.etat === "Fermé"
+                                a.ui.labeled.icon.yellow.fluid.disabled.button
+                                    i.remove.icon
+                                    | Supprimer le contrat
+                            else
+                                form.ui.form(action="?_method=DELETE" method="post")
+                                    button.ui.labeled.icon.yellow.fluid.validateModal.button(type="button")
+                                        i.remove.icon
+                                        | Supprimer le contrat
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.hourglass.full.icon
+                        | Progrés du contrat: 
+                .ui.violet.padded.segment
+                    - var diff = (moment(contrat.dateFin)).diff(moment(contrat.dateDebut), 'days') ;
+                    - var fromStart = (moment()).diff(moment(contrat.dateDebut), 'days') ;
+                    - var percent = fromStart*100/diff;
+                    .ui.active.violet.progress(data-percent=percent id="daysPercent")
+                        .bar
+                            .progress
+                        .label Progrés
+                    .ui.stackable.three.column.centered.grid
+                        .row
+                            .column
+                                h1.ui.header
+                                    i.wait.icon
+                                    .content #{moment(contrat.dateFin).fromNow(true)}
+                                        .sub.header Restants
+                            .column
+                                h1.ui.header
+                                    i.wait.icon
+                                    .content #{fromStart} Jours
+                                        .sub.header Ecoulés
+                            .column
+                                h1.ui.header
+                                    i.wait.icon
+                                    .content #{diff} Jours
+                                        .sub.header Totaux
+                        .row
+                            .column
+                                h4.ui.header
+                                    i.hourglass.start.icon
+                                    .content #{moment(contrat.dateDebut).format('D MMMM YYYY')}
+                                        .sub.header Date de début du contrat
+                            .column
+                                h4.ui.header
+                                    i.hourglass.end.icon
+                                    .content #{moment(contrat.dateFin).format('D MMMM YYYY')}
+                                        .sub.header Date d'échéance du contrat
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.book.icon
+                        | Détails de l'offre: 
+                .ui.violet.padded.segment
+                    h3.ui.header 
+                        i.hashtag.icon
+                        .content   #{contrat.offre._id}
+                            .sub.header ID de l'offre
+                    h3.ui.header 
+                        i.ellipsis.horizontal.icon
+                        .content   #{contrat.offre.titre}
+                            .sub.header Titre de l'offre
+                    h3.ui.header 
+                        i.student.icon
+                        .content   #{contrat.offre.competence.titre}
+                            .sub.header Compétence requise
+                    h3.ui.header 
+                        i.maps.pin.icon
+                        .content   #{contrat.offre.localisation}
+                            .sub.header Localisation
+                    h3.ui.header 
+                        i.write.icon
+                        .content Description de l'offre 
+                            .sub.header #{contrat.offre.description}
+                    h3.ui.header 
+                        i.calendar.icon
+                        .content #{moment(contrat.offre.dateAjout).format('DD MMMM YYYY')}
+                            .sub.header Date d'ajout 
+    
+    .ui.modal
+        h2.ui.header
+            i.help.circle.icon 
+            .content Supprimer le contrat ?
+        .content
+            p Une fois le contrat supprimé, l'offre le concernant sera réouverte. 
+        .center.aligned.actions
+            .ui.cancel.red.button Annuler
+            .ui.approve.violet.button Valider

@@ -41,8 +41,11 @@ Router.get('/', function (req, res, next) {
         }
         if (employeur !== null) {
             Offre.find({
-                employeur: employeur._id
-            }).populate('competence').exec(function (err, offres) {
+                employeur: employeur._id,
+                etat: "Ouverte"
+            }).populate('competence').sort({
+                postulants: -1
+            }).exec(function (err, offres) {
                 var offresCount = offres.length;
                 res.render('employeur/offres/list', {
                     currentRoute: 'offres',

@@ -1,0 +1,69 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.two.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .fourteen.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste des postulats :
+        .ui.padded.violet.segment
+            if quotaOffres != ""
+                .ui.negative.icon.message
+                    i.remove.icon
+                    .content 
+                        .header #{quotaOffres}
+            if offreRemoved != ""
+                .ui.positive.icon.message
+                    i.checkmark.icon
+                    .content 
+                        .header #{offreRemoved}
+            if offres.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    .content 
+                        .header Vous n'avez aucune offre à afficher
+            else
+                .ui.info.icon.message
+                    i.info.icon
+                    | Sélectionnez une offre pour afficher la liste des postulants et créer un contrat.
+                table.ui.sortable.padded.striped.basic.five.column.table(id="offresTable")
+                    thead
+                        tr
+                            th ID 
+                                i.caret.down.icon
+                            th Titre
+                                i.caret.down.icon
+                            th Compétence
+                                i.caret.down.icon
+                            th Postulants
+                                i.caret.down.icon
+                            th(class="sorter-shortDate dateFormat-ddmmyyyy") Date d'ajout
+                                i.caret.down.icon
+                    tbody
+                    each offre, index in offres
+                        tr 
+                            td.three.wide 
+                                a(href="/employeur/postulats/details/"+offre._id)
+                                    i.hashtag.icon
+                                    | #{offre._id}
+                            td.six.wide 
+                                a(href="/employeur/postulats/details/"+offre._id)
+                                    i.newspaper.icon 
+                                    | #{offre.titre}
+                            td.three.wide.left.aligned
+                                p  #{offre.competence.titre}
+                            td.one.wide.center.aligned
+                                p #{offre.postulants.length}
+                            td.three.wide.center.aligned 
+                                i.calendar.icon
+                                | #{moment(offre.dateAjout).format('D MMMM YYYY hh:mm')}

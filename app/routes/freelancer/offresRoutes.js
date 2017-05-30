@@ -30,8 +30,6 @@ Router.get('/', function (req, res, next) {
         max: max,
         local: local
     };
-    console.log("typeof min: " + max);
-    console.log(search);
     Freelancer.findOne({
         userID: req.user.id
     }).populate('userID competences').exec(function (err, freelancer) {
@@ -41,7 +39,6 @@ Router.get('/', function (req, res, next) {
         }
         if (freelancer !== null) {
             if (typeof (compet) === 'undefined' && typeof (local) === 'undefined') {
-                console.log('1')
                 Offre.find({
                     $and: [{
                         competence: {

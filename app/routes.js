@@ -16,6 +16,8 @@ module.exports = function (app) {
     var employeurSignup = require('./routes/employeur/signupRoutes.js');
     var employeurModifier = require('./routes/employeur/modifierRoutes.js');
     var employeurOffres = require('./routes/employeur/offresRoutes.js');
+    var employeurPostulats = require('./routes/employeur/postulatsRoutes.js');
+    var employeurContrats = require('./routes/employeur/contratsRoutes.js');
 
     // Other Routes
     var domaineRoutes = require('./routes/domaineRoutes.js');
@@ -38,7 +40,9 @@ module.exports = function (app) {
     app.use('/employeur', employeurIndex);
     app.use('/employeur/modifier', employeurModifier);
     app.use('/employeur/signup', employeurSignup);
+    app.use('/employeur/postulats', employeurPostulats);
     app.use('/employeur/offres', employeurOffres);
+    app.use('/employeur/contrats', employeurContrats);
     // Others
     app.use('/competences', competenceRoutes);
     app.use('/endpoints', endpointsRoutes);

@@ -7,26 +7,29 @@ block user
             .content  #{user.nom}
 block content
     .ui.container
-        .ui.four.columns.stackable.grid
-            .column
-                a.ui.blue.labeled.icon.fluid.small.button(href="/freelancer/modifier/competences")
+        .ui.five.column.centered.stackable.grid
+            .one.wide.column
+                a.ui.blue.icon.fluid.button(id="sidebaror")
+                    i.content.icon
+            .four.wide.column
+                a.ui.blue.labeled.icon.fluid.button(href="/freelancer/modifier/competences")
                     i.student.icon
                     | Modifier les compétences
             .column
-                a.ui.blue.labeled.icon.fluid.small.button(href="/freelancer/modifier/profil")
+                a.ui.blue.labeled.icon.fluid.button(href="/freelancer/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
-            .column
+            .three.wide.column
                 if(user.isValid)
-                    button.ui.green.labeled.icon.fluid.small.button(disabled)
+                    button.ui.green.labeled.icon.fluid.button(disabled)
                         i.check.circle.icon
                         | Profil validé
                 else
-                    a.ui.green.labeled.icon.fluid.small.button(href="/freelancer/modifier/validate" disabled)
+                    a.ui.green.labeled.icon.fluid.button(href="/freelancer/modifier/validate" disabled)
                         i.checkmark.icon
                         | Valider le profil
-            .column
-                a.ui.orange.labeled.icon.fluid.small.button
+            .four.wide.column
+                a.ui.orange.labeled.icon.fluid.button
                     i.delete.icon
                     | Supprimer le compte
         if messages.demandeSupprimee != ""
@@ -59,17 +62,6 @@ block content
                                 else
                                     input(type="checkbox" id="toggle-offresNotif" class="hidden" value="false")
                                 label Offres
-                .ui.segment
-                    .inline.field
-                        .ui.toggle.checkbox
-                            if (user.parametres.disponibilite === true)
-                                input(type="checkbox" id="toggle-dispo" class="hidden" value="true" checked)
-                            else
-                                input(type="checkbox" id="toggle-dispo" class="hidden" value="false")
-                            label Disponibilité
-                    .ui.info.message
-                        i.help.icon
-                        | Permet de modifier votre visibilité vis-à-vis des employeurs.
                 .ui.fluid.card
                     .image
                         img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
@@ -93,6 +85,17 @@ block content
                             i.calendar.icon
                             .content #{moment(user.dateCreated).format('D MMMM YYYY')}
                                 .sub.header Date de création
+                .ui.segment
+                    .inline.field
+                        .ui.toggle.checkbox
+                            if (user.parametres.disponibilite === true)
+                                input(type="checkbox" id="toggle-dispo" class="hidden" value="true" checked)
+                            else
+                                input(type="checkbox" id="toggle-dispo" class="hidden" value="false")
+                            label Disponibilité
+                    .ui.info.message
+                        i.help.icon
+                        | Permet de modifier votre visibilité vis-à-vis des employeurs.
             .twelve.wide.column
                 .ui.teal.inverted.segment
                     h4.ui.header 
