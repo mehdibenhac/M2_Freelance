@@ -20,8 +20,8 @@ Router.use(middleware.isLoggedIn, middleware.isFreelancer);
 Router.get('/', function (req, res, next) {
     var search = req.query.search || "";
     var compet = req.query.compet;
-    var min = req.query.min || 0;
-    var max = req.query.max || 999;
+    var min = parseInt(req.query.min) || 0;
+    var max = parseInt(req.query.max) || 999;
     var local = req.query.local;
     var fields = {
         search: search,
@@ -39,42 +39,82 @@ Router.get('/', function (req, res, next) {
         }
         if (freelancer !== null) {
             if (typeof (compet) === 'undefined' && typeof (local) === 'undefined') {
-                Offre.find({
-                    $and: [{
-                        competence: {
-                            $in: freelancer.competences
-                        }
-                    }, {
-                        $or: [{
-                            localisation: freelancer.wilayaAdr
-                        }, {
-                            localisation: "Nationale"
-                        }]
-                    }, {
-                        postulants: {
-                            $ne: req.user.profil.ID
-                        }
-                    }, {
-                        titre: {
-                            $regex: search,
-                            $options: 'i'
+                Offre.aggregate([{
+                        "$lookup": {
+                            "from": "employeurs",
+                            "localField": "employeur",
+                            "foreignField": "_id",
+                            "as": "employeur"
                         },
-                        etat: "Ouverte",
-                        duree_min: {
-                            $gte: min
-                        },
-                        duree_max: {
-                            $lte: max
+                    },
+                    {
+                        "$unwind": "$employeur"
+                    },
+                    {
+                        "$match": {
+                            $and: [{
+                                competence: {
+                                    $in: freelancer.competences
+                                }
+                            }, {
+                                $or: [{
+                                    localisation: freelancer.wilayaAdr
+                                }, {
+                                    localisation: "Nationale"
+                                }]
+                            }, {
+                                postulants: {
+                                    $ne: req.user.profil.ID
+                                }
+                            }, {
+                                titre: {
+                                    $regex: search,
+                                    $options: 'i'
+                                },
+                                etat: {
+                                    $in: ["Ouverte", "Négociation"]
+                                },
+                                duree_min: {
+                                    $gte: min
+                                },
+                                duree_max: {
+                                    $lte: max
+                                }
+                            }]
                         }
-                    }]
-                }).populate('competence').sort({
-                    dateAjout: -1
-                }).exec(function (err, offres) {
+                    },
+                    {
+                        "$lookup": {
+                            "from": "competences",
+                            "localField": "competence",
+                            "foreignField": "_id",
+                            "as": "competence"
+                        },
+                    },
+                    {
+                        "$unwind": "$competence"
+                    },
+                    {
+
+                        "$addFields": {
+                            "note_moy_employeur": {
+                                "$avg": "$employeur.notations.note"
+                            }
+                        }
+
+                    },
+                    {
+                        "$sort": {
+                            "note_moy_employeur": -1,
+                            "competence": -1,
+                            "dateAjout": -1
+                        }
+                    }
+                ]).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
                     }
-                    console.log('2');
                     res.render('freelancer/offres/list', {
                         fields: fields,
                         user: freelancer,
@@ -83,38 +123,76 @@ Router.get('/', function (req, res, next) {
                     });
                 });
             } else if (typeof (local) === 'undefined') {
-                Offre.find({
-                    $and: [{
-                            competence: compet
-                        }, {
-                            $or: [{
-                                localisation: freelancer.wilayaAdr
+                Offre.aggregate([{
+                        "$lookup": {
+                            "from": "employeurs",
+                            "localField": "employeur",
+                            "foreignField": "_id",
+                            "as": "employeur"
+                        },
+                    },
+                    {
+                        "$unwind": "$employeur"
+                    },
+                    {
+                        "$match": {
+                            $and: [{
+                                competence: compet
                             }, {
-                                localisation: "Nationale"
+                                $or: [{
+                                    localisation: freelancer.wilayaAdr
+                                }, {
+                                    localisation: "Nationale"
+                                }]
+                            }, {
+                                postulants: {
+                                    $ne: req.user.profil.ID
+                                }
+                            }, {
+                                titre: {
+                                    $regex: search,
+                                    $options: 'i'
+                                },
+                                etat: {
+                                    $in: ["Ouverte", "Négociation"]
+                                },
+                                duree_min: {
+                                    $gte: min
+                                },
+                                duree_max: {
+                                    $lte: max
+                                }
                             }]
+                        }
+                    },
+                    {
+                        "$lookup": {
+                            "from": "competences",
+                            "localField": "competence",
+                            "foreignField": "_id",
+                            "as": "competence"
                         },
-                        {
-                            postulants: {
-                                $ne: req.user.profil.ID
-                            }
-                        },
-                        {
-                            titre: {
-                                $regex: search,
-                                $options: 'i'
-                            },
-                            etat: "Ouverte",
-                            duree_min: {
-                                $gte: min
-                            },
-                            duree_max: {
-                                $lte: max
+                    },
+                    {
+                        "$unwind": "$competence"
+                    },
+                    {
+
+                        "$addFields": {
+                            "note_moy_employeur": {
+                                "$avg": "$employeur.notations.note"
                             }
                         }
-                    ]
-                }).populate('competence').sort({
-                    dateAjout: -1,
-                }).exec(function (err, offres) {
+
+                    },
+                    {
+                        "$sort": {
+                            "note_moy_employeur": -1,
+                            "competence": -1,
+                            "dateAjout": -1
+                        }
+                    }
+                ]).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
@@ -128,35 +206,73 @@ Router.get('/', function (req, res, next) {
                 });
             } else if (typeof (compet) === 'undefined') {
                 console.log('1')
-                Offre.find({
-                    $and: [{
-                            competence: {
-                                $in: freelancer.competences
-                            }
+                Offre.aggregate([{
+                        "$lookup": {
+                            "from": "employeurs",
+                            "localField": "employeur",
+                            "foreignField": "_id",
+                            "as": "employeur"
                         },
-                        {
-                            postulants: {
-                                $ne: req.user.profil.ID
-                            }
+                    },
+                    {
+                        "$unwind": "$employeur"
+                    },
+                    {
+                        "$match": {
+                            $and: [{
+                                competence: {
+                                    $in: freelancer.competences
+                                }
+                            }, {
+                                postulants: {
+                                    $ne: req.user.profil.ID
+                                }
+                            }, {
+                                titre: {
+                                    $regex: search,
+                                    $options: 'i'
+                                },
+                                localisation: local,
+                                etat: {
+                                    $in: ["Ouverte", "Négociation"]
+                                },
+                                duree_min: {
+                                    $gte: min
+                                },
+                                duree_max: {
+                                    $lte: max
+                                }
+                            }]
+                        }
+                    },
+                    {
+                        "$lookup": {
+                            "from": "competences",
+                            "localField": "competence",
+                            "foreignField": "_id",
+                            "as": "competence"
                         },
-                        {
-                            titre: {
-                                $regex: search,
-                                $options: 'i'
-                            },
-                            localisation: local,
-                            etat: "Ouverte",
-                            duree_min: {
-                                $gte: min
-                            },
-                            duree_max: {
-                                $lte: max
+                    },
+                    {
+                        "$unwind": "$competence"
+                    },
+                    {
+
+                        "$addFields": {
+                            "note_moy_employeur": {
+                                "$avg": "$employeur.notations.note"
                             }
                         }
-                    ]
-                }).populate('competence').sort({
-                    dateAjout: -1,
-                }).exec(function (err, offres) {
+
+                    },
+                    {
+                        "$sort": {
+                            "note_moy_employeur": -1,
+                            "competence": -1,
+                            "dateAjout": -1
+                        }
+                    }
+                ]).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
@@ -169,33 +285,71 @@ Router.get('/', function (req, res, next) {
                     });
                 });
             } else {
-                Offre.find({
-                    $and: [{
-                            competence: compet
+                Offre.aggregate([{
+                        "$lookup": {
+                            "from": "employeurs",
+                            "localField": "employeur",
+                            "foreignField": "_id",
+                            "as": "employeur"
                         },
-                        {
-                            postulants: {
-                                $ne: req.user.profil.ID
-                            }
+                    },
+                    {
+                        "$unwind": "$employeur"
+                    },
+                    {
+                        "$match": {
+                            $and: [{
+                                competence: compet
+                            }, {
+                                postulants: {
+                                    $ne: req.user.profil.ID
+                                }
+                            }, {
+                                titre: {
+                                    $regex: search,
+                                    $options: 'i'
+                                },
+                                localisation: local,
+                                etat: {
+                                    $in: ["Ouverte", "Négociation"]
+                                },
+                                duree_min: {
+                                    $gte: min
+                                },
+                                duree_max: {
+                                    $lte: max
+                                }
+                            }]
+                        }
+                    },
+                    {
+                        "$lookup": {
+                            "from": "competences",
+                            "localField": "competence",
+                            "foreignField": "_id",
+                            "as": "competence"
                         },
-                        {
-                            titre: {
-                                $regex: search,
-                                $options: 'i'
-                            },
-                            localisation: local,
-                            etat: "Ouverte",
-                            duree_min: {
-                                $gte: min
-                            },
-                            duree_max: {
-                                $lte: max
+                    },
+                    {
+                        "$unwind": "$competence"
+                    },
+                    {
+
+                        "$addFields": {
+                            "note_moy_employeur": {
+                                "$avg": "$employeur.notations.note"
                             }
                         }
-                    ]
-                }).populate('competence').sort({
-                    dateAjout: -1
-                }).exec(function (err, offres) {
+
+                    },
+                    {
+                        "$sort": {
+                            "note_moy_employeur": -1,
+                            "competence": -1,
+                            "dateAjout": -1
+                        }
+                    }
+                ]).exec(function (err, offres) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
@@ -221,11 +375,55 @@ Router.get('/details/:id', function (req, res, next) {
             console.log(err.stack)
             return next(err);
         }
-        Offre.findById(ID).populate('employeur postulants competence').exec(function (err, offre) {
+        Offre.aggregate([{
+                "$lookup": {
+                    "from": "employeurs",
+                    "localField": "employeur",
+                    "foreignField": "_id",
+                    "as": "employeur"
+                },
+            },
+            {
+                "$unwind": "$employeur"
+            },
+            {
+                "$match": {
+                    _id: ID
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "competences",
+                    "localField": "competence",
+                    "foreignField": "_id",
+                    "as": "competence"
+                },
+            },
+            {
+                "$unwind": "$competence"
+            },
+            {
+                "$lookup": {
+                    "from": "freelancers",
+                    "localField": "postulants",
+                    "foreignField": "_id",
+                    "as": "postulants"
+                },
+            },
+            {
+                "$addFields": {
+                    "note_moy_employeur": {
+                        "$avg": "$employeur.notations.note"
+                    }
+                }
+
+            }
+        ]).exec(function (err, offre) {
             if (err) {
                 console.log(err.stack)
                 return next(err);
             }
+            console.log(offre);
             console.log(_.any(offre.postulants, function (item) {
                 console.log("ITEM : ", typeof (item));
                 console.log("FREELANCER : ", typeof (freelancer));
@@ -233,7 +431,7 @@ Router.get('/details/:id', function (req, res, next) {
             }));
             res.render('freelancer/offres/details', {
                 user: freelancer,
-                offre: offre,
+                offre: offre[0],
                 currentRoute: 'offres'
             })
         });

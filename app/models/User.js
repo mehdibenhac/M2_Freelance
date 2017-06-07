@@ -17,14 +17,6 @@ var userSchema = mongoose.Schema({
             refPath: 'profil.accountType'
         }
     },
-    messages_envoyes: [{
-        type: String,
-        ref: 'Message'
-    }],
-    messages_recus: [{
-        type: String,
-        ref: 'Message'
-    }],
     dateCreated: {
         type: Date,
         default: Date.now()

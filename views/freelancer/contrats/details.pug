@@ -1,4 +1,4 @@
-extends /views/layout/layout_emp
+extends /views/layout/layout
 
 block user
     .ui.segment.basic
@@ -9,108 +9,108 @@ block content
     .ui.container
         .ui.three.column.stackable.grid
             .two.wide.column
-                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                a.ui.teal.icon.fluid.huge.button(id="sidebaror")
                     i.content.icon
             .ten.wide.column
-                .ui.violet.inverted.segment
+                .ui.teal.inverted.segment
                     h3.ui.header
                         i.suitcase.icon
                         .content    Détails du contrat ##{contrat._id} :
             .four.wide.column
-                a.ui.violet.labeled.icon.fluid.huge.button(href="/employeur/contrats")
+                a.ui.teal.labeled.icon.fluid.huge.button(href="/employeur/contrats")
                     i.reply.icon
                     | Retour
         .ui.divider
         .ui.two.column.stackable.grid
             .five.wide.column
-                if contrat.etat === "Cloturation"
-                    button.ui.purple.labeled.icon.fluid.huge.cloturar.button
+                if contrat.etat === "Négociation"
+                    form.ui.accept.form(role="form" action="?_method=PUT" method="post")
+                        button.ui.blue.labeled.icon.fluid.huge.acceptar.button( type="button" class= (contrat.etat !== "Négociation" ? "disabled" : ""))
+                            i.checkmark.icon
+                            | Accepter le contrat
+                else if contrat.etat === "Ouvert"
+                    button.ui.blue.labeled.icon.fluid.huge.cloturar.button(type="button" class= (contrat.etat !== "Ouvert" ? "disabled" : ""))
                         i.archive.icon
                         | Clôturer
-                .ui.violet.inverted.segment
+                .ui.teal.inverted.segment
                     h3.ui.header
                         i.user.icon
-                        | Freelancer: 
+                        | Employeur: 
                 .ui.fluid.card
                     .ui.centered.image
-                        img(class="ui circular image" src=+ (freelancer[0].sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+                        img(class="ui circular image" src=+ (employeur[0].sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
                     .center.aligned.content
-                        .ui.star.huge.rating(data-rating=Math.round(freelancer[0].note_moy) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(freelancer[0].note_moy*100)/100+" pour "+freelancer[0].notations.length+" contrats notés.")
+                        .ui.star.huge.rating(data-rating=Math.round(employeur[0].note_moy) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(employeur[0].note_moy*100)/100+" pour "+employeur[0].notations.length+" contrat(s) noté(s).")
                     .content
                         h4.ui.header 
                             i.hashtag.icon                         
-                            .content #{freelancer[0]._id}
+                            .content #{employeur[0]._id}
                                 .sub.header ID
                     .content
                         h4.ui.header 
                             i.user.icon    
-                            .content #{freelancer[0].nom}
+                            .content #{employeur[0].nom}
                                 .sub.header Nom
                     .content
                         h4.ui.header 
                             i.ellipsis.horizontal.icon
-                            .content #{freelancer[0].pnom}
+                            .content #{employeur[0].pnom}
                                 .sub.header Prénom
                     .content
                         h4.ui.header 
                             i.call.icon
-                            .content #{freelancer[0].telephone}
+                            .content #{employeur[0].telephone}
                                 .sub.header Numéro de téléphone
                     .content
                         h4.ui.header 
                             i.mail.icon
-                            .content #{freelancer[0].email}
+                            .content #{employeur[0].email}
                                 .sub.header Adresse Mail
                     .content
                         h4.ui.header 
                             i.map.icon
-                            .content #{freelancer[0].wilayaAdr}
+                            .content #{employeur[0].wilayaAdr}
                                 .sub.header Wilaya
             .eleven.wide.column
-                .ui.violet.inverted.segment
+                .ui.teal.inverted.segment
                     h3.ui.header
                         i.idea.icon
                         | Etat du contrat:
-                .ui.violet.padded.segment
+                .ui.teal.padded.segment
                     case contrat.etat
                         when "Négociation"
                             .ui.info.icon.message
                                 i.info.icon
                                 .content
                                     .header #{contrat.etat}                                    
-                                    | Votre contrat est en cours de négociation.
-                        when "Cloturation"
-                            .ui.info.icon.message
-                                i.lock.icon
-                                .content
-                                    .header #{contrat.etat}                                    
-                                    | Le freelancer a demandé la cloturation de votre contrat. Pour valider, cliquez sur le bouton "Clôturer".
+                                    | L'employeur a accepté votre postulation. Vérifiez la durée du contrat puis décidez si vous souhaitez ou non l'accepter.
                         when "Fermé"
                             .ui.warning.icon.message
                                 i.archive.icon
                                 .content
                                     .header #{contrat.etat}                                    
-                                    | Votre contrat a été clôturé et archivé. Vous ne pouvez plus le modifier.
+                                    | Votre contrat a été clôturé et archivé.
                         when "Ouvert"
                             .ui.positive.icon.message
                                 i.circle.thin.icon
                                 .content
                                     .header #{contrat.etat}                                    
-                                    | Votre contrat est ouvert. Le freelancer l'a accepté.
-                    if contrat.etat === "Négociation"
-                        form.ui.form(action="?_method=DELETE" method="post")
-                            button.ui.labeled.icon.yellow.fluid.validateModal.button(type="button")
-                                i.remove.icon
-                                | Supprimer le contrat
-                .ui.violet.inverted.segment(class= contrat.etat === "Fermé" || "Négociation" ? "disabled" : "")
+                                    | Vous avez accepté le contrat.
+                        when "Cloturation"
+                            .ui.positive.icon.message
+                                i.lock.icon
+                                .content
+                                    .header #{contrat.etat}                                    
+                                    | Vous avez demandé la cloturation de votre contrat. Veuillez patienter le temps que l'employeur traite votre demande.
+                .ui.teal.inverted.segment(class= contrat.etat === "Fermé" ? "disabled" : "")
                     h3.ui.header
                         i.hourglass.full.icon
                         | Progrés du contrat: 
-                .ui.violet.padded.segment(class= contrat.etat === "Fermé" || "Négociation" ? "disabled" : "")
+                .ui.teal.padded.segment(class= contrat.etat === "Fermé" ? "disabled" : "")
                     - var diff = (moment(contrat.dateFin)).diff(moment(contrat.dateDebut), 'days') ;
                     - var fromStart = (moment()).diff(moment(contrat.dateDebut), 'days') ;
                     - var percent = fromStart*100/diff;
-                    .ui.active.violet.progress(data-percent=percent id="daysPercent")
+                    .ui.active.teal.progress(data-percent=percent id="daysPercent")
                         .bar
                             .progress
                         .label Progrés
@@ -142,11 +142,11 @@ block content
                                     i.hourglass.end.icon
                                     .content #{moment(contrat.dateFin).format('D MMMM YYYY')}
                                         .sub.header Date d'échéance du contrat
-                .ui.violet.inverted.segment
+                .ui.teal.inverted.segment
                     h3.ui.header
                         i.book.icon
                         | Détails de l'offre: 
-                .ui.violet.padded.segment
+                .ui.teal.padded.segment
                     h3.ui.header 
                         i.hashtag.icon
                         .content   #{contrat.offre._id}
@@ -171,23 +171,30 @@ block content
                         i.calendar.icon
                         .content #{moment(contrat.offre.dateAjout).format('DD MMMM YYYY')}
                             .sub.header Date d'ajout 
-    
-    .ui.modal
+    .ui.accept.modal
         h2.ui.header
             i.help.circle.icon 
-            .content Supprimer le contrat ?
+            .content Accepter le contrat?
         .content
-            p Une fois le contrat supprimé, l'offre le concernant sera réouverte. 
+            p Une fois le contrat accepté, vous étes tenû de respecter les clauses détaillées dans les termes 
+                | d'utilisation de Fennec Freelance ainsi que les conditions de l'offre concernée.
+            a(href="/static/docs/termes.pdf")
+                i.linkify.icon
+                | Termes d'utilisation de Fennec Freelance
+            br
+            a(href=contrat.offre.url_conditions)
+                i.linkify.icon
+                | Conditions de l'offre 
         .center.aligned.actions
             .ui.cancel.red.button Annuler
-            .ui.approve.violet.button Valider
+            .ui.approve.teal.button Valider
 
     .ui.cloturar.modal
         h2.ui.header
             i.help.circle.icon 
             .content Clôturer le contrat ?
         .content
-            p Pour terminer votre contrat, veuillez noter la prestation du freelancer:
+            p Pour terminer votre contrat, veuillez noter la prestation de votre employeur:
             form.ui.cloturar.form(role="form" action=contrat._id+"/cloturer" method="post")
                 .inline.field
                     label Note:
@@ -205,4 +212,6 @@ block content
                         option(value="10") 10
         .center.aligned.actions
             .ui.cancel.red.button Annuler
-            .ui.approve.violet.button Valider
+            .ui.approve.teal.button Valider
+
+    

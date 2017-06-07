@@ -1,5 +1,6 @@
 var Router = require('express').Router();
 var User = require('../models/User.js');
+var Offre = require('../models/Offre.js');
 var Freelancer = require('../models/Freelancer.js');
 
 Router.get('/', function (req, res) {
@@ -134,5 +135,75 @@ Router.get('/testAggregate', function (req, res, next) {
 
 Router.get('/sidebar', function (req, res, next) {
     res.render('sidebarTest');
+});
+
+Router.get('/01', function (req, res, next) {
+    Offre.aggregate([{
+            "$lookup": {
+                "from": "employeurs",
+                "localField": "employeur",
+                "foreignField": "_id",
+                "as": "employeur"
+            },
+        },
+        {
+            "$unwind": "$employeur"
+        },
+        {
+            "$match": {
+                $and: [{
+                    competence: compet
+                }, {
+                    postulants: {
+                        $ne: req.user.profil.ID
+                    }
+                }, {
+                    titre: {
+                        $regex: search,
+                        $options: 'i'
+                    },
+                    localisation: local,
+                    etat: {
+                        $in: ["Ouverte", "Négociation"]
+                    },
+                    duree_min: {
+                        $gte: min
+                    },
+                    duree_max: {
+                        $lte: max
+                    }
+                }]
+            }
+        },
+        {
+            "$lookup": {
+                "from": "competences",
+                "localField": "competence",
+                "foreignField": "_id",
+                "as": "competence"
+            },
+        },
+        {
+            "$unwind": "$competence"
+        },
+        {
+
+            "$addFields": {
+                "note_moy_employeur": {
+                    "$avg": "$employeur.notations.note"
+                }
+            }
+
+        },
+        {
+            "$sort": {
+                "note_moy_employeur": -1,
+                "competence": -1,
+                "dateAjout": -1
+            }
+        }
+    ]).exec(function (err, offres) {
+        res.json(offres);
+    });
 });
 module.exports = Router;

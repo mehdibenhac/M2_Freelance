@@ -1,0 +1,66 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.four.column.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .eight.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste des messages envoyés :
+            .three.wide.column
+                a.ui.violet.labeled.icon.fluid.huge.button(href="/messagerie/recus")
+                    i.inbox.icon
+                    | Reçus
+            .three.wide.column
+                a.ui.violet.labeled.icon.fluid.huge.button(href="/messagerie/nouveau")
+                    i.add.icon
+                    | Nouveau
+        .ui.divider
+        .ui.padded.violet.segment
+            if msgEnvoye != ""
+                .ui.success.icon.message
+                    i.checkmark.icon
+                    .content #{msgEnvoye}
+            if messages.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    .content Aucun message à afficher.
+            else        
+                table.ui.sortable.five.column.small.table(id="offresTable")
+                    thead
+                        tr
+                            th ID 
+                                i.caret.down.icon
+                            th objet
+                                i.caret.down.icon
+                            th Destinataire
+                                i.caret.down.icon
+                            th Date
+                                i.caret.down.icon
+                    tbody
+                    each message, index in messages
+                        tr 
+                            td.two.wide 
+                                a(href="/messagerie/message/"+message._id)
+                                    i.hashtag.icon
+                                    | #{message._id}
+                            td.four.wide 
+                                a(href="/messagerie/message/"+message._id)
+                                    i.notes.icon 
+                                    | #{message.objet}
+                            td.six.wide.left.aligned
+                                i.user.icon 
+                                | #{message.destinataire.profil.ID.nom}, #{message.destinataire.profil.ID.pnom}
+                            td.three.wide.center.aligned 
+                                i.calendar.icon
+                                | #{moment(message.dateCreated).format('DD/MM/YYYY HH:mm')}
+                

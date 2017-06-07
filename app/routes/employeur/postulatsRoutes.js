@@ -79,7 +79,7 @@ Router.get('/details/:id', function (req, res, next) {
                 }
                 res.render('employeur/postulats/postulants', {
                     currentRoute: 'postulats',
-                    user: req.user,
+                    user: employeur,
                     offre: offre,
                     postulants: postulants
                 });
@@ -156,10 +156,8 @@ Router.post('/details/:id/contrat/fin', function (req, res, next) {
         Offre.findByIdAndUpdate(idOffre, {
             etat: 'Négociation'
         }, function (err, result) {
-            res.send({
-                offre: result,
-                contrat: contrat
-            });
+            req.flash('contratCreated', 'Contrat établi avec succés');
+            res.redirect('/employeur/contrats')
         });
     });
 });

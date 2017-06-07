@@ -16,10 +16,6 @@ var messageSchema = mongoose.Schema({
         type: String,
         ref: 'User'
     },
-    reponse: {
-        type: String,
-        ref: 'Message'
-    },
     lu: {
         type: Boolean,
         default: false
@@ -28,10 +24,7 @@ var messageSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    dateLu: {
-        type: Date,
-        default: Date.now()
-    }
+    dateLu: Date
 });
 
 var Message = mongoose.model('Message', messageSchema);

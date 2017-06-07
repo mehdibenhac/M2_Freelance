@@ -22,6 +22,8 @@ $(document).ready(function () {
     $('#dateFin').attr("min", new Date().toDateInputValue());
     $('.ui.star.rating')
         .popup();
+    $('.ui.label')
+        .popup();
     $('#offresTable').tablesorter({
         dateFormat: "ddmmyyyy"
     });
@@ -41,6 +43,27 @@ $(document).ready(function () {
     $('.ui.form')
         .form({
             fields: {
+                objet: {
+                    identifier: 'objet',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir un objet pour votre message.'
+                    }]
+                },
+                contenu: {
+                    identifier: 'contenu',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir un contenu pour votre message.'
+                    }]
+                },
+                dest: {
+                    identifier: 'dest',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez saisir un destinataire pour votre message.'
+                    }]
+                },
                 titreOffre: {
                     identifier: 'titreOffre',
                     rules: [{
@@ -191,8 +214,37 @@ $(document).ready(function () {
                 $('.ui.form').submit();
             }
         }).modal('show');
+    });
+    $('.contactModal').click(function () {
+        $('.ui.contact.modal').modal('show');
+    });
+    $('.acceptar').click(function () {
+        $('.ui.accept.modal').modal({
+            closable: false,
+            onApprove: function () {
+                $('.ui.accept.form').submit();
+            }
+        }).modal('show');
+    });
+    $('.ui.cloturar.form').form({
+        fields: {
+            note: {
+                identifier: 'note',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Veuillez sélectionner une note.'
+                }]
+            },
+        }
     })
-
+    $('.cloturar').click(function () {
+        $('.ui.cloturar.modal').modal({
+            closable: true,
+            onApprove: function () {
+                $('.ui.cloturar.form').submit();
+            }
+        }).modal('show');
+    });
     // Contrat form validation
     $('.ui.form.contratForm').form({
         fields: {

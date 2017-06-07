@@ -1,0 +1,80 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.three.column.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.user.icon
+                        .content    Détails du message ##{message._id} :
+            .four.wide.column
+                a.ui.violet.labeled.icon.fluid.huge.button(href="/messagerie/recus")
+                    i.reply.icon
+                    | Retour
+        .ui.divider
+        .ui.violet.padded.segment
+            .ui.basic.padded.segment
+                .ui.two.column.stackable.centered.grid
+                    .row
+                        .three.wide.column
+                            h4.ui.header
+                                i.hashtag.icon 
+                                .content ID du message :
+                        .thirteen.wide.column
+                            p #{message._id}
+                    .row
+                        .three.wide.column
+                            h4.ui.header
+                                i.user.icon 
+                                .content Expéditeur :
+                        .thirteen.wide.column
+                            p #{message.expediteur.profil.ID.nom}, #{message.expediteur.profil.ID.pnom}
+                    .row
+                        .three.wide.column
+                            h4.ui.header
+                                i.user.icon 
+                                .content Destinataire :
+                        .thirteen.wide.column
+                            p #{message.destinataire.profil.ID.nom}, #{message.destinataire.profil.ID.pnom}
+                    .ui.divider
+                    .row
+                        .three.wide.column
+                            h4.ui.header
+                                i.pin.icon 
+                                .content Objet :
+                        .thirteen.wide.column
+                            p #{message.objet}
+                    .row
+                        .three.wide.column
+                            h4.ui.header
+                                i.book.icon 
+                                .content Contenu :
+                        .thirteen.wide.column
+                            p #{message.contenu}
+                    .ui.divider
+                    .row
+                        .three.wide.column
+                            h4.ui.header
+                                i.calendar.icon 
+                                .content Date d'envoi :
+                        .thirteen.wide.column
+                            p Le #{moment(message.dateCreated).format('DD MMMM YYYY, à HH:mm')}
+                br
+                if selfy !== true
+                    .ui.clearing.basic.segment
+                        a.ui.labeled.icon.violet.right.floated.button(href="/messagerie/nouveau/?dest="+message.expediteur._id) 
+                            i.send.icon
+                            | Répondre
+                        form.ui.form(action=message._id+"?_method=DELETE" method="post")
+                            button.ui.labeled.icon.yellow.right.floated.submit.button(href="/messagerie/nouveau/?dest="+message.expediteur._id) 
+                                i.remove.icon
+                                | Supprimer

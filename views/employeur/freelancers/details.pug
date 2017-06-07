@@ -1,0 +1,126 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.three.column.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.user.icon
+                        .content    Détails du freelancer ##{freelancer.userID} :
+            .four.wide.column
+                a.ui.violet.labeled.icon.fluid.huge.button(href="/employeur/freelancers")
+                    i.reply.icon
+                    | Retour
+        .ui.divider
+        .ui.violet.padded.segment
+            .ui.violet.inverted.segment
+                h4.ui.header
+                    i.user.icon
+                    | Informations personnelles    
+            .ui.two.column.stackable.centered.grid
+                .four.wide.middle.aligned.column
+                    .ui.animated.yellow.contactModal.button(style="margin-bottom: 1em")
+                        .visible.content Contacter
+                        .hidden.content
+                            i.mail.icon
+                    img(class="circular ui image" src=+ (freelancer.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")                    
+                    .ui.violet.inverted.center.aligned.segment
+                        .ui.star.large.rating(data-rating=Math.round(freelancer.note_moy_freelancer) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(freelancer.note_moy_freelancer*100)/100+" pour "+freelancer.notations.length+" contrat(s) noté(s).")
+                .twelve.wide.column
+                    .ui.horizontal.segments
+                        .ui.padded.centered.segment
+                            h3.ui.header(class= freelancer.isValid === true ? "green" : "red") 
+                                i.info.icon 
+                                .content   #{freelancer.isValid === true ? "Validé" : "Non-validé"}
+                                    .sub.header Etat du compte
+                            h4.ui.header 
+                                i.user.icon 
+                                .content   #{freelancer.nom}
+                                    .sub.header Nom
+                            h4.ui.header 
+                                i.ellipsis.horizontal.icon 
+                                .content   #{freelancer.pnom}
+                                    .sub.header Prénom
+                            h4.ui.header
+                                i(class=( freelancer.sexe === "Homme") ? "male icon" : "female icon" ) 
+                                .content   #{freelancer.sexe}
+                                    .sub.header Sexe
+                            h4.ui.header 
+                                i.calendar.icon 
+                                .content   #{moment(freelancer.dateNaiss).format('D MMMM YYYY')}
+                                    .sub.header Date de naissance
+                            h4.ui.header 
+                                i.marker.icon 
+                                .content   #{freelancer.lieuNaiss}
+                                    .sub.header Lieu de naissance
+                        .ui.padded.segment
+                            h4.ui.header
+                                i.call.icon 
+                                .content   #{freelancer.telephone}
+                                    .sub.header Numéro de téléphone
+                            h4.ui.header 
+                                i.at.icon                         
+                                .content   #{freelancer.email}
+                                    .sub.header Adresse mail
+                            h4.ui.header 
+                                i.map.icon                         
+                                .content   #{freelancer.wilayaAdr}
+                                    .sub.header Wilaya de résidence
+                            h4.ui.header 
+                                i.map.pin.icon                         
+                                .content   #{freelancer.communeAdr}
+                                    .sub.header Commune de residence
+                            h4.ui.header 
+                                i.map.signs.icon                         
+                                .content   #{freelancer.quartierAdr}
+                                    .sub.header Quartier de résidence
+                            h4.ui.header 
+                                i.building.outline.icon                         
+                                .content   #{freelancer.lotissementAdr}
+                                    .sub.header Numéro de lotissement
+            .ui.violet.inverted.segment
+                h4.ui.header
+                    i.cubes.icon
+                    | Compétences        
+            .ui.two.stackable.cards
+                each competence, index in freelancer.competences
+                    .violet.card
+                        .content
+                            h4.ui.header
+                                i.cube.icon 
+                                .content  #{index+1} -  #{competence.titre}
+                            .description
+                                | #{competence.description}
+    .ui.contact.modal
+        h2.ui.header
+            i.mail.icon 
+            .content Informations de contact
+        .content
+            .ui.three.column.stackable.centered.middle.aligned.grid
+                .column
+                    h3.ui.center.aligned.icon.header
+                        i.call.icon
+                        .content #{freelancer.telephone}
+                            .sub.header Numéro de téléphone
+                .column
+                    h3.ui.center.aligned.icon.header
+                        i.mail.icon
+                        .content #{freelancer.email}
+                            .sub.header Adresse email
+                .center.aligned.column
+                    .ui.labeled.icon.big.blue.contactModal.button(style="margin-bottom: 1em")
+                        i.large.talk.icon
+                        | Messagerie
+        .center.aligned.actions
+            .ui.cancel.violet.button Fermer
+
+    

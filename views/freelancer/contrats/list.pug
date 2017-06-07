@@ -1,4 +1,4 @@
-extends /views/layout/layout_emp
+extends /views/layout/layout
 
 block user
     .ui.segment.basic
@@ -9,14 +9,14 @@ block content
     .ui.container
         .ui.two.columns.stackable.grid
             .two.wide.column
-                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                a.ui.teal.icon.fluid.huge.button(id="sidebaror")
                     i.content.icon
             .fourteen.wide.column
-                .ui.violet.inverted.segment
+                .ui.teal.inverted.segment
                     h3.ui.header
                         i.list.icon
                         .content    Liste de vos contrats (#{contrats.length}) :
-        .ui.padded.violet.segment
+        .ui.padded.teal.segment
             form.ui.form(action="" method="GET" role="form")
                 .equal.width.fields
                     .field
@@ -25,11 +25,11 @@ block content
                             i.search.icon
                     .field
                         .ui.icon.input
-                            input(type="text" name="searchNom" placeholder="Nom du freelancer...")
+                            input(type="text" name="searchNom" placeholder="Nom de l'employeur...")
                             i.search.icon
                     .field
                         .ui.icon.input
-                            input(type="text" name="searchPnom" placeholder="Prénom du freelancer...")
+                            input(type="text" name="searchPnom" placeholder="Prénom de l'employeur...")
                             i.search.icon
                     .field
                         select(class="ui dropdown" name="etat")
@@ -51,11 +51,6 @@ block content
                     i.info.icon
                     .content 
                         .header #{contratDeleted}
-            if contratCreated.length > 0
-                .ui.info.icon.message
-                    i.info.icon
-                    .content 
-                        .header #{contratCreated}
             if contrats.length === 0
                 .ui.info.icon.message
                     i.info.icon
@@ -69,7 +64,7 @@ block content
                                 i.caret.down.icon
                             th Offre
                                 i.caret.down.icon
-                            th Freelancer
+                            th Employeur
                                 i.caret.down.icon
                             th Etat
                                 i.caret.down.icon
@@ -79,7 +74,7 @@ block content
                         each contrat, index in contrats
                             tr 
                                 td.two.wide 
-                                    a(href="/employeur/contrats/details/"+contrat._id)
+                                    a(href="/freelancer/contrats/details/"+contrat._id)
                                         i.hashtag.icon
                                         | #{contrat._id}
                                 td.five.wide 
@@ -87,15 +82,11 @@ block content
                                     | #{contrat.offre.titre}
                                 td.five.wide.left.aligned
                                     i.user.icon
-                                    |  #{contrat.freelancer.nom}, #{contrat.freelancer.pnom}
+                                    |  #{contrat.employeur.nom}, #{contrat.employeur.pnom}
                                 case contrat.etat
                                     when "Négociation"
                                         td.two.wide.left.warning.aligned
                                             i.wait.icon
-                                            |  #{contrat.etat}
-                                    when "Cloturation"
-                                        td.two.wide.left.warning.aligned
-                                            i.lock.icon
                                             |  #{contrat.etat}
                                     when "Ouvert"
                                         td.two.wide.left.positive.aligned
@@ -104,6 +95,10 @@ block content
                                     when "Fermé"
                                         td.two.wide.left.negative.aligned
                                             i.archive.icon
+                                            |  #{contrat.etat}
+                                    when "Cloturation"
+                                        td.two.wide.left.warning.aligned
+                                            i.lock.icon
                                             |  #{contrat.etat}
                                 td.two.wide.center.aligned 
                                     i.calendar.icon

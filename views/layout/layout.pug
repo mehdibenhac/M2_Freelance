@@ -16,24 +16,23 @@ html
             .ui.basic.segment
                 block user
                 if (user.isValid === true)
-                    .ui.green.segment
-                        h5.ui.header
-                            i.checkmark.circle.icon
-                            .content
-                                .header Profil validé
+                    .ui.teal.inverted.segment
+                        h5.ui.center.aligned.header(data-tooltip="Profil validé.")
+                            i.green.user.icon
+                            | Freelancer
                 else
-                    .ui.red.segment
-                        h5.ui.header
-                            i.remove.circle.icon
-                            .content Profil non validé
+                    .ui.teal.inverted.segment
+                        h5.ui.center.aligned.header(data-tooltip="Profil non validé.")
+                            i.red.user.icon
+                            | Freelancer
                 .ui.two.column.grid
                     .column
-                        .ui.teal.icon.fluid.button
-                            i.mail.icon
+                        a.ui.teal.icon.fluid.button(href="/messagerie/recus")
+                            i.inbox.icon
                     .column   
                         .ui.teal.icon.fluid.button
                             i.alarm.icon
-                .ui.divider     
+                .ui.divider    
                 .ui.large.vertical.secondary.fluid.pointing.inverted.menu
                     a(class= ( currentRoute === 'profil' ? "active item" : "item" ) href="/freelancer/") 
                         i.user.icon
@@ -55,12 +54,6 @@ html
                     a.item
                         i.home.icon
                         | Accueil
-                    a.item 
-                        i.info.icon
-                        | Informations
-                    a.item
-                        i.help.circle.icon
-                        | Support
                     a.item(href="/logout") 
                         i.power.icon
                         | Déconnexion                 

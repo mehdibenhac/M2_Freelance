@@ -16,22 +16,22 @@ var multer = require('multer');
 var async = require('async');
 
 // Routes
-Router.use(middleware.isLoggedIn, middleware.isEmployeur);
+Router.use(middleware.isLoggedIn, middleware.isFreelancer);
 
 Router.get('/', function (req, res, next) {
     var titre = req.query.searchOffre || "";
     var nom = req.query.searchNom || "";
     var pnom = req.query.searchPnom || "";
     var etat = req.query.etat || "";
-    Employeur.findOne({
+    Freelancer.findOne({
         userID: req.user.id
-    }).populate('userID').exec(function (err, employeur) {
+    }).populate('userID').exec(function (err, freelancer) {
         if (err) {
             console.log(err.stack)
             return next(err);
         }
-        if (employeur !== null) {
-            Freelancer.find({
+        if (freelancer !== null) {
+            Employeur.find({
                 nom: {
                     "$regex": nom,
                     "$options": 'i'
@@ -42,9 +42,9 @@ Router.get('/', function (req, res, next) {
                 }
             }, {
                 _id: 1
-            }, function (err, freelancers) {
-                var idsFreelancer = freelancers.map(function (freelancer) {
-                    return freelancer._id;
+            }, function (err, employeurs) {
+                var idsEmployeur = employeurs.map(function (employeur) {
+                    return employeur._id;
                 });
                 Offre.find({
                     titre: {
@@ -58,11 +58,12 @@ Router.get('/', function (req, res, next) {
                         return offre._id
                     });
                     Contrat.find({
+                        freelancer: req.user.profil.ID,
                         offre: {
                             $in: idsOffre
                         },
-                        freelancer: {
-                            $in: idsFreelancer
+                        employeur: {
+                            $in: idsEmployeur
                         },
                         etat: {
                             $regex: etat
@@ -70,12 +71,11 @@ Router.get('/', function (req, res, next) {
                     }).sort({
                         etat: 1,
                         dateFin: 1
-                    }).populate('offre freelancer').exec(function (err, contrats) {
-                        res.render('employeur/contrats/list', {
+                    }).populate('offre employeur').exec(function (err, contrats) {
+                        res.render('freelancer/contrats/list', {
                             currentRoute: 'contrats',
                             contratDeleted: req.flash("contratDeleted"),
-                            contratCreated: req.flash("contratCreated"),
-                            user: employeur,
+                            user: freelancer,
                             contrats: contrats
                         });
                     });
@@ -89,7 +89,7 @@ Router.get('/', function (req, res, next) {
 });
 Router.get('/details/:id', function (req, res, next) {
     var ID = req.params.id;
-    Employeur.findById(req.user.profil.ID).exec(function (err, employeur) {
+    Freelancer.findById(req.user.profil.ID).exec(function (err, freelancer) {
         if (err) {
             console.log(err.stack)
             return next(err);
@@ -105,11 +105,11 @@ Router.get('/details/:id', function (req, res, next) {
                 return next(err);
             }
             if (contrat === null) {
-                return res.redirect('/employeur/contrats');
+                return res.redirect('/freelancer/contrats');
             }
-            Freelancer.aggregate([{
+            Employeur.aggregate([{
                 "$match": {
-                    _id: contrat.freelancer
+                    _id: contrat.employeur
                 },
             }, {
                 "$addFields": {
@@ -121,41 +121,40 @@ Router.get('/details/:id', function (req, res, next) {
                 "$sort": {
                     "note_moy": -1
                 }
-            }], function (err, aggregatedFreelancer) {
+            }], function (err, aggregatedEmployeur) {
                 if (err) {
                     console.log(err.stack)
                     return next(err);
                 }
-                res.render('employeur/contrats/details', {
+                res.render('freelancer/contrats/details', {
                     currentRoute: 'contrats',
-                    user: employeur,
+                    user: freelancer,
                     contrat: contrat,
-                    freelancer: aggregatedFreelancer
+                    employeur: aggregatedEmployeur
                 })
             })
         })
 
     })
 });
-Router.delete('/details/:id', function (req, res, next) {
+Router.put('/details/:id', function (req, res, next) {
     var ID = req.params.id;
-    Contrat.findByIdAndRemove(ID, function (err, contrat) {
+    Contrat.findByIdAndUpdate(ID, {
+        etat: "Ouvert"
+    }, function (err, contrat) {
         if (err) {
             console.log(err.stack)
             return next(err);
         }
         Offre.findByIdAndUpdate(contrat.offre, {
-            etat: "Ouverte",
-            $pull: {
-                postulants: contrat.freelancer
-            }
+            etat: "Fermée",
         }, function (err, offre) {
             if (err) {
                 console.log(err.stack)
                 return next(err);
             }
-            req.flash('contratDeleted', 'Votre contrat a été supprimé avec succés');
-            res.redirect('/employeur/contrats')
+            req.flash('contratAccepted', 'Votre contrat a été accepté avec succés');
+            res.redirect('/freelancer/contrats/details/' + contrat._id);
         });
     })
 });
@@ -163,28 +162,28 @@ Router.post('/details/:id/cloturer', function (req, res, next) {
     var ID = req.params.id;
     var note = {
         note: req.body.note,
-        employeur: req.user.profil.ID,
+        freelancer: req.user.profil.ID,
         contrat: ID
     };
     Contrat.findByIdAndUpdate(ID, {
-        etat: "Fermé"
+        etat: "Cloturation"
     }, function (err, contrat) {
         if (err) {
             console.log(err.stack)
             return next(err);
         }
-        Freelancer.findByIdAndUpdate(contrat.freelancer, {
+        Employeur.findByIdAndUpdate(contrat.employeur, {
             $push: {
                 notations: note
             }
-        }, function (err, freelancer) {
+        }, function (err, employeur) {
             if (err) {
                 console.log(err.stack)
                 return next(err);
             }
             res.send({
                 contrat: contrat,
-                employeur: freelancer
+                employeur: employeur
             })
         })
     });

@@ -27,10 +27,10 @@ html
                             | Employeur
                 .ui.two.column.grid
                     .column
-                        .ui.violet.icon.fluid.button
-                            i.mail.icon
+                        a.ui.violet.icon.fluid.button(href="/messagerie/recus")
+                            i.inbox.icon
                     .column   
-                        .ui.violet.icon.fluid.button
+                        a.ui.violet.icon.fluid.button
                             i.alarm.icon
                 .ui.divider     
                 .ui.large.vertical.secondary.fluid.pointing.inverted.menu
@@ -46,7 +46,7 @@ html
                     a(class= ( currentRoute === 'contrats' ? "active item" : "item" ) href="/employeur/contrats") 
                         i.suitcase.icon
                         | Contrats
-                    a(class= ( currentRoute === 'employeurs' ? "active item" : "item" ) href="/employeur/freelancers") 
+                    a(class= ( currentRoute === 'freelancers' ? "active item" : "item" ) href="/employeur/freelancers") 
                         i.sitemap.icon
                         | Freelancers
                 .ui.divider
@@ -54,12 +54,6 @@ html
                     a.item
                         i.home.icon
                         | Accueil
-                    a.item 
-                        i.info.icon
-                        | Informations
-                    a.item
-                        i.help.circle.icon
-                        | Support
                     a.item(href="/logout") 
                         i.power.icon
                         | Déconnexion                 

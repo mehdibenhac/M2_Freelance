@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
+    "livereload": "^0.6.2",
     "method-override": "^2.3.9",
     "moment": "^2.18.1",
     "mongoose": "^4.10.0",

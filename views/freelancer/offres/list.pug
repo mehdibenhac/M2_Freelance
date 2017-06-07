@@ -58,7 +58,7 @@ block content
                         .content 
                             .header Votre compte n'est pas validé.
                             p Vous ne pourrez postuler pour une offre que si votre compte a été validé par un administrateur.
-                table.ui.sortable.padded.striped.basic.six.column.table(id="offresTable")
+                table.ui.sortable.padded.striped.celled.seven.column.table(id="offresTable")
                     thead
                         tr
                             th Titre
@@ -67,9 +67,11 @@ block content
                                 i.caret.down.icon
                             th Localisation
                                 i.caret.down.icon
-                            th Durée min
+                            th Note
                                 i.caret.down.icon
-                            th Durée max
+                            th Dur. min
+                                i.caret.down.icon
+                            th Dur. max
                                 i.caret.down.icon
                             th(class="sorter-shortDate dateFormat-ddmmyyyy") Date d'ajout
                                 i.caret.down.icon
@@ -84,10 +86,22 @@ block content
                                 p  #{offre.competence.titre}
                             td.two.wide.center.aligned
                                 p #{offre.localisation}
-                            td.two.wide.center.aligned 
+                            if (offre.note_moy_employeur >= 7)
+                                td.one.wide.center.aligned.positive
+                                    p #{offre.note_moy_employeur}
+                            else if (offre.note_moy_employeur >= 4)
+                                td.one.wide.center.aligned.warning
+                                    p #{offre.note_moy_employeur}
+                            else if (offre.note_moy_employeur >= 1)
+                                td.one.wide.center.aligned.negative
+                                    p #{offre.note_moy_employeur}
+                            else if (offre.note_moy_employeur = 0)
+                                td.one.wide.center.aligned.disabled
+                                    p #{offre.note_moy_employeur}
+                            td.one.wide.center.aligned 
                                 i.hourglass.start.icon
                                 | #{offre.duree_min}
-                            td.two.wide.center.aligned 
+                            td.one.wide.center.aligned 
                                 i.hourglass.end.icon
                                 | #{offre.duree_max}
                             td.two.wide.center.aligned 

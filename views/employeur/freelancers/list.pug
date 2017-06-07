@@ -1,0 +1,101 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.two.columns.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .fourteen.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.list.icon
+                        .content    Liste des freelancers :
+        .ui.padded.violet.segment
+            form.ui.form(action="" method="GET" role="form")
+                .five.fields
+                    .field
+                        .ui.icon.input
+                            input(type="text" name="searchNom" placeholder="Nom F." )
+                            i.search.icon
+                    .field
+                        .ui.icon.input
+                            input(type="text" name="searchPnom" placeholder="Prénom F." )
+                            i.search.icon
+                    .six.wide.field
+                        select(class="ui dropdown" name="comp")
+                            option(value="" disabled selected) Compétence
+                            each competence in competences
+                                option(value=competence._id) #{competence.titre} - #{competence.domaine.titre}
+                    .field
+                        select(class="ui dropdown" name="noteMin")
+                            option(value="" disabled selected) Note minimum
+                            option(value="1") 1
+                            option(value="2") 2
+                            option(value="3") 3
+                            option(value="4") 4
+                            option(value="5") 5
+                            option(value="6") 6
+                            option(value="7") 7
+                            option(value="8") 8
+                            option(value="9") 9
+                            option(value="10") 10
+                    .two.fields
+                        .field
+                            button.ui.yellow.icon.fluid.button(type="reset")
+                                i.refresh.icon
+                        .field
+                            button.ui.violet.icon.fluid.button.submit
+                                i.search.icon
+            .ui.divider
+            if freelancers.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    .content Aucun freelancer à afficher.
+            else        
+                table.ui.sortable.padded.striped.celled.six.column.small.table(id="offresTable")
+                    thead
+                        tr
+                            th ID 
+                                i.caret.down.icon
+                            th Nom
+                                i.caret.down.icon
+                            th Prénom
+                                i.caret.down.icon
+                            th Compétences
+                                i.caret.down.icon
+                            th Note moyenne
+                                i.caret.down.icon
+                            th Âge
+                                i.caret.down.icon
+                    tbody
+                    each freelancer, index in freelancers
+                        tr 
+                            td.two.wide 
+                                a(href="/employeur/freelancers/details/"+freelancer.userID)
+                                    i.hashtag.icon
+                                    | #{freelancer._id}
+                            td.three.wide 
+                                a(href="/employeur/freelancers/details/"+freelancer._id)
+                                    i.user.icon 
+                                    | #{freelancer.nom}
+                            td.four.wide.left.aligned
+                                a(href="/employeur/freelancers/details/"+freelancer._id)
+                                    i.user.icon 
+                                    | #{freelancer.pnom}
+                            td.two.wide.center.aligned
+                                each competence, index in freelancer.competences
+                                    .ui.violet.label( data-content= competence.titre )
+                                        i.student.icon                             
+                                        | #{index+1}
+                            td.three.wide.center.aligned
+                                .ui.star.small.rating(data-rating=Math.round(freelancer.note_moy_freelancer) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(freelancer.note_moy_freelancer*100)/100+" pour "+freelancer.notations.length+" contrat(s) noté(s).")
+                            td.two.wide.center.aligned 
+                                i.birthday.icon
+                                | #{moment(freelancer.dateNaiss).fromNow(true)}
+                

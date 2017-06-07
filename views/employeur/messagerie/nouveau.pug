@@ -1,0 +1,52 @@
+extends /views/layout/layout_emp
+
+block user
+    .ui.segment.basic
+        h3.ui.header.inverted
+            img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+            .content  #{user.nom}
+block content
+    .ui.container
+        .ui.three.column.stackable.grid
+            .two.wide.column
+                a.ui.violet.icon.fluid.huge.button(id="sidebaror")
+                    i.content.icon
+            .ten.wide.column
+                .ui.violet.inverted.segment
+                    h3.ui.header
+                        i.mail.outline.icon
+                        .content    Nouveau message :
+            .four.wide.column
+                a.ui.violet.labeled.icon.fluid.huge.button(href="/messagerie/recus")
+                    i.reply.icon
+                    | Retour
+        .ui.divider
+        .ui.violet.padded.segment
+            .ui.basic.padded.segment
+                if sameUser != ""
+                    .ui.error.icon.message
+                        i.warning.icon
+                        .content #{sameUser}
+                if noUser != ""
+                    .ui.error.icon.message
+                        i.warning.icon
+                        .content #{noUser}
+                form.ui.form(role="form" action="" method="post")
+                    .ui.error.message                    
+                    .field
+                        label Objet du message
+                        input(type="text" name="objet" placeholder="Objet...")
+                    .field
+                        label ID du destinataire
+                        input(type="text" name="dest" placeholder="Destinataire..." value= (typeof(dest) === 'undefined' ? undefined : dest))
+                    .ui.divider
+                    .field
+                        label Contenu du message
+                        textarea(name="contenu" placeholder="Contenu...")
+                    .ui.clearing.basic.segment
+                        button.ui.labeled.icon.violet.right.floated.submit.button
+                            i.send.icon
+                            | Envoyer
+                        button.ui.labeled.icon.yellow.right.floated.button(type="reset")
+                            i.refresh.icon
+                            | Réinitialiser

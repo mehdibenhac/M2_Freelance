@@ -44,6 +44,7 @@ Router.get('/', function (req, res, next) {
                 employeur: employeur._id,
                 etat: "Ouverte"
             }).populate('competence').sort({
+                dateAjout: -1,
                 postulants: -1
             }).exec(function (err, offres) {
                 var offresCount = offres.length;
