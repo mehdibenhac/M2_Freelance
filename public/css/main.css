@@ -2,6 +2,41 @@ body {
     background: #333439 !important;
 }
 
+.mast {
+    background-color: #16a085;
+    min-height: 500px;
+}
+
+.seg-two {
+    background-color: #16a085;
+    background-image: -webkit-linear-gradient(160deg, #16a085 65%, #ecf0f1 32%);
+    min-height: 300px;
+}
+
+.two.column {
+    padding-top: 4em;
+}
+
+.three.column {
+    padding-top: 3em;
+}
+
+.seg-three {
+    background-color: #16a085;
+    background-image: -webkit-linear-gradient(200deg, #ecf0f1 35%, #16a085 32%);
+    min-height: 300px;
+}
+
+.footer {
+    background-color: #ecf0f1;
+    min-height: 250px;
+}
+
+.text.container {
+    width: 500px;
+    text-align: center
+}
+
 .signup {
     background-color: #ecf0f1;
     border: 1px solid #fff;

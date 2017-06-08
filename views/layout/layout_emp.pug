@@ -26,12 +26,16 @@ html
                             i.red.building.icon
                             | Employeur
                 .ui.two.column.grid
-                    .column
-                        a.ui.violet.icon.fluid.button(href="/messagerie/recus")
-                            i.inbox.icon
-                    .column   
-                        a.ui.violet.icon.fluid.button
-                            i.alarm.icon
+                    .column(style="padding-right: 5px")
+                        a.ui.labeled.fluid.button( href="/messagerie/recus")
+                            .ui.violet.fluid.button
+                                i.inbox.icon
+                            .ui.basic.violet.left.pointing.label(id="msgLabel") 0
+                    .column(style="padding-left: 5px")   
+                        a.ui.labeled.fluid.button(href="/notifications")
+                            .ui.violet.fluid.button
+                                i.alarm.icon
+                            .ui.basic.violet.left.pointing.label(id="notifLabel")  0                         
                 .ui.divider     
                 .ui.large.vertical.secondary.fluid.pointing.inverted.menu
                     a(class= ( currentRoute === 'profil' ? "active item" : "item" ) href="/employeur/") 

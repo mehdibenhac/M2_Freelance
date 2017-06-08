@@ -66,7 +66,8 @@ Router.get('/', middleware.isLoggedIn, middleware.isEmployeur, function (req, re
                             },
                             "note_moy_freelancer": {
                                 "$gte": noteMin
-                            }
+                            },
+                            "parametres.disponibilite": true
                         }
                     },
                     {
@@ -118,7 +119,8 @@ Router.get('/', middleware.isLoggedIn, middleware.isEmployeur, function (req, re
                             },
                             "note_moy_freelancer": {
                                 "$gte": noteMin
-                            }
+                            },
+                            "parametres.disponibilite": true
                         }
                     },
                     {

@@ -33,48 +33,44 @@ block content
                                 | Contact
                     .row
                         .six.wide.column
-                            .ui.fluid.card
-                                .center.aligned.content
-                                    h3.ui.teal.header Employeur
-                                .image
-                                    img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
-                                .center.aligned.content
-                                    .ui.star.huge.rating(data-rating=Math.round(offre.note_moy_employeur) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(offre.note_moy_employeur*100)/100+" pour "+offre.employeur.notations.length+" contrat(s) noté(s).")
-                                .content
-                                    h4.ui.header 
-                                        i.hashtag.icon                         
-                                        .content #{offre.employeur._id}
-                                            .sub.header ID
-                                .content
-                                    h4.ui.header 
-                                        i.hashtag.icon                         
-                                        .content #{offre.employeur._id}
-                                            .sub.header ID
-                                .content
-                                    h4.ui.header 
-                                        i.user.icon    
-                                        .content #{offre.employeur.nom}
-                                            .sub.header Nom
-                                .content
-                                    h4.ui.header 
-                                        i.ellipsis.horizontal.icon
-                                        .content #{offre.employeur.pnom}
-                                            .sub.header Prénom
-                                .content
-                                    h4.ui.header 
-                                        i.call.icon
-                                        .content #{offre.employeur.telephone}
-                                            .sub.header Numéro de téléphone
-                                .content
-                                    h4.ui.header 
-                                        i.mail.icon
-                                        .content #{offre.employeur.email}
-                                            .sub.header Adresse Mail
-                                .content
-                                    h4.ui.header 
-                                        i.map.icon
-                                        .content #{offre.employeur.wilayaAdr}
-                                            .sub.header Wilaya
+                            a(href="/freelancer/employeurs/details/"+offre.employeur._id)
+                                .ui.fluid.card
+                                    .center.aligned.content
+                                        h3.ui.teal.header Employeur
+                                    .image
+                                        img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
+                                    .center.aligned.content
+                                        .ui.star.huge.rating(data-rating=Math.round(offre.note_moy_employeur) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(offre.note_moy_employeur*100)/100+" pour "+offre.employeur.notations.length+" contrat(s) noté(s).")
+                                    .content
+                                        h4.ui.header 
+                                            i.hashtag.icon                         
+                                            .content #{offre.employeur.userID}
+                                                .sub.header ID
+                                    .content
+                                        h4.ui.header 
+                                            i.user.icon    
+                                            .content #{offre.employeur.nom}
+                                                .sub.header Nom
+                                    .content
+                                        h4.ui.header 
+                                            i.ellipsis.horizontal.icon
+                                            .content #{offre.employeur.pnom}
+                                                .sub.header Prénom
+                                    .content
+                                        h4.ui.header 
+                                            i.call.icon
+                                            .content #{offre.employeur.telephone}
+                                                .sub.header Numéro de téléphone
+                                    .content
+                                        h4.ui.header 
+                                            i.mail.icon
+                                            .content #{offre.employeur.email}
+                                                .sub.header Adresse Mail
+                                    .content
+                                        h4.ui.header 
+                                            i.map.icon
+                                            .content #{offre.employeur.wilayaAdr}
+                                                .sub.header Wilaya
                         .ten.wide.column
                             .ui.padded.teal.segment
                                 .ui.padded.vertical.segments

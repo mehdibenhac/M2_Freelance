@@ -24,13 +24,13 @@ block content
         .ui.stackable.two.column.grid
             .four.wide.column
                 form.ui.form(action="?_method=DELETE" method="Post")
-                    button.ui.yellow.fluid.labeled.icon.validateModal.button(type="button")
-                        i.remove.icon
-                        | Supprimer l'offre
-                br
-                a.ui.purple.fluid.labeled.icon.button(href="")
-                    i.edit.icon
-                    | Modifier l'offre
+                    .ui.purple.inverted.two.item.menu
+                        a.validateModal.item(type="button")
+                            i.remove.icon
+                            | Supprimer
+                        a.item(href="/employeur/offres/details/"+offre._id+"/mod")
+                            i.edit.icon
+                            | Modifier
                 .ui.inverted.violet.segment
                     h3.ui.header
                         i.users.icon
@@ -38,11 +38,12 @@ block content
                 .ui.padded.violet.segment
                     if offre.postulants.length > 0
                         each postulant, index in offre.postulants
-                            h4.ui.header 
-                                i.user.icon
-                                .content  #{postulant._id}
-                                    .sub.header #{postulant.nom}
-                            .ui.divider 
+                            a(href="/employeur/freelancers/details/"+postulant._id)
+                                h4.ui.header 
+                                    i.user.icon
+                                    .content #{postulant.nom}, #{postulant.pnom}
+                                        .sub.header #{postulant.userID} 
+                                .ui.divider 
                     else
                         .ui.info.icon.message
                             i.info.icon
@@ -77,9 +78,9 @@ block content
                                     .sub.header Localisation
                         .ui.segment            
                             h3.ui.header 
-                                i.write.icon
-                                .content Description de l'offre 
-                                    .sub.header #{offre.description}
+                                i.book.icon
+                                .content #{offre.description}
+                                    .sub.header Description de l'offre
                         .ui.horizontal.segments
                             .ui.basic.segment
                                 h3.ui.header 

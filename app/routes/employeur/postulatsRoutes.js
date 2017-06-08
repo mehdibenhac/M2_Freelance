@@ -1,5 +1,6 @@
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
+var Utility = require('../../utility.js');
 var Employeur = require('../../models/Employeur.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Offre = require('../../models/Offre.js');
@@ -153,6 +154,13 @@ Router.post('/details/:id/contrat/fin', function (req, res, next) {
             console.log(err.stack)
             return next(err);
         }
+        Freelancer.findById(idFreelancer).exec(function (err, freelancer) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            Utility.notifyContratFree(freelancer.userID, contrat._id);
+        });
         Offre.findByIdAndUpdate(idOffre, {
             etat: 'Négociation'
         }, function (err, result) {

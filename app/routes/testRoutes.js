@@ -2,6 +2,7 @@ var Router = require('express').Router();
 var User = require('../models/User.js');
 var Offre = require('../models/Offre.js');
 var Freelancer = require('../models/Freelancer.js');
+var Utility = require('../utility.js');
 
 Router.get('/', function (req, res) {
     var step = req.query.step;
@@ -131,6 +132,25 @@ Router.get('/testAggregate', function (req, res, next) {
         function (err, results) {
             res.send(results);
         });
+});
+
+Router.get('/notifier', function (req, res, next) {
+    var compet = "HkGT5aMbb";
+    var offre = "H1ltpzcKb-";
+    var targets = [];
+    Freelancer.find({
+        competences: compet
+    }).exec(function (err, freelancers) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        freelancers.forEach(function (freelancer) {
+            targets.push(freelancer.userID);
+        });
+        Utility.notifyOffre(targets, offre);
+        res.send(targets);
+    });
 });
 
 Router.get('/sidebar', function (req, res, next) {

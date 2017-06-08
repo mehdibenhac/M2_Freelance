@@ -422,13 +422,7 @@ Router.get('/details/:id', function (req, res, next) {
             if (err) {
                 console.log(err.stack)
                 return next(err);
-            }
-            console.log(offre);
-            console.log(_.any(offre.postulants, function (item) {
-                console.log("ITEM : ", typeof (item));
-                console.log("FREELANCER : ", typeof (freelancer));
-                return item._id === freelancer._id;
-            }));
+            };
             res.render('freelancer/offres/details', {
                 user: freelancer,
                 offre: offre[0],

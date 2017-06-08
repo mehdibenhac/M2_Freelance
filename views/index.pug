@@ -1,3 +1,182 @@
 include /views/layout/head
 body
-    h1 Welcome!
+    .mast
+        .ui.basic.segment
+            .ui.secondary.inverted.menu
+                a.active.item 
+                    i.home.icon
+                    | Accueil
+                a.item 
+                    i.bar.chart.icon
+                    | Statistiques
+                .right.menu
+                    a.item(href="/login")
+                        i.sign.in.icon
+                        | Connexion
+                    .ui.dropdown.item
+                        i.user.icon
+                        .text S'incrire en tant que...
+                        .menu
+                            a.item(href="/freelancer/signup") Freelancer
+                            a.item(href="/employeur/signup") Employeur
+        .ui.text.container
+            img.ui.centered.small.image(src="/static/images/logo_round_white.png")
+            h1.ui.inverted.header 
+                .content Fennec Freelance
+                .sub.header La plateforme de Freelance Algérienne...
+    div(class="seg-two")
+        .ui.center.aligned.two.column.grid
+            .five.wide.column
+                h2.ui.teal.icon.header
+                    i.building.icon
+                    .content Employeurs
+            .eleven.wide.column
+                h3.ui.inverted.header(style="margin-left: 150px") 
+                    i.cubes.icon
+                    .content Inscrivez-vous en tant qu'employeur et profitez de nos services...
+                .ui.list(style="margin-left: 200px; color:white")
+                    .item
+                        i.tasks.icon
+                        .content Créeez un compte, définissez vos domaines, publiez et gérez vos offres d'emploi!
+                    .item
+                        i.users.icon
+                        .content Consultez la liste des freelancers disponibles et contactez-les directement!
+                    .item
+                        i.checkmark.icon
+                        .content Accumulez des notes et améliorez votre classement dans la liste des employeurs!
+                    .item
+                        i.configure.icon
+                        .content Gérez votre profil, vos postulats, offres et contrats...
+                    .item
+                        i.ellipsis.horizontal.icon
+                        .content Et bien plus!
+    div(class="seg-three")
+        .ui.center.aligned.two.column.grid
+            .eleven.wide.column
+                h3.ui.inverted.header(style="margin-left: 100px") 
+                    i.student.icon
+                    .content Inscrivez-vous en tant que Freelancer et profitez de nos services...
+                .ui.list(style="margin-left: 150px; color:white")
+                    .item
+                        i.filter.icon
+                        .content Créeez un compte, définissez vos compétences, recherchez les offres qui vous conviennent!
+                    .item
+                        i.building.icon
+                        .content Consultez la liste des employeurs disponibles et contactez-les directement!
+                    .item
+                        i.alarm.icon
+                        .content Paramétrez vos paramétres et soyez notifié dés qu'une offre est disponible!
+                    .item
+                        i.checkmark.icon
+                        .content Accumulez des notes et améliorez votre classement dans la liste des freelancers!
+                    .item
+                        i.configure.icon
+                        .content Gérez votre profil, vos postulats, offres et contrats...
+                    .item
+                        i.ellipsis.horizontal.icon
+                        .content Et bien plus!
+            .five.wide.column
+                h2.ui.teal.icon.header
+                    i.street.view.icon
+                    .content Freelancers
+    div(class="seg-two")
+        .ui.center.aligned.two.column.grid
+            .five.wide.column
+                h2.ui.teal.icon.header
+                    i.tasks.icon
+                    .content Offres
+            .eleven.wide.column
+                h3.ui.inverted.header(style="margin-left: 150px") 
+                    i.browser.icon
+                    .content Postez ou consultez la liste des offres disponibles...
+                .ui.list(style="margin-left: 200px; color:white")
+                    .item
+                        i.send.icon
+                        .content Postez une offre en définissant la compétence désirée ainsi que ses conditions!
+                    .item
+                        i.ellipsis.vertical.icon
+                        .content parcourez la liste des offres disponibles!
+                    .item
+                        i.checkmark.box.icon
+                        .content Si une offre vous plait, postulez!
+    div(class="seg-three")
+        .ui.center.aligned.two.column.grid
+            .eleven.wide.column
+                h3.ui.inverted.header(style="margin-left: 100px") 
+                    i.folder.icon
+                    .content Consultez et gérez vos postulats...
+                .ui.list(style="margin-left: 150px; color:white")
+                    .item
+                        i.star.icon
+                        .content Les postulants sont classés selon leur notation moyenne!
+                    .item
+                        i.hand.pointer.icon
+                        .content Choisissez un freelancer parmi la liste des postulants!
+                    .item
+                        i.suitcase.icon
+                        .content Une fois un postulant selectionné, établissez un contrat!
+            .five.wide.column
+                h2.ui.teal.icon.header
+                    i.block.layout.icon
+                    .content Postulats
+    div(class="seg-two")
+        .ui.center.aligned.two.column.grid
+            .five.wide.column
+                h2.ui.teal.icon.header
+                    i.suitcase.icon
+                    .content Contrats
+            .eleven.wide.column
+                h3.ui.inverted.header(style="margin-left: 150px") 
+                    i.folder.open.icon
+                    .content Gérez vos contrats...
+                .ui.list(style="margin-left: 200px; color:white")
+                    .item
+                        i.file.text.icon
+                        .content Consultez les details de vos contrats!
+                    .item
+                        i.wait.icon
+                        .content Demandez la clôture d'un contrat!
+                    .item
+                        i.half.star.empty.icon
+                        .content Une fois un contrat clôturé, notez la prestation du freelancer/employeur!
+    div(class="footer")
+        .ui.three.column.center.aligned.grid
+            .column
+                h3.ui.header(style="margin-left: 100px") 
+                    i.heart.icon
+                    .content Liens sociaux
+                .ui.list(style="margin-left:150px")
+                    a.item
+                        i.facebook.blue.icon
+                        .content Facebook
+                    a.item
+                        i.twitter.teal.icon
+                        .content Twitter
+                    a.item
+                        i.youtube.red.icon
+                        .content Youtube              
+            .column
+                h3.ui.header(style="margin-left: 100px") 
+                    i.star.empty.icon
+                    .content Divers
+                .ui.list(style="margin-left:150px")
+                    a.item
+                        i.bar.chart.teal.icon
+                        .content Statistiques
+                    a.item(href="/login")
+                        i.sign.in.teal.icon
+                        .content Connexion
+                    a.item(href="/freelancer/signup")
+                        i.student.teal.icon
+                        .content Inscription Freelancer
+                    a.item(href="/employeur/signup")
+                        i.building.teal.icon
+                        .content Inscription Employeur
+            .column 
+                h2.ui.header(style="margin-left: 100px") 
+                    i.copyright.icon
+                    .content Copyrights
+                p
+                    i Fennec Freelance, tous droits reservés 2016/2017
+
+                        

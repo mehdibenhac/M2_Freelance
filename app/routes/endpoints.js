@@ -2,7 +2,10 @@ var Router = require('express').Router();
 var User = require('../models/User.js');
 var Freelancer = require('../models/Freelancer.js');
 var Employeur = require('../models/Employeur.js');
+var Notification = require('../models/Notification.js');
+var Message = require('../models/Message.js');
 var Offre = require('../models/Offre.js');
+var Utility = require('../utility.js');
 
 // Freelancer
 
@@ -107,7 +110,13 @@ Router.put('/postuler', function (req, res, next) {
                 postulants: req.user.profil.ID
             }
         }, function (err, offre) {
-            console.log(offre.postulants)
+            Employeur.findById(offre.employeur).exec(function (err, employeur) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                Utility.notifyPostulat(employeur.userID, offre._id);
+            });
             res.send('OK');
         })
     } else {
@@ -154,4 +163,32 @@ Router.put('/modifVisi', function (req, res, next) {
     }
 });
 
+Router.get('/notifsCount', function (req, res, next) {
+    Notification.count({
+        userID: req.user._id,
+        lu: false
+    }).exec(function (err, notifs) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        res.send({
+            count: notifs
+        });
+    });
+});
+Router.get('/msgCount', function (req, res, next) {
+    Message.count({
+        destinataire: req.user._id,
+        lu: false
+    }).exec(function (err, msgs) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        res.send({
+            count: msgs
+        });
+    });
+});
 module.exports = Router;

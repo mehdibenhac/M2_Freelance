@@ -12,9 +12,12 @@ var notificationSchema = mongoose.Schema({
     },
     titre: String,
     contenu: String,
-    idOffre: {
-        type: String,
-        ref: 'Offre'
+    target: {
+        targetType: String,
+        targetPath: {
+            type: String,
+            refPath: 'target.targetType'
+        }
     },
     lu: {
         type: Boolean,

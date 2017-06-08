@@ -26,6 +26,7 @@ module.exports = function (app) {
     var domaineRoutes = require('./routes/domaineRoutes.js');
     var competenceRoutes = require('./routes/competenceRoutes.js');
     var messagerieRoutes = require('./routes/messagerieRoutes.js');
+    var notifsRoutes = require('./routes/notifsRoutes.js');
     var endpointsRoutes = require('./routes/endpoints.js');
     var testRoutes = require('./routes/testRoutes.js');
 
@@ -55,6 +56,7 @@ module.exports = function (app) {
     app.use('/endpoints', endpointsRoutes);
     app.use('/domaines', domaineRoutes);
     app.use('/messagerie', messagerieRoutes);
+    app.use('/notifications', notifsRoutes);
     app.use('/test', testRoutes);
     app.use('/', indexRoutes);
 }

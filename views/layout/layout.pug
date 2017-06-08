@@ -26,12 +26,16 @@ html
                             i.red.user.icon
                             | Freelancer
                 .ui.two.column.grid
-                    .column
-                        a.ui.teal.icon.fluid.button(href="/messagerie/recus")
-                            i.inbox.icon
-                    .column   
-                        .ui.teal.icon.fluid.button
-                            i.alarm.icon
+                    .column(style="padding-right: 5px")
+                        a.ui.labeled.fluid.button( href="/messagerie/recus")
+                            .ui.teal.fluid.button
+                                i.inbox.icon
+                            .ui.basic.teal.left.pointing.label(id="msgLabel") 0
+                    .column(style="padding-left: 5px")   
+                        a.ui.labeled.fluid.button(href="/notifications")
+                            .ui.teal.fluid.button
+                                i.alarm.icon
+                            .ui.basic.teal.left.pointing.label(id="notifLabel")  0     
                 .ui.divider    
                 .ui.large.vertical.secondary.fluid.pointing.inverted.menu
                     a(class= ( currentRoute === 'profil' ? "active item" : "item" ) href="/freelancer/") 

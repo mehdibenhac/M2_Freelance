@@ -47,7 +47,7 @@ block content
                             .content 
                                 .header Vous avez atteint votre quota d'offres!
                                 p Vous avez dèja posté dix offres ouvertes.
-                    table.ui.sortable.padded.striped.basic.five.column.table(id="offresTable")
+                    table.ui.sortable.padded.striped.basic.six.column.small.table(id="offresTable")
                         thead
                             tr
                                 th ID (#{offres.length}/10) 
@@ -58,16 +58,18 @@ block content
                                     i.caret.down.icon
                                 th Postulants
                                     i.caret.down.icon
+                                th Etat
+                                    i.caret.down.icon
                                 th(class="sorter-shortDate dateFormat-ddmmyyyy") Date d'ajout
                                     i.caret.down.icon
                         tbody
                         each offre, index in offres
                             tr 
-                                td.three.wide 
+                                td.two.wide 
                                     a(href="/employeur/offres/details/"+offre._id)
                                         i.hashtag.icon
                                         | #{offre._id}
-                                td.six.wide 
+                                td.five.wide 
                                     a(href="/employeur/offres/details/"+offre._id)
                                         i.newspaper.icon 
                                         | #{offre.titre}
@@ -75,6 +77,19 @@ block content
                                     p  #{offre.competence.titre}
                                 td.one.wide.center.aligned
                                     p #{offre.postulants.length}
+                                case offre.etat
+                                    when "Négociation"
+                                        td.two.wide.left.warning.aligned
+                                            i.wait.icon
+                                            |  #{offre.etat}
+                                    when "Ouverte"
+                                        td.two.wide.left.positive.aligned
+                                            i.circle.thin.icon
+                                            |  #{offre.etat}
+                                    when "Fermée"
+                                        td.two.wide.left.negative.aligned
+                                            i.archive.icon
+                                            |  #{offre.etat}
                                 td.three.wide.center.aligned 
                                     i.calendar.icon
                                     | #{moment(offre.dateAjout).format('DD/MM/YYYY hh:mm')}

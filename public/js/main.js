@@ -5,6 +5,36 @@ Date.prototype.toDateInputValue = (function () {
 });
 
 $(document).ready(function () {
+    $.ajax({
+        url: '/endpoints/notifsCount',
+        dataType: 'json',
+        method: 'get',
+        success: function (data, textStatus, jQxhr) {
+            var count = parseInt(data.count);
+            if (count > 0) {
+                $('#notifLabel').html(count)
+            }
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log(errorThrown)
+        }
+    });
+    $.ajax({
+        url: '/endpoints/msgCount',
+        dataType: 'json',
+        method: 'get',
+        success: function (data, textStatus, jQxhr) {
+            var count = parseInt(data.count);
+            if (count > 0) {
+                $('#msgLabel').html(count)
+            }
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log(errorThrown)
+        }
+    });
+    $('.ui.dropdown')
+        .dropdown();
     $('select.dropdown')
         .dropdown();
     $('.ui.radio.checkbox')

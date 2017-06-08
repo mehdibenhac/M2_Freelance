@@ -4,6 +4,7 @@
 
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
+var Utility = require('../../utility.js');
 var Employeur = require('../../models/Employeur.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Offre = require('../../models/Offre.js');
@@ -52,7 +53,7 @@ Router.get('/', function (req, res, next) {
                         "$options": 'i'
                     }
                 }, {
-                    _id: 1
+                    _id: -1
                 }, function (err, offres) {
                     var idsOffre = offres.map(function (offre) {
                         return offre._id
@@ -69,7 +70,7 @@ Router.get('/', function (req, res, next) {
                             $regex: etat
                         }
                     }).sort({
-                        etat: 1,
+                        etat: -1,
                         dateFin: 1
                     }).populate('offre employeur').exec(function (err, contrats) {
                         res.render('freelancer/contrats/list', {
@@ -146,16 +147,24 @@ Router.put('/details/:id', function (req, res, next) {
             console.log(err.stack)
             return next(err);
         }
-        Offre.findByIdAndUpdate(contrat.offre, {
-            etat: "Fermée",
-        }, function (err, offre) {
+        Employeur.findById(contrat.employeur).exec(function (err, employeur) {
             if (err) {
                 console.log(err.stack)
                 return next(err);
             }
-            req.flash('contratAccepted', 'Votre contrat a été accepté avec succés');
-            res.redirect('/freelancer/contrats/details/' + contrat._id);
+            Utility.notifyContratEmp(employeur.userID, contrat._id);
+            Offre.findByIdAndUpdate(contrat.offre, {
+                etat: "Fermée",
+            }, function (err, offre) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                req.flash('contratAccepted', 'Votre contrat a été accepté avec succés');
+                res.redirect('/freelancer/contrats/details/' + contrat._id);
+            });
         });
+
     })
 });
 Router.post('/details/:id/cloturer', function (req, res, next) {

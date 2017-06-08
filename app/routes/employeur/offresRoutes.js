@@ -4,6 +4,7 @@
 
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
+var Utility = require('../../Utility.js');
 var Employeur = require('../../models/Employeur.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Offre = require('../../models/Offre.js');
@@ -42,7 +43,13 @@ Router.get('/', function (req, res, next) {
         if (employeur !== null) {
             Offre.find({
                 employeur: employeur._id,
-                etat: "Ouverte"
+                $or: [{
+                        etat: 'Ouverte'
+                    },
+                    {
+                        etat: 'Négociation'
+                    }
+                ]
             }).populate('competence').sort({
                 dateAjout: -1,
                 postulants: -1
@@ -73,7 +80,14 @@ Router.get('/ajout', function (req, res, next) {
         }
         if (employeur !== null) {
             Offre.count({
-                employeur: employeur._id
+                employeur: employeur._id,
+                $or: [{
+                        etat: 'Ouverte'
+                    },
+                    {
+                        etat: 'Négociation'
+                    }
+                ]
             }, function (err, offresCount) {
                 if (err) {
                     console.log(err.stack)
@@ -108,6 +122,7 @@ Router.get('/ajout', function (req, res, next) {
 Router.post('/ajout', upload.any(), function (req, res, next) {
     var url_conditions = '/static/uploads/' + req.files[0].filename;
     var url_autre = "";
+    var targets = [];
     if (typeof (req.files[1]) !== 'undefined') {
         url_autre = '/static/uploads/' + req.files[1].filename;
     }
@@ -127,22 +142,15 @@ Router.post('/ajout', upload.any(), function (req, res, next) {
             console.log(err.stack)
             return next(err);
         }
-        var newNotif = new Notification({
-            titre: "Nouvelle offre publiée",
-            contenu: "Une nouvelle offre a été publiée pour l'une de vos compétences",
-            idOffre: offre._id
-        });
-        console.log(req.body.localOffre);
         if (req.body.localOffre === "Nationale") {
             Freelancer.find({
                 'parametres.notif_offres': true,
                 competences: offre.competence
             }).exec(function (err, freelancers) {
                 freelancers.forEach(function (freelancer) {
-                    newNotif.userID = freelancer.userID;
-                    console.log('New notif: ' + newNotif);
-                    newNotif.save();
+                    targets.push(freelancer.userID);
                 });
+                Utility.notifyOffre(targets, offre._id);
                 req.flash('offreAjoutee', 'Offre #' + offre._id + ' ajoutée avec succés.');
                 res.redirect('/employeur/offres');
             });
@@ -153,10 +161,9 @@ Router.post('/ajout', upload.any(), function (req, res, next) {
                 competences: offre.competence
             }).exec(function (err, freelancers) {
                 freelancers.forEach(function (freelancer) {
-                    newNotif.userID = freelancer.userID;
-                    console.log('New notif: ' + newNotif);
-                    newNotif.save();
+                    targets.push(freelancer.userID);
                 });
+                Utility.notifyOffre(targets, offre._id);
                 req.flash('offreAjoutee', 'Offre #' + offre._id + ' ajoutée avec succés.');
                 res.redirect('/employeur/offres');
             });
@@ -165,7 +172,6 @@ Router.post('/ajout', upload.any(), function (req, res, next) {
 });
 Router.get('/details/:id', function (req, res, next) {
     var ID = req.params.id;
-    console.log('got here');
     async.waterfall([
         function (callback) {
             Employeur.findOne({
@@ -186,12 +192,10 @@ Router.get('/details/:id', function (req, res, next) {
                     console.log(err.stack)
                     return next(err);
                 }
-                console.log(offre);
                 callback(employeur, offre)
             });
         }
     ], function (employeur, offre) {
-        console.log('Offre: ', offre);
         res.render('employeur/offres/details', {
             currentRoute: 'offres',
             user: employeur,
@@ -218,5 +222,89 @@ Router.delete('/details/:id', function (req, res, next) {
         }
     });
 });
+Router.get('/details/:id/mod', function (req, res, next) {
+    var ID = req.params.id;
+    async.waterfall([
+        function (callback) {
+            Employeur.findOne({
+                userID: req.user._id
+            }).populate('userID').exec(function (err, employeur) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                callback(null, employeur);
+            });
+        },
+        function (employeur, callback) {
+            Offre.findOne({
+                _id: ID
+            }).populate('competence postulants').exec(function (err, offre) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                callback(employeur, offre)
+            });
+        }
+    ], function (employeur, offre) {
+        Competence.find(function (err, competences) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            if (competences.length > 0) {
+                res.render('employeur/offres/mod', {
+                    currentRoute: 'offres',
+                    user: employeur,
+                    competences: competences,
+                    offre: offre
+                })
+            } else {
+                res.send('Competences null');
+            }
+        });
+    });
+});
+Router.put('/details/:id/mod', upload.any(), function (req, res, next) {
+    var url_conditions = '/static/uploads/' + req.files[0].filename;
+    var url_autre = "";
+    if (typeof (req.files[1]) !== 'undefined') {
+        url_autre = '/static/uploads/' + req.files[1].filename;
+    }
+    var ID = req.params.id;
+    var targets = [];
+    Offre.findByIdAndUpdate(ID, {
+        $set: {
+            titre: req.body.titreOffre,
+            competence: req.body.competOffre,
+            description: req.body.descriptionOffre,
+            duree_min: req.body.dureeMin,
+            duree_max: req.body.dureeMax,
+            url_conditions: url_conditions,
+            url_autre: url_autre,
+            localisation: req.body.localOffre,
+        }
+    }, function (err, offre) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        offre.populate('postulants', function (err, offre) {
+            offre.postulants.forEach(function (postulant) {
+                targets.push(postulant.userID);
+            });
+            Utility.notifyModOffre(targets, offre._id);
+            offre.postulants = [];
+            offre.save(function (err, offre) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                res.redirect('/employeur/offres/details/' + offre._id);
+            });
+        })
 
+    });
+});
 module.exports = Router;

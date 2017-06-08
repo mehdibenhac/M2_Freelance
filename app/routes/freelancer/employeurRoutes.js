@@ -56,7 +56,8 @@ Router.get('/', middleware.isLoggedIn, middleware.isFreelancer, function (req, r
                         },
                         note_moy_employeur: {
                             "$gte": noteMin
-                        }
+                        },
+                        visibilite: true
                     }
                 },
                 {
@@ -117,7 +118,8 @@ Router.get('/', middleware.isLoggedIn, middleware.isFreelancer, function (req, r
                         },
                         note_moy_employeur: {
                             "$gte": noteMin
-                        }
+                        },
+                        visibilite: true
                     }
                 },
                 {
