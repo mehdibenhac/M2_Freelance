@@ -4,7 +4,12 @@ body {
 
 .mast {
     background-color: #16a085;
-    min-height: 500px;
+    min-height: 600px;
+}
+
+.login.mast {
+    background-color: #16a085;
+    min-height: 100%;
 }
 
 .seg-two {
@@ -13,12 +18,8 @@ body {
     min-height: 300px;
 }
 
-.two.column {
+.seg-two .two.column {
     padding-top: 4em;
-}
-
-.three.column {
-    padding-top: 3em;
 }
 
 .seg-three {
@@ -27,12 +28,25 @@ body {
     min-height: 300px;
 }
 
+.seg-three .two.column {
+    padding-top: 4em;
+}
+
 .footer {
     background-color: #ecf0f1;
     min-height: 250px;
 }
 
+.footer .three.column {
+    padding-top: 4em;
+}
+
 .text.container {
+    width: 500px;
+    text-align: center
+}
+
+.login.container {
     width: 500px;
     text-align: center
 }

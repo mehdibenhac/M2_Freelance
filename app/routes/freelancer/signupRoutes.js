@@ -172,13 +172,25 @@ Router.post('/final', upload.any(), function (req, res, next) {
                         console.log(err.stack)
                         return next(err);
                     }
-                    req.session.destroy();
-                    res.send({
-                        message: 'Freelancer créé avec succés!',
-                        User: createdUser,
-                        Freelancer: createdFreelancer,
-                        Demande: createdDemande
+                    req.logIn(createdUser, function (err) {
+                        if (err) {
+                            return next(err)
+                        }
+                        req.session.loginAttempts = 0;
+                        switch (req.user.profil.accountType) {
+                            case "Freelancer":
+                                res.redirect('/freelancer');
+                                break;
+                            case "Employeur":
+                                res.redirect('/employeur')
+                        }
                     });
+                    // res.send({
+                    //     message: 'Freelancer créé avec succés!',
+                    //     User: createdUser,
+                    //     Freelancer: createdFreelancer,
+                    //     Demande: createdDemande
+                    // });
                 });
             });
         });

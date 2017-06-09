@@ -164,31 +164,62 @@ Router.put('/modifVisi', function (req, res, next) {
 });
 
 Router.get('/notifsCount', function (req, res, next) {
-    Notification.count({
-        userID: req.user._id,
-        lu: false
-    }).exec(function (err, notifs) {
-        if (err) {
-            console.log(err.stack)
-            return next(err);
-        }
-        res.send({
-            count: notifs
+    if (req.isAuthenticated()) {
+        Notification.count({
+            userID: req.user._id,
+            lu: false
+        }).exec(function (err, notifs) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            res.send({
+                count: notifs
+            });
         });
-    });
+    } else {
+        res.send('User not connected');
+    }
+
 });
 Router.get('/msgCount', function (req, res, next) {
-    Message.count({
-        destinataire: req.user._id,
-        lu: false
-    }).exec(function (err, msgs) {
-        if (err) {
-            console.log(err.stack)
-            return next(err);
-        }
-        res.send({
-            count: msgs
+    if (req.isAuthenticated()) {
+        Message.count({
+            destinataire: req.user._id,
+            lu: false
+        }).exec(function (err, msgs) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            res.send({
+                count: msgs
+            });
         });
-    });
+    } else {
+        res.send('User not connected');
+    }
+
+});
+
+Router.post('/adminLogin', function (req, res, next) {
+    var user = {
+        username: req.body.username,
+        password: req.body.password
+    };
+    res.send(user);
+    // req.logIn(user, function (err) {
+    //     if (err) {
+    //         return next(err)
+    //     }
+    //     req.session.loginAttempts = 0;
+    //     switch (req.user.profil.accountType) {
+    //         case "Freelancer":
+    //             res.redirect('/freelancer');
+    //             break;
+    //         case "Employeur":
+    //             res.redirect('/employeur')
+    //     }
+    // });
 });
 module.exports = Router;

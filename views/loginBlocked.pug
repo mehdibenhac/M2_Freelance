@@ -22,22 +22,11 @@ body
         .ui.login.container
             img.ui.centered.small.image(src="/static/images/logo_round_white.png")
             .ui.padded.raised.segment
-                form.ui.form(action="/login" method="post")
-                    .field
-                        label Nom d'utilisateur
-                        input(type="text" name="username")
-                    .field
-                        label Mot de passe
-                        input(type="password" name="password")
-                    .field
-                        button.ui.labeled.icon.teal.fluid.button 
-                            i.sign.in.icon
-                            | S'authentifier
-                if authFail != ""
+                if waitLogin != ""
                     .ui.negative.icon.message
                         i.remove.icon
-                        .content #{authFail}
-                if loggedOut != ""
-                    .ui.success.icon.message
-                        i.checkmark.icon
-                        .content #{loggedOut}
+                        .content #{waitLogin}
+                if loginBlocked != ""
+                    .ui.negative.icon.message
+                        i.remove.icon
+                        .content #{loginBlocked}

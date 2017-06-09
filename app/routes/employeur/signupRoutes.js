@@ -116,13 +116,19 @@ Router.post('/final', function (req, res, next) {
                             console.log(err.stack)
                             return next(err);
                         }
-                        req.session.destroy();
-                        res.send({
-                            'Message': "Employeur créé avec succés",
-                            'User': createdUser,
-                            'Employeur': createdEmployeur,
-                            'Demande': createdDemande
-                        })
+                        req.logIn(createdUser, function (err) {
+                            if (err) {
+                                return next(err)
+                            }
+                            req.session.loginAttempts = 0;
+                            switch (req.user.profil.accountType) {
+                                case "Freelancer":
+                                    res.redirect('/freelancer');
+                                    break;
+                                case "Employeur":
+                                    res.redirect('/employeur')
+                            }
+                        });
                     });
                 });
             });

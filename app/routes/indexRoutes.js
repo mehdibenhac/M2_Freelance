@@ -10,37 +10,68 @@ Router.get('/', function (req, res) {
 });
 Router.get('/login', middleware.isNotLoggedIn, function (req, res) {
     if (req.session.loginLocked && moment().unix() - req.session.lockedAt < 59) {
-        var timeDiff = moment().unix() - req.session.lockedAt;
-        res.send('Wait before trying to login again! it has been: ' + timeDiff + ' seconds since the last attempt!');
+        res.redirect('/loginBlocked');
     } else if (req.session.loginLocked && moment().unix() - req.session.lockedAt >= 59) {
         req.session.loginLocked = false;
         req.session.lockedAt = 0;
         req.session.loginAttempts = 0;
-        res.render('login');
+        var fail = (req.flash('fail')).toString();
+        res.render('login', {
+            authFail: fail,
+            loggedOut: req.flash('loggedOut')
+        });
     } else if (!req.session.loginLocked) {
-        res.render('login');
+        var fail = (req.flash('fail')).toString();
+        console.log(fail.length);
+        console.log(fail === "");
+        console.log(fail);
+        res.render('login', {
+            authFail: fail,
+            loggedOut: req.flash('loggedOut')
+        });
+    }
+});
+Router.get('/loginBlocked', function (req, res, next) {
+    if (req.session.loginLocked && moment().unix() - req.session.lockedAt < 59) {
+        var timeDiff = moment().unix() - req.session.lockedAt;
+        if (timeDiff > 0) {
+            req.flash('waitLogin', 'Patientez 1 minute avant de reessayer de vous connecter. ' + timeDiff + ' secondes se sont écoulées depuis votre derniere tentative!');
+        }
+        res.render('loginBlocked', {
+            waitLogin: req.flash('waitLogin'),
+            loginBlocked: req.flash('lock'),
+        })
+    } else if (req.session.loginLocked && moment().unix() - req.session.lockedAt >= 59) {
+        req.session.loginLocked = false;
+        req.session.lockedAt = 0;
+        req.session.loginAttempts = 0;
+        res.redirect('/login');
     }
 });
 Router.get('/logout', middleware.isLoggedIn, function (req, res) {
     req.logout();
-    res.send("Logged out!")
+    req.flash('loggedOut', 'Vous vous êtes deconnecté avec succés.');
+    res.redirect('/login')
 });
 Router.post('/login', middleware.isNotLoggedIn, function (req, res, next) {
     if (!req.session.loginLocked) {
         passport.authenticate('local', function (err, user, info) {
             if (err) {
-                console.log(err);
-                return next();
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
             }
             if (!user) {
                 if (req.session.loginAttempts < 4) {
                     req.session.loginAttempts = req.session.loginAttempts + 1;
-                    console.log('Authenticate failed! Attempt: ' + req.session.loginAttempts)
-                    return res.redirect('/login?failure');
+                    req.flash('fail', 'Authentification échouée. Essai n°: ' + req.session.loginAttempts);
+                    return res.redirect('/login');
                 } else {
                     req.session.loginLocked = true;
                     req.session.lockedAt = moment().unix();
-                    return res.send('Failed login 5 times! aborting and locking account fo 1 minute.')
+                    req.flash('lock', 'Authentication échouée pour la cinquiéme fois. Patientez 1 minute avant de reessayer.');
+                    return res.redirect('/loginBlocked');
                 }
             }
             req.logIn(user, function (err) {
@@ -48,10 +79,13 @@ Router.post('/login', middleware.isNotLoggedIn, function (req, res, next) {
                     return next(err)
                 }
                 req.session.loginAttempts = 0;
-                return res.json({
-                    message: "Login succeded",
-                    User: req.user
-                });
+                switch (req.user.profil.accountType) {
+                    case "Freelancer":
+                        res.redirect('/freelancer');
+                        break;
+                    case "Employeur":
+                        res.redirect('/employeur')
+                }
             });
         })(req, res, next);
     } else {

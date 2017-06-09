@@ -73,6 +73,20 @@ $(document).ready(function () {
     $('.ui.form')
         .form({
             fields: {
+                username: {
+                    identifier: 'username',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez renseigner votre nom d\'utilisateur'
+                    }]
+                },
+                password: {
+                    identifier: 'password',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Veuillez renseigner votre mot de passe'
+                    }]
+                },
                 objet: {
                     identifier: 'objet',
                     rules: [{
