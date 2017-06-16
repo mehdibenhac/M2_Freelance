@@ -4,6 +4,7 @@ var Utility = {
     notifyOffre: function (targets, offre) {
         switch (Array.isArray(targets)) {
             case true:
+                console.log('Notification pour: ', targets);
                 targets.forEach(function (target) {
                     var newNotif = new Notification({
                         userID: target,
@@ -24,6 +25,7 @@ var Utility = {
                 });
                 break;
             case false:
+                console.log('Notification pour: ', targets);
                 var newNotif = new Notification({
                     userID: targets,
                     titre: "Vous avez reçu une nouvelle notification concernant l'offre: " + offre,

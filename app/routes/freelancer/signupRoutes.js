@@ -205,10 +205,18 @@ Router.post('/final', upload.any(), function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                req.session.destroy();
-                res.send({
-                    User: createdUser,
-                    Freelancer: createdFreelancer
+                req.logIn(createdUser, function (err) {
+                    if (err) {
+                        return next(err)
+                    }
+                    req.session.loginAttempts = 0;
+                    switch (req.user.profil.accountType) {
+                        case "Freelancer":
+                            res.redirect('/freelancer');
+                            break;
+                        case "Employeur":
+                            res.redirect('/employeur')
+                    }
                 });
             });
         });

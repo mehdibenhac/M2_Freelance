@@ -66,20 +66,20 @@ Router.get('/', function (req, res) {
     });
 })
 //------- ADD NEW Competence
-Router.post('/', function (req, res) {
+Router.post('/', function (req, res, next) {
+    console.log(req.body.domaines);
     var newCompetence = new Competence({
         titre: req.body.competTitre,
         description: req.body.competDesc,
-        domaine: req.body.competDomaine
+        domaine: req.body.domaines
     });
-    newCompetence.save(function (err, results, next) {
+    console.log(newCompetence);
+    newCompetence.save(function (err, results) {
         if (err) {
-            console.log(err.stack);
-            res.status(500).json({
-                httpErr: '500',
-                message: 'Error! check server console for logs.'
-            });
-            next();
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
         }
         res.status(200).json({
             message: 'Competence created!',

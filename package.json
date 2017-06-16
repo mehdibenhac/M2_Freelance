@@ -1,12 +1,14 @@
 {
-  "name": "freelancer.dz",
+  "name": "fennec-freelance",
   "version": "1.0.0",
-  "description": "Projet memoire",
+  "description": "Projet mémoire Master 2 - 2016/2017",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "start mongod",
+    "start": "nodemon app"
   },
-  "author": "Mehdi",
+  "author": "Bendali Hacine Mohamed Mehdi Anis",
   "license": "ISC",
   "dependencies": {
     "async": "^2.4.1",
@@ -14,6 +16,7 @@
     "connect-flash": "^0.1.1",
     "connect-redis": "^3.3.0",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.3",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
     "livereload": "^0.6.2",
@@ -22,6 +25,7 @@
     "mongoose": "^4.10.0",
     "morgan": "^1.8.1",
     "multer": "^1.3.0",
+    "opn-cli": "^3.1.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",

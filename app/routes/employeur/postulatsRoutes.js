@@ -104,7 +104,7 @@ Router.get('/details/:id/contrat', function (req, res) {
             }
             Freelancer.aggregate([{
                 "$match": {
-                    _id: idUser
+                    userID: idUser
                 },
             }, {
                 "$addFields": {

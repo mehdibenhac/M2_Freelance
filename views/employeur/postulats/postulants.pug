@@ -97,7 +97,7 @@ block content
                                                 | #{postulant.telephone}
                                 .extra
                                     form.ui.form(action=offre._id+"/contrat" method="get")
-                                        input(type="hidden" name="idUser" value=postulant._id)
+                                        input(type="hidden" name="idUser" value=postulant.userID)
                                         .ui.purple.right.floated.labeled.icon.submit.button
                                             i.legal.icon
                                             | Etablir un contrat

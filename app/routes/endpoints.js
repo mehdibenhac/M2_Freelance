@@ -6,6 +6,7 @@ var Notification = require('../models/Notification.js');
 var Message = require('../models/Message.js');
 var Offre = require('../models/Offre.js');
 var Utility = require('../utility.js');
+var passport = require('passport');
 
 // Freelancer
 
@@ -203,23 +204,24 @@ Router.get('/msgCount', function (req, res, next) {
 });
 
 Router.post('/adminLogin', function (req, res, next) {
-    var user = {
-        username: req.body.username,
-        password: req.body.password
-    };
-    res.send(user);
-    // req.logIn(user, function (err) {
-    //     if (err) {
-    //         return next(err)
-    //     }
-    //     req.session.loginAttempts = 0;
-    //     switch (req.user.profil.accountType) {
-    //         case "Freelancer":
-    //             res.redirect('/freelancer');
-    //             break;
-    //         case "Employeur":
-    //             res.redirect('/employeur')
-    //     }
-    // });
+    console.log(req.body);
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+        }
+        if (!user) {
+            return res.status(400).send('No user found');
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                return next(err)
+            }
+            res.status(200).send('User connected');
+        });
+    })(req, res, next);
 });
+
 module.exports = Router;

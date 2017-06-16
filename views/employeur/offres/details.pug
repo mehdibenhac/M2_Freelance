@@ -38,7 +38,7 @@ block content
                 .ui.padded.violet.segment
                     if offre.postulants.length > 0
                         each postulant, index in offre.postulants
-                            a(href="/employeur/freelancers/details/"+postulant._id)
+                            a(href="/employeur/freelancers/details/"+postulant.userID)
                                 h4.ui.header 
                                     i.user.icon
                                     .content #{postulant.nom}, #{postulant.pnom}

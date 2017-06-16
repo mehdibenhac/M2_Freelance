@@ -21,6 +21,8 @@ module.exports = function (app) {
     var employeurPostulats = require('./routes/employeur/postulatsRoutes.js');
     var employeurContrats = require('./routes/employeur/contratsRoutes.js');
     var employeurFreelancers = require('./routes/employeur/freelancersRoutes.js');
+    // Admin Routes
+    var adminIndex = require('./routes/admin/index.js');
 
     // Other Routes
     var domaineRoutes = require('./routes/domaineRoutes.js');
@@ -51,6 +53,8 @@ module.exports = function (app) {
     app.use('/employeur/offres', employeurOffres);
     app.use('/employeur/contrats', employeurContrats);
     app.use('/employeur/freelancers', employeurFreelancers);
+    // Admin
+    app.use('/admin', adminIndex);
     // Others
     app.use('/competences', competenceRoutes);
     app.use('/endpoints', endpointsRoutes);

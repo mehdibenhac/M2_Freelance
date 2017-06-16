@@ -14,6 +14,7 @@ var competenceSchema = mongoose.Schema({
     }
 });
 
+
 var Competence = mongoose.model('Competence', competenceSchema);
 
 module.exports = Competence;

@@ -81,14 +81,14 @@ block content
                                     i.hashtag.icon
                                     | #{freelancer._id}
                             td.three.wide 
-                                a(href="/employeur/freelancers/details/"+freelancer._id)
+                                a(href="/employeur/freelancers/details/"+freelancer.userID)
                                     i.user.icon 
                                     | #{freelancer.nom}
-                            td.four.wide.left.aligned
-                                a(href="/employeur/freelancers/details/"+freelancer._id)
+                            td.three.wide.left.aligned
+                                a(href="/employeur/freelancers/details/"+freelancer.userID)
                                     i.user.icon 
                                     | #{freelancer.pnom}
-                            td.two.wide.center.aligned
+                            td.three.wide.center.aligned
                                 each competence, index in freelancer.competences
                                     .ui.violet.label( data-content= competence.titre )
                                         i.student.icon                             

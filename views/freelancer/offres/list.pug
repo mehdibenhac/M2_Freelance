@@ -95,9 +95,9 @@ block content
                             else if (offre.note_moy_employeur >= 1)
                                 td.one.wide.center.aligned.negative
                                     p #{offre.note_moy_employeur}
-                            else if (offre.note_moy_employeur = 0)
+                            else 
                                 td.one.wide.center.aligned.disabled
-                                    p #{offre.note_moy_employeur}
+                                    p 0
                             td.one.wide.center.aligned 
                                 i.hourglass.start.icon
                                 | #{offre.duree_min}

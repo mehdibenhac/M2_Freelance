@@ -89,14 +89,14 @@ block content
                                     .sub.header Numéro de lotissement
             .ui.violet.inverted.segment
                 h4.ui.header
-                    i.cubes.icon
+                    i.university.icon
                     | Compétences        
             .ui.two.stackable.cards
                 each competence, index in freelancer.competences
                     .violet.card
                         .content
                             h4.ui.header
-                                i.cube.icon 
+                                i.student.icon 
                                 .content  #{index+1} -  #{competence.titre}
                             .description
                                 | #{competence.description}
@@ -117,7 +117,7 @@ block content
                         .content #{freelancer.email}
                             .sub.header Adresse email
                 .center.aligned.column
-                    .ui.labeled.icon.big.blue.contactModal.button(style="margin-bottom: 1em")
+                    a.ui.labeled.icon.big.blue.contactModal.button(href="/messagerie/nouveau/?dest="+freelancer.userID style="margin-bottom: 1em")
                         i.large.talk.icon
                         | Messagerie
         .center.aligned.actions

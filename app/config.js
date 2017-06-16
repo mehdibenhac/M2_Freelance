@@ -32,18 +32,19 @@ module.exports = function (app) {
             client: redis
         }),
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
+        cookie: {
+            httpOnly: false,
+            maxAge: 36000000
+        }
     }));
     // Use the morgan logger & initialize the session:
     app.use(logger('dev'));
-    app.use(session({
-        secret: "Mehdiana Jones",
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            maxAge: 60000
-        }
-    }));
+    // app.use(session({
+    //     secret: "Mehdiana Jones",
+    //     resave: false,
+    //     saveUninitialized: true,
+    // }));
     // Use flash and body-parser:
     app.use(flash());
     app.use(bodyParser.urlencoded({
@@ -60,4 +61,5 @@ module.exports = function (app) {
     app.set('view engine', 'pug');
     app.use('/static', express.static(__dirname + /../ + '/public'));
     app.locals.basedir = __dirname + /../;
+
 }

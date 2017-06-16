@@ -14,7 +14,7 @@ Router.get('/', middleware.isLoggedIn, middleware.isEmployeur, function (req, re
     var nomFree = req.query.searchNom || "";
     var pnomFree = req.query.searchPnom || "";
     var comp = req.query.comp;
-    var noteMin = parseInt(req.query.noteMin) || 0;
+    var noteMin = parseInt(req.query.noteMin) || null;
     Employeur.findById(req.user.profil.ID).exec(function (err, employeur) {
         if (err) {
             console.log(err.stack)
@@ -27,6 +27,7 @@ Router.get('/', middleware.isLoggedIn, middleware.isEmployeur, function (req, re
             }
             // This is intended for sorting through domaine.titre since mongoose is rather wonky when 
             // it comes to sorting by populated fields.
+            console.log(competences);
             competences.sort(function (a, b) {
                 var titreA = a.domaine.titre.toUpperCase();
                 var titreB = b.domaine.titre.toUpperCase();
@@ -296,7 +297,7 @@ Router.get('/details/:id', middleware.isLoggedIn, middleware.isEmployeur, functi
         }
         Freelancer.aggregate([{
                 "$match": {
-                    _id: ID
+                    userID: ID
                 }
             },
             {
@@ -319,6 +320,7 @@ Router.get('/details/:id', middleware.isLoggedIn, middleware.isEmployeur, functi
                 console.log(err.stack)
                 return next(err);
             }
+            console.log(freelancer);
             res.render('employeur/freelancers/details', {
                 user: employeur,
                 freelancer: freelancer[0],

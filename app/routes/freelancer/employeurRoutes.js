@@ -10,11 +10,12 @@ var Domaine = require('../../models/Domaine.js');
 
 // Router.use(middleware.isLoggedIn, middleware.isFreelancer);
 
-Router.get('/', middleware.isLoggedIn, middleware.isFreelancer, function (req, res) {
+Router.get('/', middleware.isLoggedIn, middleware.isFreelancer, function (req, res, next) {
     var nomEmp = req.query.searchNom || "";
     var pnomEmp = req.query.searchPnom || "";
     var dom = req.query.dom;
-    var noteMin = parseInt(req.query.noteMin) || 0;
+    var noteMin = parseInt(req.query.noteMin) || null;
+    console.log(noteMin)
     Freelancer.findById(req.user.profil.ID).populate("competences").exec(function (err, freelancer) {
         if (err) {
             console.log(err.stack)
@@ -24,7 +25,6 @@ Router.get('/', middleware.isLoggedIn, middleware.isFreelancer, function (req, r
         freelancer.competences.forEach(function (competence) {
             domaines.push(competence.domaine);
         });
-        console.log(domaines);
         if (typeof (dom) === 'undefined') {
             Employeur.aggregate([{
                     "$lookup": {
@@ -166,7 +166,7 @@ Router.get('/details/:id', function (req, res, next) {
         }
         Employeur.aggregate([{
                 "$match": {
-                    _id: ID
+                    userID: ID
                 }
             },
             {

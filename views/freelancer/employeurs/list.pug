@@ -35,6 +35,7 @@ block content
                     .field
                         select(class="ui dropdown" name="noteMin")
                             option(value="" disabled selected) Note minimum
+                            option() 0
                             option(value="1") 1
                             option(value="2") 2
                             option(value="3") 3
@@ -53,45 +54,50 @@ block content
                             button.ui.teal.icon.fluid.button.submit
                                 i.search.icon
             .ui.divider
-            .ui.info.icon.message
-                i.info.icon
-                | La employeurs présentés ont été selectionnés en comparant leurs domaines d'activité avec vos propres compétences.
-            table.ui.sortable.padded.striped.celled.six.column.small.table(id="offresTable")
-                thead
-                    tr
-                        th ID 
-                            i.caret.down.icon
-                        th Nom & prénom
-                            i.caret.down.icon
-                        th Nom d'entreprise
-                            i.caret.down.icon
-                        th Domaines
-                            i.caret.down.icon
-                        th Note moyenne
-                            i.caret.down.icon
-                        th Âge
-                            i.caret.down.icon
-                tbody
-                each employeur, index in employeurs
-                    tr 
-                        td.two.wide 
-                            a(href="/freelancer/employeurs/details/"+employeur._id)
-                                i.hashtag.icon
-                                | #{employeur.userID}
-                        td.four.wide 
-                            a(href="/freelancer/employeurs/details/"+employeur._id)
-                                i.user.icon 
-                                | #{employeur.nom}, #{employeur.pnom}
-                        td.three.wide.left.aligned
-                            i.building.icon                             
-                            |  #{employeur.nomEntreprise}
-                        td.two.wide.center.aligned
-                            each domaine, index in employeur.domaines
-                                .ui.teal.label( data-content= domaine.titre )
-                                    i.cube.icon                             
-                                    | #{index+1}
-                        td.three.wide.center.aligned
-                            .ui.star.small.rating(data-rating=Math.round(employeur.note_moy_employeur) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(employeur.note_moy_employeur*100)/100+" pour "+employeur.notations.length+" contrat(s) noté(s).")
-                        td.two.wide.center.aligned 
-                            i.birthday.icon
-                            | #{moment(employeur.dateNaiss).fromNow(true)}
+            if employeurs.length === 0
+                .ui.info.icon.message
+                    i.info.icon
+                    | Aucun employé trouvé
+            else
+                .ui.info.icon.message
+                    i.info.icon
+                    | La employeurs présentés ont été selectionnés en comparant leurs domaines d'activité avec vos propres compétences.
+                table.ui.sortable.padded.striped.celled.six.column.small.table(id="offresTable")
+                    thead
+                        tr
+                            th ID 
+                                i.caret.down.icon
+                            th Nom & prénom
+                                i.caret.down.icon
+                            th Nom d'entreprise
+                                i.caret.down.icon
+                            th Domaines
+                                i.caret.down.icon
+                            th Note moyenne
+                                i.caret.down.icon
+                            th Âge
+                                i.caret.down.icon
+                    tbody
+                    each employeur, index in employeurs
+                        tr 
+                            td.two.wide 
+                                a(href="/freelancer/employeurs/details/"+employeur.userID)
+                                    i.hashtag.icon
+                                    | #{employeur.userID}
+                            td.three.wide 
+                                a(href="/freelancer/employeurs/details/"+employeur.userID)
+                                    i.user.icon 
+                                    | #{employeur.nom}, #{employeur.pnom}
+                            td.three.wide.left.aligned
+                                i.building.icon                             
+                                |  #{employeur.nomEntreprise}
+                            td.three.wide.center.aligned
+                                each domaine, index in employeur.domaines
+                                    .ui.teal.label( data-content= domaine.titre )
+                                        i.cube.icon                             
+                                        | #{index+1}
+                            td.three.wide.center.aligned
+                                .ui.star.small.rating(data-rating=Math.round(employeur.note_moy_employeur) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(employeur.note_moy_employeur*100)/100+" pour "+employeur.notations.length+" contrat(s) noté(s).")
+                            td.two.wide.center.aligned 
+                                i.birthday.icon
+                                | #{moment(employeur.dateNaiss).fromNow(true)}
