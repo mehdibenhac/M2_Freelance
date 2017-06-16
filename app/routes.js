@@ -23,6 +23,7 @@ module.exports = function (app) {
     var employeurFreelancers = require('./routes/employeur/freelancersRoutes.js');
     // Admin Routes
     var adminIndex = require('./routes/admin/index.js');
+    var adminSeed = require('./routes/admin/seed.js');
 
     // Other Routes
     var domaineRoutes = require('./routes/domaineRoutes.js');
@@ -55,6 +56,7 @@ module.exports = function (app) {
     app.use('/employeur/freelancers', employeurFreelancers);
     // Admin
     app.use('/admin', adminIndex);
+    app.use('/admin/seed', adminSeed);
     // Others
     app.use('/competences', competenceRoutes);
     app.use('/endpoints', endpointsRoutes);

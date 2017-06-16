@@ -65,11 +65,13 @@ Router.post('/login', function (req, res, next) {
 			}
 		}
 		if (!user) {
+			req.session.loginAttempts = 0;
 			return res.status(200).send({
 				status: 'noUser'
 			});
 		}
 		if (user.profil.accountType !== "Administrateur") {
+			req.session.loginAttempts = 0;
 			return res.status(200).send({
 				status: 'notAdmin'
 			});
@@ -78,6 +80,7 @@ Router.post('/login', function (req, res, next) {
 			if (err) {
 				return next(err)
 			}
+			req.session.loginAttempts = 0;
 			res.status(200).send({
 				status: 'ok',
 				user: req.user
@@ -131,8 +134,8 @@ Router.get('/comptes', function (req, res, next) {
 		{
 			$sort: {
 				note_moy: -1,
-				nom: -1,
-				pnom: -1
+				nom: 1,
+				pnom: 1
 			}
 		}
 	]).exec(function (err, employeurs) {
@@ -158,8 +161,8 @@ Router.get('/comptes', function (req, res, next) {
 			{
 				$sort: {
 					note_moy: -1,
-					nom: -1,
-					pnom: -1
+					nom: 1,
+					pnom: 1
 				}
 			}
 		]).exec(function (err, freelancers) {
@@ -195,8 +198,8 @@ Router.get('/freelancers', function (req, res, next) {
 		{
 			$sort: {
 				note_moy: -1,
-				nom: -1,
-				pnom: -1
+				nom: 1,
+				pnom: 1
 			}
 		}
 	]).exec(function (err, freelancers) {
@@ -204,6 +207,7 @@ Router.get('/freelancers', function (req, res, next) {
 			console.log(err.stack)
 			return next(err);
 		}
+		console.log(freelancers);
 		res.status(200).send({
 			freelancers: freelancers
 		});
@@ -299,8 +303,8 @@ Router.get('/employeurs', function (req, res, next) {
 		{
 			$sort: {
 				note_moy: -1,
-				nom: -1,
-				pnom: -1
+				nom: 1,
+				pnom: 1
 			}
 		}
 	]).exec(function (err, employeurs) {
@@ -377,5 +381,51 @@ Router.delete('/employeur', function (req, res, next) {
 			});
 		});
 	});
+});
+
+//Offre CRUD
+Router.get('/offres', function (req, res, next) {
+	Offre.find().populate('employeur postulants competence').exec(function (err, offres) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(offres);
+	});
+});
+Router.put('/offre', function (req, res, next) {
+	Offre.findByIdAndUpdate(req.body._id, {
+		$set: {
+			titre: req.body.titre,
+			description: req.body.description
+		}
+	}).exec(function (err, offre) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(offre)
+	})
+});
+Router.delete('/offre', function (req, res, next) {
+	Contrat.remove({
+		offre: req.body._id
+	}, function (err, contrat) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		Offre.findByIdAndRemove(req.body._id, function (err, offre) {
+			if (err) {
+				console.log(err.stack)
+				return next(err);
+			}
+			res.send({
+				offre: offre,
+				contrat: contrat
+			})
+		})
+	})
+
 });
 module.exports = Router;

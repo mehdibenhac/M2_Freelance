@@ -51,7 +51,7 @@ var employeurSchema = mongoose.Schema({
     },
     visibilite: {
         type: Boolean,
-        default: false
+        default: true
     }
 });
 

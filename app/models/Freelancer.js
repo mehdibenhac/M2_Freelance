@@ -48,11 +48,11 @@ var freelancerSchema = mongoose.Schema({
     parametres: {
         disponibilite: {
             type: Boolean,
-            default: false
+            default: true
         },
         notif_offres: {
             type: Boolean,
-            default: false
+            default: true
         }
     }
 });
