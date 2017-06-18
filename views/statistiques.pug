@@ -1,0 +1,96 @@
+include /views/layout/head
+body
+    .login.mast
+        .ui.basic.segment
+            .ui.secondary.inverted.menu
+                a.item(href="/") 
+                    i.home.icon
+                    | Accueil
+                a.item.active(href="/statistiques") 
+                    i.bar.chart.icon
+                    | Statistiques
+                .right.menu
+                    a.item(href="/login")
+                        i.sign.in.icon
+                        | Connexion
+                    .ui.dropdown.item
+                        i.user.icon
+                        .text S'incrire en tant que...
+                        .menu
+                            a.item(href="/freelancer/signup") Freelancer
+                            a.item(href="/employeur/signup") Employeur
+        .ui.text.container
+            .ui.icon.huge.inverted.header
+                i.bar.chart.icon
+                | Statistiques
+        .ui.stackable.four.column.center.aligned.grid(style="margin-top: 1em")
+            .row
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.student.icon
+                            |  #{compets}
+                        .label(style="padding-top:1em")
+                            | Compétences disponibles
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.cubes.icon
+                            |  #{domaines}
+                        .label(style="padding-top:1em")
+                            | Domaines disponibles
+            .row
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.users.icon
+                            |  #{userCount}
+                        .label(style="padding-top:1em")
+                            | Utilisateur(s) enregistré(s)
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.street.view.icon
+                            |  #{freeCount}
+                        .label(style="padding-top:1em")
+                            | Freelancer(s)
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.building.icon
+                            |  #{empCount}
+                        .label(style="padding-top:1em")
+                            | Employeur(s)
+            .row
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.tasks.icon &nbsp;
+                            i.circle.outline.icon
+                            |  #{offresOuvertes}
+                        .label(style="padding-top:1em")
+                            | Offre(s) Ouverte(s).
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.tasks.icon &nbsp;
+                            i.lock.icon
+                            |  #{offresFermées}
+                        .label(style="padding-top:1em")
+                            | Offre(s) Fermée(s).
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.suitcase.icon &nbsp;
+                            i.circle.outline.icon
+                            |  #{contratsOuverts}
+                        .label(style="padding-top:1em")
+                            | Contrat(s) Ouvert(s)
+                .column
+                    .ui.inverted.huge.statistic
+                        .value
+                            i.suitcase.icon &nbsp;
+                            i.lock.icon
+                            |  #{contratsFermés}
+                        .label(style="padding-top:1em")
+                            | Contrat(s) Fermé(s)

@@ -8,20 +8,29 @@ block user
                 .sub.header #{user.userID.accountType}
 block content
     .ui.container
-        .ui.four.column.stackable.grid
+        .ui.five.column.stackable.grid
             .one.wide.column
-                a.ui.violet.icon.fluid.large.button(id="sidebaror")
+                a.ui.violet.icon.fluid.button(id="sidebaror")
                     i.content.icon
-            .five.wide.column
-                a.ui.purple.labeled.icon.fluid.large.button(href="/employeur/modifier/domaines")
+            .four.wide.column
+                a.ui.purple.labeled.icon.fluid.button(href="/employeur/modifier/domaines")
                     i.student.icon
                     | Modifier les domaines
-            .five.wide.column
-                a.ui.purple.labeled.icon.fluid.large.button(href="/employeur/modifier/profil")
+            .four.wide.column
+                a.ui.purple.labeled.icon.fluid.button(href="/employeur/modifier/profil")
                     i.edit.icon
                     | Modifier le profil
-            .five.wide.column
-                a.ui.yellow.labeled.icon.fluid.large.button
+            .three.wide.column
+                if(user.isValid)
+                    button.ui.green.labeled.icon.fluid.button(disabled)
+                        i.check.circle.icon
+                        | Profil validé
+                else
+                    a.ui.green.labeled.icon.fluid.button(href="/employeur/validate")
+                        i.checkmark.icon
+                        | Valider le profil
+            .four.wide.column
+                a.ui.yellow.labeled.icon.fluid.button
                     i.delete.icon
                     | Supprimer le compte
         if messages.domainesModifSuccess != ""
@@ -29,6 +38,21 @@ block content
                 i.info.icon
                 .content
                     .header #{messages.domainesModifSuccess}
+        if messages.demandeExists != ""
+            .ui.info.icon.message
+                i.info.icon
+                .content
+                    .header #{messages.demandeExists}
+        if messages.profilValid != ""
+            .ui.negative.icon.message
+                i.warning.sign.icon
+                .content
+                    .header #{messages.profilValid}
+        if messages.demandeCreated != ""
+            .ui.success.icon.message
+                i.checkmark.icon
+                .content
+                    .header #{messages.demandeCreated}
         .ui.two.columns.stackable.grid
             .four.wide.column
                 .ui.violet.inverted.segment

@@ -2,11 +2,99 @@ var Router = require('express').Router(),
     moment = require('moment'),
     mongoose = require('mongoose'),
     middleware = require('../middleware.js'),
+    Freelancer = require('../models/Freelancer.js'),
+    Employeur = require('../models/Employeur.js'),
+    Offre = require('../models/Offre.js'),
+    Contrat = require('../models/Contrat.js'),
+    User = require('../models/User.js'),
+    Competence = require('../models/Competence.js'),
+    Domaine = require('../models/Domaine.js'),
     passport = require('passport');
 
 
 Router.get('/', function (req, res) {
     res.render('index');
+});
+Router.get('/statistiques', function (req, res) {
+    Competence.count(function (err, compets) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        Domaine.count(function (err, domaines) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            Freelancer.count(function (err, freeCount) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                Employeur.count(function (err, empCount) {
+                    if (err) {
+                        console.log(err.stack)
+                        return next(err);
+                    }
+                    Offre.count({
+                        etat: "Ouverte"
+                    }, function (err, offresOuvertes) {
+                        if (err) {
+                            console.log(err.stack)
+                            return next(err);
+                        }
+                        Offre.count({
+                            etat: "Fermée"
+                        }, function (err, offresFermées) {
+                            if (err) {
+                                console.log(err.stack)
+                                return next(err);
+                            }
+                            User.count({
+                                "profil.accountType": {
+                                    $ne: "Administrateur"
+                                }
+                            }, function (err, userCount) {
+                                if (err) {
+                                    console.log(err.stack)
+                                    return next(err);
+                                }
+                                Contrat.count({
+                                    etat: 'Ouvert'
+                                }, function (err, contratsOuverts) {
+                                    if (err) {
+                                        console.log(err.stack)
+                                        return next(err);
+                                    }
+                                    Contrat.count({
+                                        etat: 'Fermé'
+                                    }, function (err, contratsFermés) {
+                                        if (err) {
+                                            console.log(err.stack)
+                                            return next(err);
+                                        }
+                                        res.render('statistiques', {
+                                            compets: compets,
+                                            domaines: domaines,
+                                            freeCount: freeCount,
+                                            empCount: empCount,
+                                            userCount: userCount,
+                                            offresOuvertes: offresOuvertes,
+                                            offresFermées: offresFermées,
+                                            contratsOuverts: contratsOuverts,
+                                            contratsFermés: contratsFermés
+                                        });
+                                    })
+                                })
+                            })
+                        })
+
+                    })
+                })
+            })
+        })
+    })
+
 });
 Router.get('/login', middleware.isNotLoggedIn, function (req, res) {
     if (req.session.loginLocked && moment().unix() - req.session.lockedAt < 59) {

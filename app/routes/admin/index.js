@@ -9,6 +9,7 @@ var Message = require('../../models/Message.js');
 var Notification = require('../../models/Notification.js');
 var Demande = require('../../models/Demande.js');
 var passport = require('passport');
+var moment = require('moment');
 var path = require('path');
 
 Router.use(function (req, res, next) {
@@ -229,6 +230,16 @@ Router.put('/freelancer', function (req, res, next) {
 			console.log(err.stack)
 			return next(err);
 		}
+		var newNotif = new Notification({
+			userID: freelancer.userID,
+			titre: "Votre profil a été modifié.",
+			contenu: "<p> Un administrateur vient de modifier les informations de votre profil." +
+				"<br> <b>Nom:</b> " + req.body.nom +
+				"<br> <b>Prénom:</b> " + req.body.pnom +
+				"<br> <b>Date de naissance:</b>  " + moment(req.body.dateNaiss).format('DD/MM/YYYY') +
+				"<br> <b>Lieu de naissace:</b>  " + req.body.lieuNaiss + "</p>"
+		});
+		newNotif.save();
 		res.send(freelancer);
 	});
 });
@@ -334,6 +345,17 @@ Router.put('/employeur', function (req, res, next) {
 			console.log(err.stack)
 			return next(err);
 		}
+		var newNotif = new Notification({
+			userID: employeur.userID,
+			titre: "Votre profil a été modifié.",
+			contenu: "<p> Un administrateur vient de modifier les informations de votre profil." +
+				"<br> <b>Nom:</b> " + req.body.nom +
+				"<br> <b>Prénom:</b> " + req.body.pnom +
+				"<br> <b>Nom d'entreprise:</b>  " + req.body.nomEntreprise +
+				"<br> <b>Date de naissance:</b>  " + moment(req.body.dateNaiss).format('DD/MM/YYYY') +
+				"<br> <b>Lieu de naissace:</b>  " + req.body.lieuNaiss + "</p>"
+		});
+		newNotif.save();
 		res.send(employeur);
 	});
 });
@@ -407,7 +429,25 @@ Router.put('/offre', function (req, res, next) {
 			console.log(err.stack)
 			return next(err);
 		}
-		res.send(offre)
+		User.findOne({
+			"profil.ID": offre.employeur
+		}, function (err, user) {
+			if (err) {
+				console.log(err.stack)
+				return next(err);
+			}
+			var newNotif = new Notification({
+				userID: user._id,
+				titre: "Votre offre " + offre._id + " a été modifiée.",
+				contenu: "Un administrateur vient de modifier l'une de vos offres.",
+				target: {
+					targetType: 'Offre',
+					targetPath: offre._id
+				}
+			});
+			newNotif.save();
+			res.send(offre)
+		})
 	})
 });
 Router.delete('/offre', function (req, res, next) {
@@ -423,9 +463,23 @@ Router.delete('/offre', function (req, res, next) {
 				console.log(err.stack)
 				return next(err);
 			}
-			res.send({
-				offre: offre,
-				contrat: contrat
+			User.findOne({
+				"profil.ID": offre.employeur
+			}, function (err, user) {
+				if (err) {
+					console.log(err.stack)
+					return next(err);
+				}
+				var newNotif = new Notification({
+					userID: user._id,
+					titre: "Votre offre " + offre._id + " a été supprimée.",
+					contenu: "Un administrateur vient de supprimer l'une de vos offres, intitulée: " + offre.titre + ".",
+				});
+				newNotif.save();
+				res.send({
+					offre: offre,
+					contrat: contrat
+				})
 			})
 		})
 	})
@@ -457,7 +511,6 @@ Router.put('/demande', function (req, res, next) {
 		}
 		console.log(demande.profil.accountType);
 		if (demande.profil.accountType === 'Employeur') {
-			console.log('Inside IF')
 			Employeur.findByIdAndUpdate(demande.profil.ID, {
 				isValid: true
 			}, function (err, employeur) {
@@ -465,8 +518,12 @@ Router.put('/demande', function (req, res, next) {
 					console.log(err.stack)
 					return next(err);
 				}
-				console.log(demande);
-				console.log(employeur);
+				var newNotif = new Notification({
+					userID: employeur.userID,
+					titre: "Votre profil a été validé par un administrateur.",
+					contenu: "Un administrateur vient de vérifier votre demande de validation et l'a validée.",
+				});
+				newNotif.save();
 				res.send({
 					demande: demande,
 					user: employeur
@@ -480,8 +537,12 @@ Router.put('/demande', function (req, res, next) {
 					console.log(err.stack)
 					return next(err);
 				}
-				console.log(demande);
-				console.log(freelancer);
+				var newNotif = new Notification({
+					userID: freelancer.userID,
+					titre: "Votre profil a été validé par un administrateur.",
+					contenu: "Un administrateur vient de vérifier votre demande de validation et l'a validée.",
+				});
+				newNotif.save();
 				res.send({
 					demande: demande,
 					user: freelancer
@@ -496,7 +557,22 @@ Router.delete('/demande', function (req, res, next) {
 			console.log(err.stack)
 			return next(err);
 		}
-		res.send(demande);
+		User.findOne({
+			"profil.ID": demande.profil.ID
+		}, function (err, user) {
+			if (err) {
+				console.log(err.stack)
+				return next(err);
+			}
+			var newNotif = new Notification({
+				userID: user._id,
+				titre: "Votre demande de validation a été refusée.",
+				contenu: "Un administrateur vient de refuser votre demande de validation.",
+			});
+			newNotif.save();
+			res.send(demande);
+		})
+
 	})
 });
 
