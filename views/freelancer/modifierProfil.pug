@@ -53,9 +53,7 @@ block content
                     .two.fields
                         .field
                             select( name="wilayaAdr" class="ui search dropdown" value=user.wilayaAdr  disabled=( allowModif === false ) ? "" : undefined)
-                                option(value="Alger") Alger
-                                option(value="Constantine") Constantine
-                                option(value="Annaba" selected) Annaba
+                                include /views/partials/wilayas_select
                         .field
                             input(type="text" name="communeAdr" placeholder="Commune" value=user.communeAdr  disabled=( allowModif === false ) ? "" : undefined)
                     .two.fields

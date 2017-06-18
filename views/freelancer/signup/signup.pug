@@ -68,19 +68,13 @@ include /views/layout/head
                 input(type="date" name="dateNaiss" max="1999-06-01")
               .field
                 select(name="lieuNaiss" class="ui search dropdown")
-                  option(value="" disabled selected) Selectionnez une Wilaya
-                  option(value="Alger") Alger
-                  option(value="Constantine") Constantine
-                  option(value="Annaba") Annaba
+                  include /views/partials/wilayas_select
           .field
             h4.ui.dividing.header Adresse
             .two.fields
               .field
                 select( name="wilayaAdr" class="ui search dropdown")
-                  option(value="" disabled selected) Selectionnez une Wilaya
-                  option(value="Alger") Alger
-                  option(value="Constantine") Constantine
-                  option(value="Annaba") Annaba
+                  include /views/partials/wilayas_select
               .field
                 input(type="text" name="communeAdr" placeholder="Commune")
             .two.fields

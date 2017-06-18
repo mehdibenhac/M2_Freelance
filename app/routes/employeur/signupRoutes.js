@@ -57,7 +57,7 @@ Router.post('/', function (req, res, next) {
                 }
                 if (foundEmployeur !== null) {
                     req.flash('profileFound', 'Un profil employeur existe dèja avec l\'adresse mail et/ou le numéro de téléphone fournis');
-                    req.redirect('back');
+                    res.redirect('back');
                 } else {
                     req.session.signup = {
                         profile: req.body

@@ -46,12 +46,12 @@ include /views/layout/head
                   label Femme
           .field
             h4.ui.dividing.header Email et numéro de téléphone: 
-            //- if messages != ""
-            //-   .ui.icon.message
-            //-     i.warning.icon
-            //-     .content
-            //-       .header Erreur de données!
-            //-       p #{messages}.           
+            if messages != ""
+              .ui.icon.message
+                i.warning.icon
+                .content
+                  .header Erreur de données!
+                  p #{messages}.           
             .two.fields
               .field
                 input(type="text" name="email" placeholder="Adresse Mail")
@@ -67,19 +67,13 @@ include /views/layout/head
                 input(type="date" name="dateNaiss" max="1999-06-01")
               .field
                 select(name="lieuNaiss" class="ui search dropdown")
-                  option(value="" disabled selected) Selectionnez une Wilaya
-                  option(value="Alger") Alger
-                  option(value="Constantine") Constantine
-                  option(value="Annaba") Annaba
+                  include /views/partials/wilayas_select
           .field
             h4.ui.dividing.header Adresse
             .two.fields
               .field
                 select( name="wilayaAdr" class="ui search dropdown")
-                  option(value="" disabled selected) Selectionnez une Wilaya
-                  option(value="Alger") Alger
-                  option(value="Constantine") Constantine
-                  option(value="Annaba") Annaba
+                  include /views/partials/wilayas_select
               .field
                 input(type="text" name="communeAdr" placeholder="Commune")
             .two.fields
