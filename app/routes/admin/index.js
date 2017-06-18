@@ -9,6 +9,7 @@ var Message = require('../../models/Message.js');
 var Notification = require('../../models/Notification.js');
 var Demande = require('../../models/Demande.js');
 var passport = require('passport');
+var path = require('path');
 
 Router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "http://localhost:8080");
@@ -19,7 +20,7 @@ Router.use(function (req, res, next) {
 });
 
 Router.get('/', function (req, res, next) {
-	res.send('Admin Index');
+	res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 Router.post('/signup', function (req, res, next) {

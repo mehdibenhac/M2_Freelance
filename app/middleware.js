@@ -33,8 +33,9 @@ var Middleware = {
         } else if (req.isAuthenticated() && req.user.profil.accountType === "Employeur") {
             req.flash('employeurConnected', 'Vous étes deja connecté en tant qu\'employeur');
             return res.redirect('/employeur');
+        } else if (req.isAuthenticated() && req.user.profil.accountType === "Administrateur") {
+            return res.redirect('/admin#/t/p');
         }
-        res.send('Already logged in!')
     }
 }
 module.exports = Middleware;

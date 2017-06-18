@@ -19,6 +19,7 @@
     "cors": "^2.8.3",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
+    "jquery": "^3.2.1",
     "livereload": "^0.6.2",
     "method-override": "^2.3.9",
     "moment": "^2.18.1",
