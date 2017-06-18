@@ -5,6 +5,7 @@ Date.prototype.toDateInputValue = (function () {
 });
 
 $(document).ready(function () {
+    $('#competField').hide();
     $.ajax({
         url: '/endpoints/notifsCount',
         dataType: 'json',
@@ -33,6 +34,40 @@ $(document).ready(function () {
             console.log(errorThrown)
         }
     });
+    $('#domSelect').on('change', function () {
+        $('#competSelect').children('option:not(:first)').remove();
+        var data = {
+            domaine: $(this).val()
+        };
+        $.ajax({
+            url: '/endpoints/competences',
+            dataType: 'json',
+            method: 'post',
+            data: data,
+            success: function (data, textStatus, jQxhr) {
+                $('#competsInfo').hide().slideDown(500)
+                var competences = data;
+                if (competences.length > 0) {
+                    $('#competField').hide().slideDown(500);
+                    $('#competSelect').parent().removeClass('disabled');
+                    $('#competsInfo > .content').text(competences.length + ' Compétence(s) trouvée(s)')
+                    competences.forEach(function (competence) {
+                        $('#competSelect').append($('<option>', {
+                            value: competence._id,
+                            text: competence.titre
+                        }))
+                    }, this);
+                } else {
+                    $('#competsInfo > .content').text('Aucune compétence trouvée pour le domaine selectionné')
+                    $('#competSelect').parent().addClass('disabled');
+                    $('#competField').show().slideUp(500);
+                }
+            }
+        })
+    });
+    $('#competSelect').on('change', function () {
+        $('#competsInfo').show().slideUp(500)
+    })
     $('.ui.dropdown')
         .dropdown();
     $('select.dropdown')
@@ -270,6 +305,14 @@ $(document).ready(function () {
             }
         }).modal('show');
     });
+    $('.refusar').click(function () {
+        $('.ui.refuse.modal').modal({
+            closable: false,
+            onApprove: function () {
+                $('.ui.refuse.form').submit();
+            }
+        }).modal('show');
+    });
     $('.ui.cloturar.form').form({
         fields: {
             note: {
@@ -414,6 +457,16 @@ $(document).ready(function () {
                     }, {
                         type: 'maxCount[4]',
                         prompt: 'Vous avez selectionné plus de quatre compétences.'
+                    }]
+                },
+                domaines: {
+                    identifier: 'domaines',
+                    rules: [{
+                        type: 'minCount[1]',
+                        prompt: 'Selectionnez au moins un domaine.'
+                    }, {
+                        type: 'maxCount[4]',
+                        prompt: 'Vous avez selectionné plus de quatre domaines.'
                     }]
                 }
             }

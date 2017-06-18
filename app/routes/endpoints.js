@@ -3,6 +3,7 @@ var User = require('../models/User.js');
 var Freelancer = require('../models/Freelancer.js');
 var Employeur = require('../models/Employeur.js');
 var Notification = require('../models/Notification.js');
+var Competence = require('../models/Competence.js');
 var Message = require('../models/Message.js');
 var Offre = require('../models/Offre.js');
 var Utility = require('../utility.js');
@@ -224,4 +225,15 @@ Router.post('/adminLogin', function (req, res, next) {
     })(req, res, next);
 });
 
+Router.post('/competences', function (req, res, next) {
+    Competence.find({
+        domaine: req.body.domaine
+    }, function (err, competences) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        res.send(competences);
+    });
+})
 module.exports = Router;

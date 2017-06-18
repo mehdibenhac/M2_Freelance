@@ -115,7 +115,8 @@ Router.get('/login', middleware.isNotLoggedIn, function (req, res) {
         console.log(fail);
         res.render('login', {
             authFail: fail,
-            loggedOut: req.flash('loggedOut')
+            loggedOut: req.flash('loggedOut'),
+            suppr: req.flash('suppr')
         });
     }
 });

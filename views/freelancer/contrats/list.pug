@@ -46,11 +46,16 @@ block content
                             button.ui.teal.icon.fluid.button.submit
                                 i.search.icon
             .ui.divider
-            if contratDeleted.length > 0
-                .ui.info.icon.message
-                    i.info.icon
+            if contratDeleted != ""
+                .ui.success.icon.message
+                    i.checkmark.icon
                     .content 
                         .header #{contratDeleted}
+            if contratClotured != ""
+                .ui.success.icon.message
+                    i.checkmark.icon
+                    .content 
+                        .header #{contratClotured}
             if contrats.length === 0
                 .ui.info.icon.message
                     i.info.icon

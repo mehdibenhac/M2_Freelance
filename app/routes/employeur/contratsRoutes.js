@@ -4,6 +4,7 @@
 
 var Router = require('express').Router();
 var middleware = require('../../middleware.js');
+var Utility = require('../../utility.js');
 var Employeur = require('../../models/Employeur.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Offre = require('../../models/Offre.js');
@@ -75,6 +76,7 @@ Router.get('/', function (req, res, next) {
                             currentRoute: 'contrats',
                             contratDeleted: req.flash("contratDeleted"),
                             contratCreated: req.flash("contratCreated"),
+                            contratClotured: req.flash("contratClotured"),
                             user: employeur,
                             contrats: contrats
                         });
@@ -182,10 +184,9 @@ Router.post('/details/:id/cloturer', function (req, res, next) {
                 console.log(err.stack)
                 return next(err);
             }
-            res.send({
-                contrat: contrat,
-                employeur: freelancer
-            })
+            Utility.notifyContratClotureFree(freelancer.userID, contrat._id);
+            req.flash('contratClotured', 'Contrat cloturé avec succés.');
+            res.redirect('/employeur/contrats');
         })
     });
 });

@@ -76,6 +76,7 @@ Router.get('/', function (req, res, next) {
                         res.render('freelancer/contrats/list', {
                             currentRoute: 'contrats',
                             contratDeleted: req.flash("contratDeleted"),
+                            contratClotured: req.flash('contratClotured'),
                             user: freelancer,
                             contrats: contrats
                         });
@@ -167,6 +168,35 @@ Router.put('/details/:id', function (req, res, next) {
 
     })
 });
+Router.delete('/details/:id', function (req, res, next) {
+    var ID = req.params.id;
+    Contrat.findByIdAndRemove(ID, function (err, contrat) {
+        if (err) {
+            console.log(err.stack)
+            return next(err);
+        }
+        Employeur.findById(contrat.employeur, function (err, employeur) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            Utility.notifyContratDelEmp(employeur.userID, contrat._id);
+            Offre.findByIdAndUpdate(contrat.offre, {
+                etat: "Ouverte",
+                $pull: {
+                    postulants: contrat.freelancer
+                }
+            }, function (err, offre) {
+                if (err) {
+                    console.log(err.stack)
+                    return next(err);
+                }
+                req.flash('contratDeleted', 'Le contrat a été refusé et supprimé avec succés.');
+                res.redirect('/freelancer/contrats')
+            });
+        })
+    })
+});
 Router.post('/details/:id/cloturer', function (req, res, next) {
     var ID = req.params.id;
     var note = {
@@ -190,10 +220,9 @@ Router.post('/details/:id/cloturer', function (req, res, next) {
                 console.log(err.stack)
                 return next(err);
             }
-            res.send({
-                contrat: contrat,
-                employeur: employeur
-            })
+            Utility.notifyContratClotureEmp(employeur.userID, contrat._id)
+            req.flash('contratClotured', 'Demande de cloturation déposée avec succés.');
+            res.redirect('/freelancer/contrats');
         })
     });
 });

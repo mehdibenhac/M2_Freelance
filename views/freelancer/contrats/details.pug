@@ -28,6 +28,11 @@ block content
                         button.ui.blue.labeled.icon.fluid.huge.acceptar.button( type="button" class= (contrat.etat !== "Négociation" ? "disabled" : ""))
                             i.checkmark.icon
                             | Accepter le contrat
+                    br
+                    form.ui.refuse.form(role="form" action="?_method=DELETE" method="post")
+                        button.ui.orange.labeled.icon.fluid.huge.refusar.button( type="button" class= (contrat.etat !== "Négociation" ? "disabled" : ""))
+                            i.remove.icon
+                            | Refuser le contrat
                 else if contrat.etat === "Ouvert"
                     button.ui.blue.labeled.icon.fluid.huge.cloturar.button(type="button" class= (contrat.etat !== "Ouvert" ? "disabled" : ""))
                         i.archive.icon
@@ -188,7 +193,16 @@ block content
         .center.aligned.actions
             .ui.cancel.red.button Annuler
             .ui.approve.teal.button Valider
-
+    .ui.refuse.modal
+        h2.ui.header
+            i.help.circle.icon 
+            .content Refuser le contrat?
+        .content
+            p Une fois le contrat refusé, Il sera définitivement supprimé et vous serez retiré de la liste 
+                | des postulants de l'offre concernée.
+        .center.aligned.actions
+            .ui.cancel.red.button Annuler
+            .ui.approve.teal.button Valider
     .ui.cloturar.modal
         h2.ui.header
             i.help.circle.icon 

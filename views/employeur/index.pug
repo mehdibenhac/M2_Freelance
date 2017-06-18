@@ -5,7 +5,7 @@ block user
         h3.ui.header.inverted
             img(class="ui circular image" src=+ (user.sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
             .content  #{user.nom}
-                .sub.header #{user.userID.accountType}
+                .sub.header #{user.userID[0].accountType}
 block content
     .ui.container
         .ui.five.column.stackable.grid
@@ -30,9 +30,10 @@ block content
                         i.checkmark.icon
                         | Valider le profil
             .four.wide.column
-                a.ui.yellow.labeled.icon.fluid.button
-                    i.delete.icon
-                    | Supprimer le compte
+                form.ui.form(method="get" action="/employeur/supprimer")
+                    .ui.red.labeled.icon.fluid.validateModal.button
+                        i.delete.icon
+                        | Supprimer le compte
         if messages.domainesModifSuccess != ""
             .ui.info.icon.message
                 i.info.icon
@@ -53,12 +54,17 @@ block content
                 i.checkmark.icon
                 .content
                     .header #{messages.demandeCreated}
+        if messages.supprImpossible != ""
+            .ui.negative.icon.message
+                i.warning.icon
+                .content
+                    .header #{messages.supprImpossible}
         .ui.two.columns.stackable.grid
             .four.wide.column
                 .ui.violet.inverted.segment
                         h4.ui.header
                             i.tasks.icon
-                            .content    Compte:
+                            .content    Compte
                 .ui.segment
                     .inline.field
                         .ui.toggle.checkbox
@@ -76,28 +82,35 @@ block content
                     .content
                         h4.ui.header 
                             i.hashtag.icon                         
-                            .content #{user.userID._id}
+                            .content #{user.userID[0]._id}
                                 .sub.header Numéro de compte
                     .content
                         h4.ui.header 
                             i.asterisk.icon    
-                            .content #{user.userID.username}
+                            .content #{user.userID[0].username}
                                 .sub.header Nom d'utilisateur
                     .content
                         h4.ui.header 
                             i.tag.icon
-                            .content #{user.userID.profil.accountType}
+                            .content #{user.userID[0].profil.accountType}
                                 .sub.header Type de compte
                     .content
                         h4.ui.header 
                             i.calendar.icon
-                            .content #{dateCreated}
+                            .content #{moment(user.dateCreated).format('DD MMMM YYYY')}
                                 .sub.header Date de création
             .twelve.wide.column
                 .ui.violet.inverted.segment
                     h4.ui.header 
+                        i.star.half.empty.icon
+                        .content   Note moyenne
+                .ui.violet.raised.centered.segment
+                    .ui.center.aligned.container
+                        .ui.star.massive.rating(data-rating=Math.round(user.note_moy) data-max-rating="10" data-content="Note moyenne calculée: "+Math.round(user.note_moy*100)/100+" pour "+user.notations.length+" contrat(s) noté(s).")
+                .ui.violet.inverted.segment
+                    h4.ui.header 
                         i.user.icon
-                        .content   Identité:
+                        .content   Identité
                 .ui.horizontal.segments
                     .ui.padded.segment
                         h4.ui.header 
@@ -118,7 +131,7 @@ block content
                                 .sub.header Sexe
                         h4.ui.header 
                             i.calendar.icon 
-                            .content   #{dateNaiss}
+                            .content   #{moment(user.dateNaiss).format('DD MMMM YYYY')}
                                 .sub.header Date de naissance
                         h4.ui.header 
                             i.marker.icon 
@@ -152,7 +165,7 @@ block content
                 .ui.violet.inverted.segment
                         h4.ui.header
                             i.cubes.icon
-                            .content Domaines:
+                            .content Domaines
                 .ui.two.stackable.cards
                     each domaine, index in user.domaines
                         .violet.card
@@ -162,4 +175,17 @@ block content
                                     .content  #{index+1} -  #{domaine.titre}
                                 .description
                                     | #{domaine.description}
+        .ui.modal
+            h2.ui.header
+                i.warning.sign.icon 
+                .content Supprimer votre compte ?
+            .content
+                p 
+                    | Souhaitez-vous vraiment supprimer votre compte?
+                    b  une fois supprimé, vous ne pourrez plus le récuperer!
+            .center.aligned.actions
+                .ui.cancel.button Annuler
+                .ui.approve.red.button 
+                    i.trash.icon
+                    | Valider
                         

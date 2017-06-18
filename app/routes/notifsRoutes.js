@@ -24,6 +24,7 @@ Router.get('/', function (req, res, next) {
                         userID: req.user._id
                     })
                     .sort({
+                        lu: 1,
                         date_ajout: -1
                     })
                     .exec(function (err, notifications) {
@@ -50,6 +51,7 @@ Router.get('/', function (req, res, next) {
                         userID: req.user._id
                     })
                     .sort({
+                        lu: 1,
                         date_ajout: -1
                     })
                     .exec(function (err, notifications) {

@@ -24,6 +24,7 @@ Router.get('/recus', function (req, res, next) {
                         destinataire: req.user._id
                     })
                     .sort({
+                        lu: 1,
                         dateCreated: -1
                     })
                     .populate('expediteur')
@@ -58,6 +59,7 @@ Router.get('/recus', function (req, res, next) {
                         destinataire: req.user._id
                     })
                     .sort({
+                        lu: 1,
                         dateCreated: -1
                     })
                     .populate('expediteur')

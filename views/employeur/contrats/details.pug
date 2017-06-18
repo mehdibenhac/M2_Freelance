@@ -15,7 +15,7 @@ block content
                 .ui.violet.inverted.segment
                     h3.ui.header
                         i.suitcase.icon
-                        .content    Détails du contrat ##{contrat._id} :
+                        .content    Détails du contrat ##{contrat._id}
             .four.wide.column
                 a.ui.violet.labeled.icon.fluid.huge.button(href="/employeur/contrats")
                     i.reply.icon
@@ -30,7 +30,7 @@ block content
                 .ui.violet.inverted.segment
                     h3.ui.header
                         i.user.icon
-                        | Freelancer: 
+                        | Freelancer 
                 .ui.fluid.card
                     .ui.centered.image
                         img(class="ui circular image" src=+ (freelancer[0].sexe === "Homme") ? "/static/images/male.png" : "/static/images/female.png")
@@ -70,7 +70,7 @@ block content
                 .ui.violet.inverted.segment
                     h3.ui.header
                         i.idea.icon
-                        | Etat du contrat:
+                        | Etat du contrat
                 .ui.violet.padded.segment
                     case contrat.etat
                         when "Négociation"
@@ -102,50 +102,58 @@ block content
                             button.ui.labeled.icon.yellow.fluid.validateModal.button(type="button")
                                 i.remove.icon
                                 | Supprimer le contrat
-                .ui.violet.inverted.segment(class= contrat.etat === "Fermé" || "Négociation" ? "disabled" : "")
-                    h3.ui.header
-                        i.hourglass.full.icon
-                        | Progrés du contrat: 
-                .ui.violet.padded.segment(class= contrat.etat === "Fermé" || "Négociation" ? "disabled" : "")
-                    - var diff = (moment(contrat.dateFin)).diff(moment(contrat.dateDebut), 'days') ;
-                    - var fromStart = (moment()).diff(moment(contrat.dateDebut), 'days') ;
-                    - var percent = fromStart*100/diff;
-                    .ui.active.violet.progress(data-percent=percent id="daysPercent")
-                        .bar
-                            .progress
-                        .label Progrés
-                    .ui.stackable.three.column.centered.grid
-                        .row
-                            .column
-                                h1.ui.header
-                                    i.wait.icon
-                                    .content #{moment(contrat.dateFin).fromNow(true)}
-                                        .sub.header Restant(s)
-                            .column
-                                h1.ui.header
-                                    i.wait.icon
-                                    .content #{fromStart} Jours
-                                        .sub.header Ecoulé(s)
-                            .column
-                                h1.ui.header
-                                    i.wait.icon
-                                    .content #{diff} Jours
-                                        .sub.header Totaux
-                        .row
-                            .column
-                                h4.ui.header
-                                    i.hourglass.start.icon
-                                    .content #{moment(contrat.dateDebut).format('D MMMM YYYY')}
-                                        .sub.header Date de début du contrat
-                            .column
-                                h4.ui.header
-                                    i.hourglass.end.icon
-                                    .content #{moment(contrat.dateFin).format('D MMMM YYYY')}
-                                        .sub.header Date d'échéance du contrat
+                if(contrat.etat === 'Fermé' || contrat.etat === 'Négociation' || contrat.etat === 'Cloturation')
+                    .ui.violet.inverted.disabled.segment
+                        h3.ui.header
+                            i.hourglass.full.icon
+                            | Progrés du contrat: 
+                    .ui.violet.padded.disabled.center.aligned.segment
+                        h4 Détails du progrés du contrat indisponibles
+                else
+                    .ui.violet.inverted.segment
+                        h3.ui.header
+                            i.hourglass.full.icon
+                            | Progrés du contrat 
+                    .ui.violet.padded.segment
+                        - var diff = (moment(contrat.dateFin)).diff(moment(contrat.dateDebut), 'days') ;
+                        - var fromStart = (moment()).diff(moment(contrat.dateDebut), 'days') ;
+                        - var percent = fromStart*100/diff;
+                        .ui.active.violet.progress(data-percent=percent id="daysPercent")
+                            .bar
+                                .progress
+                            .label Progrés
+                        .ui.stackable.three.column.centered.grid
+                            .row
+                                .column
+                                    h1.ui.header
+                                        i.wait.icon
+                                        .content #{moment(contrat.dateFin).fromNow(true)}
+                                            .sub.header Restant(s)
+                                .column
+                                    h1.ui.header
+                                        i.wait.icon
+                                        .content #{fromStart} Jours
+                                            .sub.header Ecoulé(s)
+                                .column
+                                    h1.ui.header
+                                        i.wait.icon
+                                        .content #{diff} Jours
+                                            .sub.header Totaux
+                            .row
+                                .column
+                                    h4.ui.header
+                                        i.hourglass.start.icon
+                                        .content #{moment(contrat.dateDebut).format('D MMMM YYYY')}
+                                            .sub.header Date de début du contrat
+                                .column
+                                    h4.ui.header
+                                        i.hourglass.end.icon
+                                        .content #{moment(contrat.dateFin).format('D MMMM YYYY')}
+                                            .sub.header Date d'échéance du contrat
                 .ui.violet.inverted.segment
                     h3.ui.header
                         i.book.icon
-                        | Détails de l'offre: 
+                        | Détails de l'offre 
                 .ui.violet.padded.segment
                     h3.ui.header 
                         i.hashtag.icon

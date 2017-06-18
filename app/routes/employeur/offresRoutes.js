@@ -9,6 +9,7 @@ var Employeur = require('../../models/Employeur.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Offre = require('../../models/Offre.js');
 var Competence = require('../../models/Competence.js');
+var Domaine = require('../../models/Domaine.js');
 var Notification = require('../../models/Notification.js');
 var moment = require('moment');
 var shortid = require('shortid');
@@ -97,21 +98,23 @@ Router.get('/ajout', function (req, res, next) {
                     req.flash('quotaOffres', 'Attention! vous ne pouvez plus ajouter d\'offres car vous avez atteint votre quota.');
                     return res.redirect('/employeur/offres');
                 }
-                Competence.find(function (err, competences) {
+                // Competence.find(function (err, competences) {
+                //     if (err) {
+                //         console.log(err.stack)
+                //         return next(err);
+                //     }
+                Domaine.find(function (err, domaines) {
                     if (err) {
                         console.log(err.stack)
                         return next(err);
                     }
-                    if (competences.length > 0) {
-                        res.render('employeur/offres/ajout', {
-                            currentRoute: 'offres',
-                            user: employeur,
-                            competences: competences
-                        })
-                    } else {
-                        res.send('Competences null');
-                    }
-                });
+                    res.render('employeur/offres/ajout', {
+                        currentRoute: 'offres',
+                        user: employeur,
+                        domaines: domaines
+                    })
+                })
+                // });
             });
         } else {
             res.send('Employeur null')
@@ -248,21 +251,17 @@ Router.get('/details/:id/mod', function (req, res, next) {
             });
         }
     ], function (employeur, offre) {
-        Competence.find(function (err, competences) {
+        Domaine.find(function (err, domaines) {
             if (err) {
                 console.log(err.stack)
                 return next(err);
             }
-            if (competences.length > 0) {
-                res.render('employeur/offres/mod', {
-                    currentRoute: 'offres',
-                    user: employeur,
-                    competences: competences,
-                    offre: offre
-                })
-            } else {
-                res.send('Competences null');
-            }
+            res.render('employeur/offres/mod', {
+                currentRoute: 'offres',
+                user: employeur,
+                domaines: domaines,
+                offre: offre
+            })
         });
     });
 });

@@ -33,11 +33,18 @@ block content
                         label Titre
                         input(type="text" name="titreOffre" placeholder="Titre de l'offre" value=offre.titre)
                     .field
+                        label Domaine concerné
+                        select(type="text" id="domSelect" class="ui dropdown" required maxlength="50" name="domaineOffre")
+                            option(value="" selected disabled) Domaine concerné par l'offre
+                            each domaine in domaines
+                                option(value=domaine._id) #{domaine.titre}
+                        .ui.info.icon.message(id="competsInfo")
+                            i.info.icon
+                            .content Selectionnez un domaine pour afficher les compétences disponibles
+                    .field(id="competField")
                         label Compétence concernée
-                        select(type="text" class="ui dropdown" required maxlength="50" name="competOffre" placeholder="Titre de l'offre")
-                            option(value="" disabled) Compétence concernée par l'offre
-                            each competence in competences
-                                option(value=competence._id selected=( offre.competence._id == competence._id ? "" : undefined ) ) #{competence.titre}
+                        select(type="text" id="competSelect" class="ui dropdown" required maxlength="50" name="competOffre")
+                            option(value="" selected disabled) Compétence concernée par l'offre
                     .field
                         label Description
                         textarea.textarea(name="descriptionOffre" required maxlength="1000" placeholder="Description de votre offre") #{offre.description}
