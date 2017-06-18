@@ -5,6 +5,8 @@ var Employeur = require('../../models/Employeur.js');
 var Administrateur = require('../../models/Administrateur.js');
 var Offre = require('../../models/Offre.js');
 var Contrat = require('../../models/Contrat.js');
+var Message = require('../../models/Message.js');
+var Notification = require('../../models/Notification.js');
 var Demande = require('../../models/Demande.js');
 var passport = require('passport');
 
@@ -283,7 +285,7 @@ Router.delete('/freelancer', function (req, res, next) {
 		});
 	})
 });
-// Employeur CRUD
+// Employeur RUD
 Router.get('/employeurs', function (req, res, next) {
 	Employeur.aggregate([{
 			$lookup: {
@@ -383,7 +385,7 @@ Router.delete('/employeur', function (req, res, next) {
 	});
 });
 
-//Offre CRUD
+// Offre RUD
 Router.get('/offres', function (req, res, next) {
 	Offre.find().populate('employeur postulants competence').exec(function (err, offres) {
 		if (err) {
@@ -428,4 +430,292 @@ Router.delete('/offre', function (req, res, next) {
 	})
 
 });
+
+// Demande RUD
+Router.get('/demandes', function (req, res, next) {
+	Demande.find().populate('profil.ID justificatifs.competence').sort({
+		dateCreated: -1
+	}).exec(function (err, demandes) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(demandes);
+	})
+});
+Router.put('/demande', function (req, res, next) {
+	Demande.findByIdAndUpdate(req.body._id, {
+		$set: {
+			status: 'processed',
+			dateTreated: new Date()
+		}
+	}, function (err, demande) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		console.log(demande.profil.accountType);
+		if (demande.profil.accountType === 'Employeur') {
+			console.log('Inside IF')
+			Employeur.findByIdAndUpdate(demande.profil.ID, {
+				isValid: true
+			}, function (err, employeur) {
+				if (err) {
+					console.log(err.stack)
+					return next(err);
+				}
+				console.log(demande);
+				console.log(employeur);
+				res.send({
+					demande: demande,
+					user: employeur
+				})
+			})
+		} else if (demande.profil.accountType === 'Freelancer') {
+			Freelancer.findByIdAndUpdate(demande.profil.ID, {
+				isValid: true
+			}, function (err, freelancer) {
+				if (err) {
+					console.log(err.stack)
+					return next(err);
+				}
+				console.log(demande);
+				console.log(freelancer);
+				res.send({
+					demande: demande,
+					user: freelancer
+				})
+			})
+		}
+	})
+});
+Router.delete('/demande', function (req, res, next) {
+	Demande.findByIdAndRemove(req.body._id, function (err, demande) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(demande);
+	})
+});
+
+//Messages CRUD
+Router.get('/messages', function (req, res, next) {
+	Message.count({
+		destinataire: req.user._id
+	}, function (err, destCount) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		Message.count({
+			expediteur: req.user._id
+		}, function (err, expCount) {
+			if (err) {
+				console.log(err.stack)
+				return next(err);
+			}
+			Message.count({
+				destinataire: req.user._id,
+				lu: false
+			}, function (err, unreadCount) {
+				if (err) {
+					console.log(err.stack)
+					return next(err);
+				}
+				res.send({
+					received: destCount,
+					sent: expCount,
+					unread: unreadCount
+				})
+			})
+		})
+	})
+});
+Router.get('/messages/recus', function (req, res, next) {
+	Message.find({
+		destinataire: req.user._id
+	}).sort({
+		dateCreated: -1
+	}).populate('expediteur destinataire').populate({
+		path: 'expediteur',
+		populate: {
+			path: 'profil.ID'
+		}
+	}).populate({
+		path: 'destinataire',
+		populate: {
+			path: 'profil.ID'
+		}
+	}).exec(function (err, messages) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(messages)
+	})
+});
+
+Router.get('/messages/envoyes', function (req, res, next) {
+	Message.find({
+		expediteur: req.user._id
+	}).sort({
+		dateCreated: -1
+	}).populate('expediteur destinataire').populate({
+		path: 'expediteur',
+		populate: {
+			path: 'profil.ID'
+		}
+	}).populate({
+		path: 'destinataire',
+		populate: {
+			path: 'profil.ID'
+		}
+	}).exec(function (err, messages) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(messages)
+	})
+});
+
+Router.put('/messages', function (req, res, next) {
+	Message.findByIdAndUpdate(req.body._id, {
+		$set: {
+			lu: true
+		}
+	}, function (err, message) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(message)
+	})
+})
+
+Router.delete('/messages', function (req, res, next) {
+	Message.findByIdAndRemove(req.body._id, function (err, message) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(message)
+	})
+})
+
+Router.post('/messages', function (req, res, next) {
+	newMessage = new Message({
+		objet: req.body.objet,
+		contenu: req.body.contenu,
+		expediteur: req.user._id,
+		destinataire: req.body.dest
+	})
+	newMessage.save(function (err, message) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send('Message enregistré');
+	})
+})
+
+//Notifications RUD
+
+Router.get('/notifications', function (req, res, next) {
+	Notification.count({
+		userID: req.user._id,
+		lu: false
+	}, function (err, unreadCount) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		Notification.count({
+			userID: req.user._id,
+			lu: true
+		}, function (err, readCount) {
+			if (err) {
+				console.log(err.stack)
+				return next(err);
+			}
+			res.send({
+				unread: unreadCount,
+				read: readCount
+			})
+		})
+	})
+
+});
+
+Router.get('/notifications/unread', function (req, res, next) {
+	Notification.find({
+		userID: req.user._id,
+		lu: false
+	}).sort({
+		date_ajout: -1
+	}).exec(function (err, unreadNotifs) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(unreadNotifs)
+	})
+
+});
+Router.get('/notifications/read', function (req, res, next) {
+	Notification.find({
+		userID: req.user._id,
+		lu: true
+	}).sort({
+		date_lu: -1
+	}).exec(function (err, readNotifs) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(readNotifs)
+	})
+
+});
+Router.put('/notifications', function (req, res, next) {
+	Notification.findByIdAndUpdate(req.body._id, {
+		$set: {
+			lu: true,
+			date_lu: new Date()
+		}
+	}, function (err, notif) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(notif)
+	})
+
+});
+Router.delete('/notifications', function (req, res, next) {
+	Notification.findByIdAndRemove(req.body._id, function (err, notif) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(notif)
+	})
+
+});
+
+//
+Router.get('/users', function (req, res, next) {
+	User.find({
+		_id: {
+			$ne: req.user._id
+		}
+	}).populate('profil.ID').exec(function (err, users) {
+		if (err) {
+			console.log(err.stack)
+			return next(err);
+		}
+		res.send(users);
+	})
+})
 module.exports = Router;

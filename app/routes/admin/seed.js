@@ -3,6 +3,7 @@ var User = require('../../models/User.js');
 var Freelancer = require('../../models/Freelancer.js');
 var Employeur = require('../../models/Employeur.js');
 var Competence = require('../../models/Competence.js');
+var Notification = require('../../models/Notification.js');
 var Offre = require('../../models/Offre.js');
 var Demande = require('../../models/Demande.js');
 var shortid = require('shortid');
@@ -38,12 +39,6 @@ function randomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-// function randomEmp(emps) {
-//     var IDS = [];
-//     emps.forEach(function(emp) {
-//         return 
-//     });
-// }
 
 function randomNumber(Max) {
     return Math.floor(Math.random() * Max)
@@ -142,6 +137,11 @@ Router.post('/employeur', function (req, res, next) {
         },
         status: 'pending'
     });
+    var newJustificatif = {
+        url: '/static/uploads/dummy.pdf',
+        competence: 'r1LP9TMbb'
+    };
+    newDemande.justificatifs.push(newJustificatif);
     newDemande.save(function (err, demande) {
         if (err) {
             console.log(err.stack)
@@ -203,6 +203,31 @@ Router.post('/offre', function (req, res, next) {
             })
         });
 
+    })
+});
+Router.post('/notification', function (req, res, next) {
+    User.find({
+        "profil.accountType": {
+            $ne: "Administrateur"
+        }
+    }, function (err, users) {
+        var randomUser = users[Math.floor(Math.random() * users.length)]._id;
+        var newNotif = new Notification({
+            userID: 'ByKzWrOz-',
+            titre: "Vous avez reçu une nouvelle notification",
+            contenu: "Une nouvelle notification aléatoire a été générée.",
+            target: {
+                targetType: 'User',
+                targetPath: randomUser
+            }
+        });
+        newNotif.save(function (err, notif) {
+            if (err) {
+                console.log(err.stack)
+                return next(err);
+            }
+            res.send(notif)
+        })
     })
 });
 module.exports = Router;
