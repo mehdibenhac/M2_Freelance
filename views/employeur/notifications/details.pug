@@ -44,7 +44,7 @@ block content
                                 i.book.icon 
                                 .content Contenu :
                         .thirteen.wide.column
-                            p #{notification.contenu}
+                            p!= notification.contenu
                     .row
                         if notification.target.targetType === 'Contrat'
                             .three.wide.column
